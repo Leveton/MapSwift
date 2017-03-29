@@ -14,6 +14,7 @@
 		1CE1EAAF1E8C5FCF00C4E87D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */; };
 		1CE1EAB21E8C5FCF00C4E87D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */; };
 		1CE1EABD1E8C5FCF00C4E87D /* MapSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EABC1E8C5FCF00C4E87D /* MapSwiftTests.swift */; };
+		1CE1EAC81E8C645300C4E87D /* MSMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		1CE1EAB81E8C5FCF00C4E87D /* MapSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE1EABC1E8C5FCF00C4E87D /* MapSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSwiftTests.swift; sourceTree = "<group>"; };
 		1CE1EABE1E8C5FCF00C4E87D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSMapViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				1CE1EAA51E8C5FCF00C4E87D /* AppDelegate.swift */,
 				1CE1EAA71E8C5FCF00C4E87D /* FirstViewController.swift */,
 				1CE1EAA91E8C5FCF00C4E87D /* SecondViewController.swift */,
+				1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
 				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1CE1EAAA1E8C5FCF00C4E87D /* SecondViewController.swift in Sources */,
+				1CE1EAC81E8C645300C4E87D /* MSMapViewController.swift in Sources */,
 				1CE1EAA61E8C5FCF00C4E87D /* AppDelegate.swift in Sources */,
 				1CE1EAA81E8C5FCF00C4E87D /* FirstViewController.swift in Sources */,
 			);
