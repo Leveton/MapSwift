@@ -9,19 +9,17 @@
 import Foundation
 
 enum modelType{
-    case kModelTypeCivic
-    case kModelTypeAccord
-    case kModelTypePrelude
+    case Civic
+    case Accord
+    case Prelude
 }
 
-class honda: Car{
+class Honda: Car{
     
-    var model:modelType = .kModelTypeCivic
-    
-    var model2:modelType = .kModelTypeCivic{
+    var model:modelType = .Civic{
         
         willSet(newModel){
-            if (newModel == .kModelTypeCivic){
+            if (newModel == .Civic){
                 self.numberOfDoors = 2
             }else{
                 self.numberOfDoors = 4
