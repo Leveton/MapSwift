@@ -8,12 +8,25 @@
 
 import UIKit
 
+struct SomeSize{
+    var width  = 0
+    var height = 0
+}
+
 class FirstViewController: UIViewController {
 
+    var arrayA:Array<String>!
+    weak var carA:Car?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        arrayA = Array()
         
-        configureCar()
+        
+//        configureCar()
+//        configureHouse()
+//        configureBoat()
+        compareReferenceAndValue()
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,11 +54,52 @@ class FirstViewController: UIViewController {
         
         car.startEngine()
         
+    }
+    
+    func configureHouse(){
         let house = House()
+        
         house.numberOfDoors = 1
         print("number of house doors \(house.numberOfDoors) number of house windows \(house.numberOfWindows)")
         
     }
 
+    func configureBoat(){
+        let boat = Boat()
+        
+        if boat.isKind(of: Boat.self){
+            boat.numberOfDoors = 1
+            print("number of boat doors \(boat.numberOfDoors)")
+        }
+        if boat.isKind(of: NSObject.self){ print("is kind of NSObject") } //prints out
+        if boat.isMember(of: Boat.self){ print("is member of boat") } //prints out
+        if boat.isMember(of: NSObject.self){ print("is member of NSObject") } //does not print out
+    }
+    
+    func compareReferenceAndValue(){
+        
+        let boat = Boat()
+        boat.color = "Red"
+        
+        /* kar and car both point to the same chunk of memory */
+        let ship = boat
+        ship.color = boat.color
+        print("boat color \(boat.color) ship color \(ship.color)")
+        
+        boat.color = "Green"
+        print("boat color \(boat.color) ship color \(ship.color)")
+        
+        var someSize = SomeSize()
+        someSize.width = 20
+        
+        /* anotherSize is copied on assignment creating a new chunk of memory */
+        var anotherSize = someSize
+        anotherSize.width = someSize.width
+        print("some size width \(someSize.width) another size width \(anotherSize.width)")
+        
+        someSize.width = 40
+        print("some size width again \(someSize.width) another size width again \(anotherSize.width)")
+        
+    }
 }
 

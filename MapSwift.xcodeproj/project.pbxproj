@@ -10,6 +10,7 @@
 		1C6EE04C1E8EC2F70037DD87 /* Car.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6EE04B1E8EC2F70037DD87 /* Car.swift */; };
 		1C6EE0521E8ECAD10037DD87 /* Honda.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C6EE0511E8ECAD10037DD87 /* Honda.swift */; };
 		1CCAA9651E8EECBD00428878 /* House.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCAA9641E8EECBD00428878 /* House.swift */; };
+		1CCAA9671E8EF08300428878 /* Boat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CCAA9661E8EF08300428878 /* Boat.swift */; };
 		1CE1EAA61E8C5FCF00C4E87D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EAA51E8C5FCF00C4E87D /* AppDelegate.swift */; };
 		1CE1EAA81E8C5FCF00C4E87D /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EAA71E8C5FCF00C4E87D /* FirstViewController.swift */; };
 		1CE1EAAA1E8C5FCF00C4E87D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EAA91E8C5FCF00C4E87D /* SecondViewController.swift */; };
@@ -34,6 +35,7 @@
 		1C6EE04B1E8EC2F70037DD87 /* Car.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Car.swift; path = models/Car.swift; sourceTree = "<group>"; };
 		1C6EE0511E8ECAD10037DD87 /* Honda.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Honda.swift; path = models/Honda.swift; sourceTree = "<group>"; };
 		1CCAA9641E8EECBD00428878 /* House.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = House.swift; path = models/House.swift; sourceTree = "<group>"; };
+		1CCAA9661E8EF08300428878 /* Boat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Boat.swift; path = models/Boat.swift; sourceTree = "<group>"; };
 		1CE1EAA21E8C5FCF00C4E87D /* MapSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CE1EAA51E8C5FCF00C4E87D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1CE1EAA71E8C5FCF00C4E87D /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				1C6EE04B1E8EC2F70037DD87 /* Car.swift */,
 				1C6EE0511E8ECAD10037DD87 /* Honda.swift */,
 				1CCAA9641E8EECBD00428878 /* House.swift */,
+				1CCAA9661E8EF08300428878 /* Boat.swift */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
 				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
@@ -219,6 +222,7 @@
 				1CCAA9651E8EECBD00428878 /* House.swift in Sources */,
 				1CE1EAAA1E8C5FCF00C4E87D /* SecondViewController.swift in Sources */,
 				1CE1EAC81E8C645300C4E87D /* MSMapViewController.swift in Sources */,
+				1CCAA9671E8EF08300428878 /* Boat.swift in Sources */,
 				1C6EE04C1E8EC2F70037DD87 /* Car.swift in Sources */,
 				1CE1EAA61E8C5FCF00C4E87D /* AppDelegate.swift in Sources */,
 				1C6EE0521E8ECAD10037DD87 /* Honda.swift in Sources */,
