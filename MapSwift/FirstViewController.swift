@@ -23,9 +23,9 @@ class FirstViewController: UIViewController {
         arrayA = Array()
         
         
-//        configureCar()
-//        configureHouse()
-//        configureBoat()
+        configureCar()
+        configureHouse()
+        configureBoat()
         compareReferenceAndValue()
     }
 
