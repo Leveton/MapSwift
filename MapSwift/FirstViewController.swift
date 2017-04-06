@@ -14,9 +14,10 @@ struct SomeSize{
 }
 
 class FirstViewController: UIViewController {
-
+    
     var arrayA:Array<String>!
     weak var carA:Car?
+    var carB:Car!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,20 +25,23 @@ class FirstViewController: UIViewController {
         
         
         configureCar()
-        configureHouse()
-        configureBoat()
-        compareReferenceAndValue()
+        //        configureHouse()
+        //        configureBoat()
+        //        compareReferenceAndValue()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-//MARK: selectors
+    
+    //MARK: selectors
     
     func configureCar(){
+        
         let car = Car()
+        
+        carB = car
         
         let temp = car.numberOfDoors
         print("number of doors \(temp)")
@@ -63,7 +67,7 @@ class FirstViewController: UIViewController {
         print("number of house doors \(house.numberOfDoors) number of house windows \(house.numberOfWindows)")
         
     }
-
+    
     func configureBoat(){
         let boat = Boat()
         

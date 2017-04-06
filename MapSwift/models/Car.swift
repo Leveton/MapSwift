@@ -13,11 +13,15 @@ class Car{
     
     var numberOfDoors:Int = 0
     
+    /* why do you have to do this to prevent crash? */
+    var newColor:String = ""
+    
     var color:String{
         get{
-            return self.color
+            return self.newColor
         }
         set{
+            newColor = newValue
             if (newValue == "Red"){
                 self.numberOfWindows = 3
             }
