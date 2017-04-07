@@ -24,10 +24,15 @@ class FirstViewController: UIViewController {
         arrayA = Array()
         
         
-        configureCar()
+        //configureCar()
         //        configureHouse()
-        //        configureBoat()
+        configureBoat()
         //        compareReferenceAndValue()
+        
+        /* we can get a value from the house class without having to allocate additional memory */
+        let variable = House.SomeComplexOperationUniqueToHouse()
+        
+        print("double \(variable)")
     }
     
     override func didReceiveMemoryWarning() {
@@ -78,6 +83,18 @@ class FirstViewController: UIViewController {
         if boat.isKind(of: NSObject.self){ print("is kind of NSObject") } //prints out
         if boat.isMember(of: Boat.self){ print("is member of boat") } //prints out
         if boat.isMember(of: NSObject.self){ print("is member of NSObject") } //does not print out
+        
+        boat.engine = Engine(cylinder: 4)
+        print("boat engine \(boat.engine!) cylinder count \(boat.engine!.cylinder)")
+        
+        //let titanic = Boat()
+        //titanic.engine = Engine()
+        
+        boat.hullSize = CGSize(width: 200, height: 100)
+        boat.bulbousBow = CGPoint(x: 200.0, y: 0.0)
+        boat.flagPosition = CGRect(origin: boat.bulbousBow, size: boat.hullSize)
+        print("hull size \(boat.hullSize.width) bow point \(boat.bulbousBow.y) flag right \(boat.flagPosition.origin.x+boat.flagPosition.size.width)")
+        
     }
     
     func compareReferenceAndValue(){

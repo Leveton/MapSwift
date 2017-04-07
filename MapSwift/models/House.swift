@@ -14,6 +14,11 @@ class House{
     var numberOfDoors:Int = 0 {
         willSet{
             self.numberOfWindows = newValue
+        
         }
+    }
+    
+    static func SomeComplexOperationUniqueToHouse() -> Double{
+        return Double.pi
     }
 }

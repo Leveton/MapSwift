@@ -12,4 +12,18 @@ class Boat: NSObject {
 
     var numberOfDoors:Int = 0
     var color:String = "White"
+    
+    var engine:Engine?
+    
+    var bulbousBow = CGPoint()
+    var hullSize = CGSize()
+    var flagPosition = CGRect()
+}
+
+struct Engine {
+    let cylinder:Int
+    
+    init(cylinder:Int) {
+        self.cylinder = cylinder
+    }
 }
