@@ -15,19 +15,51 @@ struct SomeSize{
 
 class FirstViewController: UIViewController {
     
+    /*let's define some encapsulated constants */
+    private let locStringHelloWorld = "Hello World"
+    private let labelSide           = CGFloat(200)
+    /* end constants */
+    
+    /* mutable and accessable variables */
     var arrayA:Array<String>!
     weak var carA:Car?
     var carB:Car!
     
+    var label:UILabel!{
+        didSet{
+            
+            label.text = locStringHelloWorld
+            label.textAlignment = .center
+            label.layer.borderColor = self.label.textColor.cgColor
+            label.layer.borderWidth = 1.0
+        }
+    }
+    
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        var labelFrame = label.frame
+        labelFrame.size.width  = labelSide
+        labelFrame.size.height = labelSide
+        labelFrame.origin.x = (self.view.frame.width - labelSide)/2
+        labelFrame.origin.y = (self.view.frame.height - labelSide)/2
+        label.frame = labelFrame
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         arrayA = Array()
+        label = UILabel()
+        self.view.addSubview(label)
         
+        self.view.backgroundColor = UIColor.red
         
         //configureCar()
-        //        configureHouse()
-        configureBoat()
-        //        compareReferenceAndValue()
+        //configureHouse()
+        //configureBoat()
+        //compareReferenceAndValue()
         
         /* we can get a value from the house class without having to allocate additional memory */
         let variable = House.SomeComplexOperationUniqueToHouse()
@@ -70,6 +102,9 @@ class FirstViewController: UIViewController {
         
         house.numberOfDoors = 1
         print("number of house doors \(house.numberOfDoors) number of house windows \(house.numberOfWindows)")
+        
+        house.frame.origin.x = 20.0
+        house.frame.origin.y = house.frame.maxX
         
     }
     

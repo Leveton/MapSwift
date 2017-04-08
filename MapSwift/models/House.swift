@@ -6,7 +6,11 @@
 //  Copyright © 2017 mikeleveton. All rights reserved.
 //
 
+import UIKit
+
 class House{
+    
+    var frame:CGRect = CGRect(x: 0, y: 0, width: 0, height: 0)
     
     var numberOfWindows:Int = 0
     
