@@ -1,22 +1,25 @@
 //
-//  MSMapViewController.swift
+//  MSLocationsViewController.swift
 //  MapSwift
 //
-//  Created by Mike Leveton on 3/29/17.
+//  Created by Mike Leveton on 4/10/17.
 //  Copyright © 2017 mikeleveton. All rights reserved.
 //
 
 import UIKit
 
-class MSMapViewController: MSViewController {
+class MSLocationsViewController: MSViewController {
 
-    @IBOutlet weak var label:UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.label.layer.borderColor = UIColor.black.cgColor
-        self.label.layer.borderWidth = 2.0
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
+        /* broadcast a system-wide notification that the user changed the app's theme color to purple */
+        let themeColor:UIColor = UIColor.init(colorLiteralRed: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: themeColor)
     }
 
     override func didReceiveMemoryWarning() {
