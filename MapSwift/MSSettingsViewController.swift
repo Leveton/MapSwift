@@ -1,23 +1,19 @@
 //
-//  MSMapViewController.swift
+//  MSSettingsViewController.swift
 //  MapSwift
 //
-//  Created by Mike Leveton on 3/29/17.
+//  Created by Mike Leveton on 4/14/17.
 //  Copyright © 2017 mikeleveton. All rights reserved.
 //
 
 import UIKit
 
-class MSMapViewController: MSViewController {
+class MSSettingsViewController: MSViewController {
 
-    @IBOutlet weak var label:UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.label.layer.borderColor = UIColor.black.cgColor
-        self.label.layer.borderWidth = 2.0
-        self.label.text = "Hello World"
-        
+
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {

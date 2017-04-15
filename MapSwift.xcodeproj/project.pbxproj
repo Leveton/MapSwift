@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C510BE41EA1AF6900C99FAD /* MSFavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C510BE31EA1AF6900C99FAD /* MSFavoritesViewController.swift */; };
+		1C510BE61EA1AF8B00C99FAD /* MSSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C510BE51EA1AF8B00C99FAD /* MSSettingsViewController.swift */; };
 		1CA32F421E9C7902007E648D /* MSLocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA32F411E9C7902007E648D /* MSLocationsViewController.swift */; };
 		1CA32F441E9C7946007E648D /* MSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CA32F431E9C7946007E648D /* MSViewController.swift */; };
 		1CE1EAA61E8C5FCF00C4E87D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EAA51E8C5FCF00C4E87D /* AppDelegate.swift */; };
@@ -28,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C510BE31EA1AF6900C99FAD /* MSFavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSFavoritesViewController.swift; sourceTree = "<group>"; };
+		1C510BE51EA1AF8B00C99FAD /* MSSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSSettingsViewController.swift; sourceTree = "<group>"; };
 		1CA32F411E9C7902007E648D /* MSLocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSLocationsViewController.swift; sourceTree = "<group>"; };
 		1CA32F431E9C7946007E648D /* MSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSViewController.swift; sourceTree = "<group>"; };
 		1CE1EAA21E8C5FCF00C4E87D /* MapSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +89,8 @@
 				1CA32F431E9C7946007E648D /* MSViewController.swift */,
 				1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */,
 				1CA32F411E9C7902007E648D /* MSLocationsViewController.swift */,
+				1C510BE31EA1AF6900C99FAD /* MSFavoritesViewController.swift */,
+				1C510BE51EA1AF8B00C99FAD /* MSSettingsViewController.swift */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
 				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
@@ -207,8 +213,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C510BE41EA1AF6900C99FAD /* MSFavoritesViewController.swift in Sources */,
 				1CA32F441E9C7946007E648D /* MSViewController.swift in Sources */,
 				1CA32F421E9C7902007E648D /* MSLocationsViewController.swift in Sources */,
+				1C510BE61EA1AF8B00C99FAD /* MSSettingsViewController.swift in Sources */,
 				1CE1EAC81E8C645300C4E87D /* MSMapViewController.swift in Sources */,
 				1CE1EAA61E8C5FCF00C4E87D /* AppDelegate.swift in Sources */,
 			);

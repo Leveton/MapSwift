@@ -1,23 +1,23 @@
 //
-//  MSMapViewController.swift
+//  MSFavoritesViewController.swift
 //  MapSwift
 //
-//  Created by Mike Leveton on 3/29/17.
+//  Created by Mike Leveton on 4/14/17.
 //  Copyright © 2017 mikeleveton. All rights reserved.
 //
 
 import UIKit
 
-class MSMapViewController: MSViewController {
+class MSFavoritesViewController: MSViewController {
 
-    @IBOutlet weak var label:UILabel!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.label.layer.borderColor = UIColor.black.cgColor
-        self.label.layer.borderWidth = 2.0
-        self.label.text = "Hello World"
+
+        //save the user's name for access in other modules
+        UserDefaults.standard.set("Mike", forKey: "userName")
         
+        //access this in other modules
+        print("user name: \(UserDefaults.standard.object(forKey: "userName") as! String)")
     }
 
     override func didReceiveMemoryWarning() {
