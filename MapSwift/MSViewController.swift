@@ -14,10 +14,7 @@ class MSViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = UIColor.red
-        
-        /* listen for the notification that the app's theme color changed */
-        NotificationCenter.default.addObserver(self, selector: #selector(MSViewController.handleThemeChange), name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
+        self.view.backgroundColor = UIColor.init(colorLiteralRed: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
     }
 
     override func didReceiveMemoryWarning() {
