@@ -9,10 +9,29 @@
 import UIKit
 import MapKit
 
-class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+private struct Constants {
+    static let MapSide = CGFloat(300)
+    static let TabBarHeight = CGFloat(49)
+}
 
-    lazy var manager:CLLocationManager = self.newManager()
+class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.manager.startUpdatingLocation()
+        
+        /* 1 mile radius */
+        let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
+        self.map.setRegion(adjustedRegion, animated: true)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+//MARK: getters
+    lazy var manager:CLLocationManager = self.newManager()
     func newManager() -> CLLocationManager{
         let manager = CLLocationManager()
         manager.requestWhenInUseAuthorization()
@@ -22,37 +41,38 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     lazy var map:MKMapView = self.newMap()
     func newMap() -> MKMapView{
-        return MKMapView()
+        let map = MKMapView()
+        map.frame = self.mapFrame()
+        map.delegate = self
+        map.showsUserLocation = true
+        self.view.addSubview(map)
+        return map
+    }
+    
+    lazy var centerPoint:CLLocationCoordinate2D = self.newCenterPoint()
+    func newCenterPoint() -> CLLocationCoordinate2D{
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = 25.777599;
+        coordinate.longitude = -80.190793;
+        return coordinate;
     }
     
     func mapFrame() -> CGRect{
         
-          let mapFrame = CGRect.zero
-          //mapFrame.size = CGSize.
-//        /* use 2 floats defined at the top to set the map's size (it's width and height) */
-//        CGRect mapFrame        = CGRectZero;
-//        mapFrame.size          = CGSizeMake(kMapSide, kMapSide);
-//        
-//        /* Calculate the map's position of the view using Core Graphic helper methods */
-//        CGFloat xOffset        = (CGRectGetWidth([[self view] frame]) - kMapSide)/2;
-//        CGFloat yOffset        = ((CGRectGetHeight([[self view] frame]) - kTabbarHeight) - kMapSide)/2;
-//        CGPoint mapOrigin      = CGPointMake(xOffset, yOffset);
-//        mapFrame.origin        = mapOrigin;
+        var mapFrame = CGRect.zero
+        mapFrame.size = CGSize(width: Constants.MapSide, height: Constants.MapSide)
+        
+        /* Calculate the map's position of the view using Core Graphic helper methods */
+        let xOffset = (self.view.frame.width - Constants.MapSide)/2
+        let yOffset = (self.view.frame.height - Constants.MapSide)/2
+        let mapOrigin = CGPoint(x: xOffset, y: yOffset)
+        mapFrame.origin = mapOrigin
         
         return  mapFrame;
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.manager.startUpdatingLocation()
-        //let adjustedRegion:MKCoordinateRegion =
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
-
+//MARK: MKMapViewDelegate
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
     }
