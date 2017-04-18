@@ -1,0 +1,118 @@
+{
+    "MapStackLocationsArray": [{
+                               "locationId": 1,
+                               "name": "CVS",
+                               "latitude": 25.771171,
+                               "longitude": -80.191777,
+                               "distance": 721.5,
+                               "type": "Random",
+                               "image": "CVS"
+                               }, {
+                               "locationId": 2,
+                               "name": "McDonalds",
+                               "latitude": 25.777976,
+                               "longitude": -80.19013,
+                               "distance": 78.51,
+                               "type": "Restaurant",
+                               "image": "McDonalds"
+                               }, {
+                               "locationId": 3,
+                               "name": "Freedom Tower",
+                               "latitude": 25.780273,
+                               "longitude": -80.189669,
+                               "distance": 31.79,
+                               "type": "Random",
+                               "image": "FreedomTower"
+                               }, {
+                               "locationId": 4,
+                               "name": "MDC Bookstore",
+                               "latitude": 25.778048,
+                               "longitude": -80.191291,
+                               "distance": 7.056,
+                               "type": "School",
+                               "image": "MDCBookStore"
+                               }, {
+                               "locationId": 5,
+                               "name": "Bubba Gump Shrimp Co",
+                               "latitude": 25.777355,
+                               "longitude": -80.185572,
+                               "distance": 52.35,
+                               "type": "Restaurant",
+                               "image": "BGSC"
+                               }, {
+                               "locationId": 6,
+                               "name": "Ticketmaster",
+                               "latitude": 25.770934,
+                               "longitude": -80.190911,
+                               "distance": 74.12,
+                               "type": "Random",
+                               "image": "Ticketmaster"
+                               }, {
+                               "locationId": 7,
+                               "name": "Bijan",
+                               "latitude": 25.771022,
+                               "longitude": -80.192072,
+                               "distance": 74.25,
+                               "type": "Restaurant",
+                               "image": "Bijan"
+                               },
+                               
+                               {
+                               "locationId": 8,
+                               "name": "WeWork",
+                               "latitude": 25.790343,
+                               "longitude": -80.13159,
+                               "distance": 6095,
+                               "type": "StartUp",
+                               "image": "WeWork"
+                               }, {
+                               "locationId": 9,
+                               "name": "Venture Hive",
+                               "latitude": 25.7841796,
+                               "longitude": -80.1911146,
+                               "distance": 732.4,
+                               "type": "StartUp",
+                               "image": "VentureHive"
+                               }, {
+                               "locationId": 10,
+                               "name": "The Lab",
+                               "latitude": 25.8011413,
+                               "longitude": -80.2022127,
+                               "distance": 2857,
+                               "type": "StartUp",
+                               "image": "TheLab"
+                               }, {
+                               "locationId": 11,
+                               "name": "Jackson Memorial",
+                               "latitude": 25.7919915,
+                               "longitude": -80.2130825,
+                               "distance": 2746,
+                               "type": "Hospital",
+                               "image": "Jackson"
+                               }, {
+                               "locationId": 12,
+                               "name": "Baptist Hospital",
+                               "latitude": 25.803405,
+                               "longitude": -80.2708323,
+                               "distance": 8512,
+                               "type": "Hospital",
+                               "image": "Baptist"
+                               }, {
+                               "locationId": 13,
+                               "name": "Miami Dade College",
+                               "latitude": 25.7776625,
+                               "longitude": -80.190763,
+                               "distance": 0,
+                               "type": "School",
+                               "image": "MDC"
+                               }, {
+                               "locationId": 14,
+                               "name": "New World School of the Arts",
+                               "latitude": 25.7768929,
+                               "longitude": -80.1938443,
+                               "distance": 315.5,
+                               "type": "School",
+                               "image": "NWSOTA"
+                               }
+                               ]
+}

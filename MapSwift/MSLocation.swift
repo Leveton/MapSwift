@@ -1,0 +1,23 @@
+//
+//  MSLocation.swift
+//  MapSwift
+//
+//  Created by Mike Leveton on 4/17/17.
+//  Copyright © 2017 mikeleveton. All rights reserved.
+//
+
+import UIKit
+import MapKit
+
+class MSLocation: NSObject {
+
+    var title:String?
+    var coordinate:CLLocationCoordinate2D?
+    var distance:CGFloat?
+    var locationImage:UIImage?
+    
+    func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
+        /* if you square a negative number, you get a quiet nan */
+        return sqrt(abs(((pointA.latitude - pointB.latitude) * 2) + ((pointA.longitude - pointB.longitude) * 2)))
+    }
+}

@@ -23,6 +23,16 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         /* 1 mile radius */
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
+        
+        let location = MSLocation()
+        var newPoint = CLLocationCoordinate2D()
+        newPoint.latitude  = 15.777599
+        newPoint.longitude = 70.190793
+        let distance = location.getDistanceFromPoint(pointA: self.centerPoint, pointB: newPoint)
+        print("distance \(distance)")
+        
+        populateMap()
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -75,5 +85,33 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+    }
+    
+//MARK: helpers
+    
+    func populateMap(){
+        
+        /** grab the local json file */
+        let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
+        let jsonURL = URL(fileURLWithPath: jsonFile!)
+        
+        /**convert it to bytes*/
+        let jsonData: Data?
+        do {
+            jsonData = try Data(contentsOf: jsonURL)
+            
+        } catch _ {
+            jsonData = nil
+        }
+        
+        /** serialize the bytes into a dictionary object */
+        let jsonResponse:AnyObject
+        do {
+            try jsonResponse = JSONSerialization.jsonObject(with: jsonData!, options: []) as AnyObject
+            print("json response \(jsonResponse)")
+        } catch {
+            print("json failed")
+        }
+
     }
 }
