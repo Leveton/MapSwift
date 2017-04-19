@@ -87,7 +87,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
     }
     
-//MARK: helpers
+//MARK: selectors
     
     func populateMap(){
         
