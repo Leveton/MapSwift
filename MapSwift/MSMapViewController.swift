@@ -24,13 +24,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
         
-        let location = MSLocation()
-        var newPoint = CLLocationCoordinate2D()
-        newPoint.latitude  = 15.777599
-        newPoint.longitude = 70.190793
-        let distance = location.getDistanceFromPoint(pointA: self.centerPoint, pointB: newPoint)
-        print("distance \(distance)")
-        
         populateMap()
         
     }
@@ -65,6 +58,11 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         coordinate.latitude  = 25.777599;
         coordinate.longitude = -80.190793;
         return coordinate;
+    }
+    
+    lazy var datasource:Array<MSLocation> = self.newDatasource()
+    func newDatasource() -> Array<MSLocation>{
+        return Array()
     }
     
     func mapFrame() -> CGRect{
@@ -108,10 +106,36 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let jsonResponse:AnyObject
         do {
             try jsonResponse = JSONSerialization.jsonObject(with: jsonData!, options: []) as AnyObject
+            let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
             print("json response \(jsonResponse)")
+            let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
+            print("json dictionaries \(locationDictionaries)")
+            for x in 0..<locationDictionaries.count{
+                self.datasource.append(createLocationWithDictionary(dict: locationDictionaries[x] as NSDictionary))
+            }
+            
         } catch {
             print("json failed")
         }
 
+    }
+    
+    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
+        coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
+        
+        let location = MSLocation(coordinate: coordinate)
+        location.title = dict.object(forKey: "name") as? String
+        location.type = dict.object(forKey: "name") as? String
+        location.distance = dict.object(forKey: "distance") as? CGFloat
+        location.coordinate = coordinate
+        
+        let image = UIImage(named: dict.object(forKey: "image") as! String)
+        location.locationImage = image
+        
+        map.addAnnotation(location)
+        
+        return location
     }
 }
