@@ -114,6 +114,10 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 self.datasource.append(createLocationWithDictionary(dict: locationDictionaries[x] as NSDictionary))
             }
             
+            let viewControllers = self.tabBarController?.viewControllers
+            let vc:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
+            vc.dataSource = self.datasource
+            
         } catch {
             print("json failed")
         }
