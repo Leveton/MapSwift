@@ -14,20 +14,21 @@ private struct Constants {
 
 class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
     
+    private let cellID = "CellIdentifier"
+    
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         self.view.addSubview(tableView)
         return tableView
     }
     
-    var dataSource:Array<MSLocation>?{
+    var dataSource:Array<MSLocation>!{
         didSet{
-            
             self.tableView.reloadData()
-            
         }
     }
     
@@ -57,22 +58,15 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     //MARK: UITableViewDelegate
     
-    func numberOfSections(in tableView: UITableView) -> Int{
-        return 1
-    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (self.dataSource?.count)!
+        return self.dataSource.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellId: String = "Cell"
-        //let cell: UITableViewCell = (tableView.dequeueReusableCell(withIdentifier: cellId)! as? UITableViewCell)!
-        let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: cellId)
-        if indexPath.row == 2{
-            cell.backgroundColor = UIColor.red
-        }
+        let location = self.dataSource[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+        cell.textLabel?.text = location.title
         return cell
 
     }
-    
 }
