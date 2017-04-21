@@ -65,14 +65,30 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return self.dataSource.count
     }
     
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let location = self.dataSource[indexPath.row]
+//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+//        cell.textLabel?.text = location.title
+//        return cell
+//    }
+
+    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-        cell.textLabel?.text = location.title
-        //cell.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
-        return cell
+        let str:String = "cellid"
+        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+        
+        if (cell == nil){
+            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+            //print("new cell")
+        }else{
+            //print("old cell")
+        }
+        cell?.textLabel?.text = location.title
+        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
+        return cell!
     }
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let location = self.dataSource[indexPath.row]
         let vc = MSLocationDetailViewController()
