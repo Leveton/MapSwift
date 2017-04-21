@@ -16,6 +16,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     private let cellID = "CellIdentifier"
     
+    
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
         let tableView = UITableView()
@@ -63,29 +64,13 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return 1000
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-//        cell.textLabel?.text = location.title
-//        return cell
-//    }
-
-    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        
-        if (cell == nil){
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            print("new cell")
-        }else{
-            print("old cell")
-        }
-        cell?.textLabel?.text = "row: \(indexPath.row)"
-        return cell!
+        let location = self.dataSource[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+        cell.textLabel?.text = location.title
+        return cell
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let location = self.dataSource[indexPath.row]
         let vc = MSLocationDetailViewController()
