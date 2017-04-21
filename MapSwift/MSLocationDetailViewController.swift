@@ -17,6 +17,8 @@ private struct Constants{
 
 class MSLocationDetailViewController: UIViewController {
     
+    private var isLocationFavorited:Bool = false
+    
     lazy var distanceLabel:UILabel = self.newDistanceLabel()
     func newDistanceLabel() -> UILabel{
         let label = UILabel()
@@ -58,6 +60,16 @@ class MSLocationDetailViewController: UIViewController {
         button.setImage(UIImage.init(named: "dismissButton"), for: .normal)
         button.sizeToFit()
         button.addTarget(self, action: #selector(MSLocationDetailViewController.didTapDismiss), for: .touchUpInside)
+        self.view.addSubview(button)
+        return button
+    }
+    
+    lazy var favoriteButton:UIButton = self.newFavoriteButton()
+    func newFavoriteButton() ->UIButton{
+        let button = UIButton(type: .system)
+        button.setImage(UIImage.init(named: "dismissButton"), for: .normal)
+        //button.sizeToFit()
+        button.addTarget(self, action: #selector(MSLocationDetailViewController.didTapFavorite), for: .touchUpInside)
         self.view.addSubview(button)
         return button
     }
@@ -148,6 +160,42 @@ class MSLocationDetailViewController: UIViewController {
         
         /* notice that this was logged out BEFORE "completion block fired" was logged out */
         print("reached end of didTapDismiss scope")
+    }
+    
+    func didTapFavorite(){
+        
+        /*let's prevent interaction until the method returns */
+        self.favoriteButton.isEnabled = false
+        self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
+        //let favs = UserDefaults.sta
+        
+//        [sender setEnabled:NO];
+//        
+//        [sender setImage:_isLocationFavorited ? [UIImage imageNamed:@"favoriteStarEmpty"] :[UIImage imageNamed:@"favoriteStar"] forState:UIControlStateNormal];
+//        
+//        
+//        NSNumber *locationId = [NSNumber numberWithInteger:[_location locationId]];
+//        NSArray *favs = [[NSUserDefaults standardUserDefaults] objectForKey:@"favoritesArray"];
+//        
+//        /* one of several mutable array convenience initializers */
+//        NSMutableArray *mutableFavs = [NSMutableArray arrayWithArray:favs];
+//        
+//        AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
+//        if (_isLocationFavorited){
+//            [mutableFavs removeObject:locationId];
+//            [delegate removeLocationFromFavoritesWithLocation:_location];
+//        }else{
+//            [mutableFavs addObject:locationId];
+//            [delegate addLocationToFavoritesWithLocation:_location];
+//        }
+//        
+//        /* standard hack to prevent duplicates, by filtering the array through a set, all duplicates are removed because set elements must be unique */
+//        NSSet *set = [NSSet setWithArray:mutableFavs];
+//        favs = [set allObjects];
+//        
+//        [[NSUserDefaults standardUserDefaults] setObject:favs forKey:@"favoritesArray"];
+//        _isLocationFavorited = !_isLocationFavorited;
+//        [sender setEnabled:YES];
     }
     
     /* uncomment this if you want to see in-line block example */

@@ -16,6 +16,7 @@ class MSLocation: NSObject, MKAnnotation {
     @objc var coordinate:CLLocationCoordinate2D
     var distance:CGFloat?
     var locationImage:UIImage?
+    var locationID:Int?
     
     init(coordinate:CLLocationCoordinate2D) {
         self.coordinate = coordinate
