@@ -22,6 +22,8 @@ class MSLocationDetailViewController: UIViewController {
         let label = UILabel()
         label.textAlignment = .center
         label.isHidden = true
+        label.layer.borderColor = UIColor.black.cgColor
+        label.layer.borderWidth = 1
         self.view.addSubview(label)
         return label
     }
@@ -49,7 +51,7 @@ class MSLocationDetailViewController: UIViewController {
         return pan
     }
     
-
+    
     lazy var dismissButton:UIButton = self.newDismssButton()
     func newDismssButton() ->UIButton{
         let button = UIButton(type: .system)
@@ -79,10 +81,10 @@ class MSLocationDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
     }
-
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
@@ -91,7 +93,7 @@ class MSLocationDetailViewController: UIViewController {
         
         /* the status bar is 20 points */
         imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0
-
+        
         imageFrame.size.width = self.view.frame.width - (Constants.ViewMargin*2)
         imageFrame.size.height = Constants.ImageHeight
         self.imageView.frame = imageFrame
@@ -129,14 +131,48 @@ class MSLocationDetailViewController: UIViewController {
     
     func didTapLabel(){
         self.distanceLabel.isHidden = !self.distanceLabel.isHidden
+        animateDistanceLabel()
     }
     
     func didPanImageView(panRecongnizer:UIPanGestureRecognizer){
         panRecongnizer.view?.center = panRecongnizer.location(in: panRecongnizer.view?.superview)
-
+        
+    }
+    
+    let handleDismiss = {() -> Void in
+        print("completion block fired")
     }
     
     func didTapDismiss(){
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: handleDismiss)
+        
+        /* notice that this was logged out BEFORE "completion block fired" was logged out */
+        print("reached end of didTapDismiss scope")
+    }
+    
+    /* uncomment this if you want to see in-line block example */
+    //    func didTapDismiss(){
+    //        self.dismiss(animated: true, completion: {() -> Void in
+    //            print("completion block fired")
+    //        })
+    //
+    //        /* notice that this was logged out BEFORE "completion block fired" was logged out */
+    //        print("reached end of didTapDismiss scope")
+    //    }
+    
+    func animateDistanceLabel(){
+        
+        self.label.isUserInteractionEnabled = false
+        
+        var frame = self.distanceLabel.frame
+        let yOffset = self.distanceLabel.isHidden ? -Constants.AnimationHeight : Constants.AnimationHeight
+        frame.origin.y = frame.origin.y + yOffset
+        
+        UIView.animate(withDuration: 0.3, delay: 0.1, options: .curveLinear, animations: {() -> Void in
+            self.distanceLabel.frame = frame
+        }, completion: {(finished) -> Void in
+            /* animation complete. allow the user to toggle the label */
+            self.label.isUserInteractionEnabled = finished
+        })
     }
 }
