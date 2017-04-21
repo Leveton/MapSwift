@@ -29,6 +29,8 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     var dataSource:Array<MSLocation>!{
         didSet{
+            //self.dataSource = self.dataSource.sorted{$0.title! < $1.title!}
+            self.dataSource = self.dataSource.sorted{$0.distance! < $1.distance!}
             self.tableView.reloadData()
         }
     }
@@ -67,6 +69,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let location = self.dataSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
         cell.textLabel?.text = location.title
+        //cell.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
         return cell
     }
 

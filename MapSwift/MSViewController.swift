@@ -14,7 +14,8 @@ class MSViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = UIColor.init(colorLiteralRed: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
+        //MSSingleton.sharedInstance.themeColor = UIColor.red
+        self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
     }
 
     override func didReceiveMemoryWarning() {
