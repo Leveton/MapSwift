@@ -15,6 +15,16 @@ private struct Constants{
     static let AnimationHeight = CGFloat(20)
 }
 
+public extension Array where Element: Equatable {
+    // Remove first collection element that is equal to the given `object`:
+    mutating func removeWithObject(object: Element) {
+        print("looping thru array")
+        if let index = index(of: object) {
+            remove(at: index)
+        }
+    }
+}
+
 class MSLocationDetailViewController: UIViewController {
     
     private var isLocationFavorited:Bool = false
@@ -165,36 +175,26 @@ class MSLocationDetailViewController: UIViewController {
         
         /*let's prevent interaction until the method returns */
         self.favoriteButton.isEnabled = false
-        self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
-        //let favs = UserDefaults.sta
         
-//        [sender setEnabled:NO];
-//        
-//        [sender setImage:_isLocationFavorited ? [UIImage imageNamed:@"favoriteStarEmpty"] :[UIImage imageNamed:@"favoriteStar"] forState:UIControlStateNormal];
-//        
-//        
-//        NSNumber *locationId = [NSNumber numberWithInteger:[_location locationId]];
-//        NSArray *favs = [[NSUserDefaults standardUserDefaults] objectForKey:@"favoritesArray"];
-//        
-//        /* one of several mutable array convenience initializers */
-//        NSMutableArray *mutableFavs = [NSMutableArray arrayWithArray:favs];
-//        
-//        AppDelegate *delegate = [[UIApplication sharedApplication] delegate];
-//        if (_isLocationFavorited){
-//            [mutableFavs removeObject:locationId];
-//            [delegate removeLocationFromFavoritesWithLocation:_location];
-//        }else{
-//            [mutableFavs addObject:locationId];
-//            [delegate addLocationToFavoritesWithLocation:_location];
-//        }
-//        
-//        /* standard hack to prevent duplicates, by filtering the array through a set, all duplicates are removed because set elements must be unique */
-//        NSSet *set = [NSSet setWithArray:mutableFavs];
-//        favs = [set allObjects];
-//        
-//        [[NSUserDefaults standardUserDefaults] setObject:favs forKey:@"favoritesArray"];
-//        _isLocationFavorited = !_isLocationFavorited;
-//        [sender setEnabled:YES];
+        self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
+        
+        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        print("favs from user defaults: \(favs)")
+        
+        /* grab the app delegate at the root of the project and cascade down */
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
+        if isLocationFavorited{
+            favs.removeWithObject(object: self.location!.locationID!)
+            appDelegate.removeLocationFromFavoritesWithLocation(location: self.location!)
+        }else{
+            favs.append(self.location!.locationID!)
+            appDelegate.addLocationToFavoritesWithLocation(location: self.location!)
+        }
+        
+        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        isLocationFavorited = !isLocationFavorited
+        self.favoriteButton.isEnabled = true
     }
     
     /* uncomment this if you want to see in-line block example */

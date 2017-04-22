@@ -43,5 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 
+    public func removeLocationFromFavoritesWithLocation(location: MSLocation){
+        
+    }
+    public func addLocationToFavoritesWithLocation(location: MSLocation){
+        
+    }
 }
 
