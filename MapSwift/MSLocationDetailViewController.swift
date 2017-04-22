@@ -68,7 +68,6 @@ class MSLocationDetailViewController: UIViewController {
     func newFavoriteButton() ->UIButton{
         let button = UIButton(type: .system)
         button.setImage(UIImage.init(named: "dismissButton"), for: .normal)
-        //button.sizeToFit()
         button.addTarget(self, action: #selector(MSLocationDetailViewController.didTapFavorite), for: .touchUpInside)
         self.view.addSubview(button)
         return button

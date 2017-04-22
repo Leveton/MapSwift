@@ -16,7 +16,6 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     private let cellID = "CellIdentifier"
     
-    
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
         let tableView = UITableView()
@@ -29,8 +28,9 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     var dataSource:Array<MSLocation>!{
         didSet{
-            //self.dataSource = self.dataSource.sorted{$0.title! < $1.title!}
-            self.dataSource = self.dataSource.sorted{$0.distance! < $1.distance!}
+            /* did set only gets called once so you won't have an infinite loop here */
+            //self.dataSource.sort{$0.title! < $1.title!}
+            self.dataSource.sort{$0.distance! < $1.distance!}
             self.tableView.reloadData()
         }
     }
