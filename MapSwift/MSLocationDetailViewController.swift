@@ -93,6 +93,10 @@ class MSLocationDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: location?.locationID))")
+        isLocationFavorited = favs.contains((self.location?.locationID)!)
+        
         if isLocationFavorited{
             self.favoriteButton.setImage(UIImage.init(named: "favoriteStar"), for: UIControlState.normal)
         }else{
@@ -184,7 +188,6 @@ class MSLocationDetailViewController: UIViewController {
         
         self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
         
-        print("defaults \(UserDefaults.standard.object(forKey: "favoritesArray"))")
         var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
         print("favs from user defaults: \(favs)")
         
@@ -211,6 +214,8 @@ class MSLocationDetailViewController: UIViewController {
         self.favoriteButton.sizeToFit()
         
         self.favoriteButton.isEnabled = true
+        
+        print("favs from user defaults after mutation: \(favs)")
     }
     
     /* uncomment this if you want to see in-line block example */

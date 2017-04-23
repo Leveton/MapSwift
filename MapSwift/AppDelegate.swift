@@ -18,10 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         /* could set the theme color here */
         //MSSingleton.sharedInstance.themeColor = UIColor.orange
         
-        /* initialize a global favorites array */
-        var favoritesArray = [Int]()
+        /* initialize a global favorites array IF it hasn't already been */
+        let favs = UserDefaults.standard.object(forKey: "favoritesArray")
+        if favs == nil{
+            let favoritesArray = [Int]()
+            UserDefaults.standard.set(favoritesArray, forKey: "favoritesArray")
+        }
         
-        UserDefaults.standard.set(favoritesArray, forKey: "favoritesArray")
         return true
     }
 
