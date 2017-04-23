@@ -25,7 +25,7 @@
                                "image": "FreedomTower"
                                }, {
                                "locationId": 4,
-                               "name": "MDC Bookstore",
+                               "name": "MDC Reception",
                                "latitude": 25.778048,
                                "longitude": -80.191291,
                                "distance": 7.056,
@@ -33,6 +33,14 @@
                                "image": "MDCBookStore"
                                }, {
                                "locationId": 5,
+                               "name": "MDC Bookstore",
+                               "latitude": 25.778048,
+                               "longitude": -80.191291,
+                               "distance": 7.056,
+                               "type": "School",
+                               "image": "MDCBookStore"
+                               },{
+                               "locationId": 6,
                                "name": "Bubba Gump Shrimp Co",
                                "latitude": 25.777355,
                                "longitude": -80.185572,
@@ -40,7 +48,7 @@
                                "type": "Restaurant",
                                "image": "BGSC"
                                }, {
-                               "locationId": 6,
+                               "locationId": 7,
                                "name": "Ticketmaster",
                                "latitude": 25.770934,
                                "longitude": -80.190911,
@@ -48,7 +56,7 @@
                                "type": "Random",
                                "image": "Ticketmaster"
                                }, {
-                               "locationId": 7,
+                               "locationId": 8,
                                "name": "Bijan",
                                "latitude": 25.771022,
                                "longitude": -80.192072,
@@ -58,7 +66,7 @@
                                },
                                
                                {
-                               "locationId": 8,
+                               "locationId": 9,
                                "name": "WeWork",
                                "latitude": 25.790343,
                                "longitude": -80.13159,
@@ -66,7 +74,7 @@
                                "type": "StartUp",
                                "image": "WeWork"
                                }, {
-                               "locationId": 9,
+                               "locationId": 10,
                                "name": "Venture Hive",
                                "latitude": 25.7841796,
                                "longitude": -80.1911146,
@@ -74,7 +82,7 @@
                                "type": "StartUp",
                                "image": "VentureHive"
                                }, {
-                               "locationId": 10,
+                               "locationId": 11,
                                "name": "The Lab",
                                "latitude": 25.8011413,
                                "longitude": -80.2022127,
@@ -82,7 +90,7 @@
                                "type": "StartUp",
                                "image": "TheLab"
                                }, {
-                               "locationId": 11,
+                               "locationId": 12,
                                "name": "Jackson Memorial",
                                "latitude": 25.7919915,
                                "longitude": -80.2130825,
@@ -90,7 +98,7 @@
                                "type": "Hospital",
                                "image": "Jackson"
                                }, {
-                               "locationId": 12,
+                               "locationId": 13,
                                "name": "Baptist Hospital",
                                "latitude": 25.803405,
                                "longitude": -80.2708323,
@@ -98,7 +106,7 @@
                                "type": "Hospital",
                                "image": "Baptist"
                                }, {
-                               "locationId": 13,
+                               "locationId": 14,
                                "name": "Miami Dade College",
                                "latitude": 25.7776625,
                                "longitude": -80.190763,
@@ -106,7 +114,7 @@
                                "type": "School",
                                "image": "MDC"
                                }, {
-                               "locationId": 14,
+                               "locationId": 15,
                                "name": "New World School of the Arts",
                                "latitude": 25.7768929,
                                "longitude": -80.1938443,

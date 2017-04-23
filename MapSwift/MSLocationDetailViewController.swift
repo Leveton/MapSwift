@@ -15,16 +15,6 @@ private struct Constants{
     static let AnimationHeight = CGFloat(20)
 }
 
-public extension Array where Element: Equatable {
-    // Remove first collection element that is equal to the given `object`:
-    mutating func removeWithObject(object: Element) {
-        print("looping thru array")
-        if let index = index(of: object) {
-            remove(at: index)
-        }
-    }
-}
-
 class MSLocationDetailViewController: UIViewController {
     
     private var isLocationFavorited:Bool = false
@@ -103,8 +93,19 @@ class MSLocationDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        if isLocationFavorited{
+            self.favoriteButton.setImage(UIImage.init(named: "favoriteStar"), for: UIControlState.normal)
+        }else{
+            self.favoriteButton.setImage(UIImage.init(named: "favoriteStarEmpty"), for: UIControlState.normal)
+        }
+        self.favoriteButton.sizeToFit()
     }
+    
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        let tabController = self.presentingViewController as! MSTabBarController
+//        tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
+//    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -141,6 +142,11 @@ class MSLocationDetailViewController: UIViewController {
         dismissFrame.origin.y = CGFloat(20)
         self.dismissButton.frame = dismissFrame
         
+        
+        var favoriteFrame = self.favoriteButton.frame
+        favoriteFrame.origin.x = self.view.frame.width - (favoriteFrame.size.width + Constants.ViewMargin)
+        favoriteFrame.origin.y = 20.0
+        self.favoriteButton.frame = favoriteFrame
     }
     
     override func didReceiveMemoryWarning() {
@@ -178,22 +184,32 @@ class MSLocationDetailViewController: UIViewController {
         
         self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
         
+        print("defaults \(UserDefaults.standard.object(forKey: "favoritesArray"))")
         var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
         print("favs from user defaults: \(favs)")
         
-        /* grab the app delegate at the root of the project and cascade down */
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        /* grab our custom tabbar controller at the root of the project and cascade down */
+        let tabController = self.presentingViewController as! MSTabBarController
         
         if isLocationFavorited{
             favs.removeWithObject(object: self.location!.locationID!)
-            appDelegate.removeLocationFromFavoritesWithLocation(location: self.location!)
+            tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
         }else{
             favs.append(self.location!.locationID!)
-            appDelegate.addLocationToFavoritesWithLocation(location: self.location!)
+            tabController.addLocationToFavoritesWithLocation(location: self.location!)
         }
         
         UserDefaults.standard.set(favs, forKey: "favoritesArray")
         isLocationFavorited = !isLocationFavorited
+        
+        /* this is redundant code, so let's refactor it */
+        if isLocationFavorited{
+            self.favoriteButton.setImage(UIImage.init(named: "favoriteStar"), for: UIControlState.normal)
+        }else{
+            self.favoriteButton.setImage(UIImage.init(named: "favoriteStarEmpty"), for: UIControlState.normal)
+        }
+        self.favoriteButton.sizeToFit()
+        
         self.favoriteButton.isEnabled = true
     }
     

@@ -28,7 +28,11 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     var dataSource:Array<MSLocation>!{
         didSet{
-            /* did set only gets called once so you won't have an infinite loop here */
+            /* 
+             Did set only gets called once so you won't have an infinite loop here.
+             Uncomment sorting by title to get the MDC locations in alphabetical order. Or use a more advanced sorting filter.
+             */
+            
             //self.dataSource.sort{$0.title! < $1.title!}
             self.dataSource.sort{$0.distance! < $1.distance!}
             self.tableView.reloadData()

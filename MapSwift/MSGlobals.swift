@@ -13,3 +13,13 @@ public class MSSingleton{
     static let sharedInstance = MSSingleton()
     var themeColor = UIColor.init(colorLiteralRed: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
 }
+
+public extension Array where Element: Equatable {
+    // Remove first collection element that is equal to the given `object`:
+    mutating func removeWithObject(object: Element) {
+        print("looping thru array")
+        if let index = index(of: object) {
+            remove(at: index)
+        }
+    }
+}

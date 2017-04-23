@@ -17,6 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         /* could set the theme color here */
         //MSSingleton.sharedInstance.themeColor = UIColor.orange
+        
+        /* initialize a global favorites array */
+        var favoritesArray = [Int]()
+        
+        UserDefaults.standard.set(favoritesArray, forKey: "favoritesArray")
         return true
     }
 
@@ -40,14 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-
-
-    public func removeLocationFromFavoritesWithLocation(location: MSLocation){
-        
-    }
-    public func addLocationToFavoritesWithLocation(location: MSLocation){
-        
     }
 }
 
