@@ -90,8 +90,8 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         }
         
         cell?.delegate = self
-        cell?.textLabel?.text = location.title
-        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
+        //cell?.textLabel?.text = location.title
+        //cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
         return cell!
     }
     
@@ -102,4 +102,12 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         vc.view.backgroundColor = UIColor.red
         self.present(vc, animated: true, completion: nil)
     }
+    
+    //MARK: MSTableViewCellDelegate
+    
+    
+    func deleteButtonTappedFrom(cell: MSTableViewCell){
+        
+    }
+    
 }
