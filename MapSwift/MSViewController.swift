@@ -14,7 +14,6 @@ class MSViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //MSSingleton.sharedInstance.themeColor = UIColor.red
         self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
     }
 

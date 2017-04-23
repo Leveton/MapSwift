@@ -12,7 +12,7 @@ private struct Constants {
     static let TableViewPadding = CGFloat(20)
 }
 
-class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
+class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource, MSTableViewCellDelegate {
     
     private let cellID = "CellIdentifier"
     
@@ -21,7 +21,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
         self.view.addSubview(tableView)
         return tableView
     }
@@ -80,14 +80,16 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
         let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+        var cell = tableView.dequeueReusableCell(withIdentifier: str) as? MSTableViewCell
         
         if (cell == nil){
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+            cell = MSTableViewCell.init(style: .subtitle, reuseIdentifier: str)
             //print("new cell")
         }else{
             //print("old cell")
         }
+        
+        cell?.delegate = self
         cell?.textLabel?.text = location.title
         cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
         return cell!
