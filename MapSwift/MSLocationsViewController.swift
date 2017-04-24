@@ -12,7 +12,7 @@ private struct Constants {
     static let TableViewPadding = CGFloat(20)
 }
 
-class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource, MSTableViewCellDelegate {
+class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let cellID = "CellIdentifier"
     
@@ -21,7 +21,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
         self.view.addSubview(tableView)
         return tableView
     }
@@ -80,18 +80,18 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
         let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str) as? MSTableViewCell
+        var cell = tableView.dequeueReusableCell(withIdentifier: str)
         
         if (cell == nil){
-            cell = MSTableViewCell.init(style: .subtitle, reuseIdentifier: str)
+            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
             //print("new cell")
         }else{
             //print("old cell")
         }
         
-        cell?.delegate = self
-        //cell?.textLabel?.text = location.title
-        //cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
+        //cell?.delegate = self
+        cell?.textLabel?.text = location.title
+        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
         return cell!
     }
     
@@ -101,13 +101,6 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         vc.location = location
         vc.view.backgroundColor = UIColor.red
         self.present(vc, animated: true, completion: nil)
-    }
-    
-    //MARK: MSTableViewCellDelegate
-    
-    
-    func deleteButtonTappedFrom(cell: MSTableViewCell){
-        
     }
     
 }
