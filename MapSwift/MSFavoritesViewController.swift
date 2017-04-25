@@ -11,20 +11,21 @@ import UIKit
 class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableViewDataSource, MSTableViewCellDelegate {
 
     private let cellID = "CellIdentifier"
-    var dataSource = [MSLocation]()
+    @IBOutlet weak var tableView: UITableView!
     
-    lazy var tableView:UITableView = self.newTableView()
-    func newTableView() -> UITableView{
-        let tableView = UITableView()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
-        self.view.addSubview(tableView)
-        return tableView
+    /* guarantee that dataSource is not nil */
+    var dataSource = [MSLocation](){
+        didSet{
+            if self.tableView != nil{
+                self.tableView.reloadData()
+            }
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,8 +44,11 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         cell?.delegate = self
         cell?.location = location
         cell?.tag = indexPath.row
-        //cell.textLabel?.text = location.title
         return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
 
     //MARK: MSTableViewCellDelegate

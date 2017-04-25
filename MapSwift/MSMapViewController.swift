@@ -110,13 +110,27 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             print("json response \(jsonResponse)")
             let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
             print("json dictionaries \(locationDictionaries)")
+            
+            /* Populate the favorites vc */
+            let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+            print("favs from MSMAPVC: \(favs)")
+            var favsDataSource = [MSLocation]()
+            
             for x in 0..<locationDictionaries.count{
-                self.datasource.append(createLocationWithDictionary(dict: locationDictionaries[x] as NSDictionary))
+                let dict = locationDictionaries[x] as NSDictionary
+                let location:MSLocation = createLocationWithDictionary(dict: dict)
+                self.datasource.append(location)
+                if favs.contains(location.locationID!){
+                    favsDataSource.append(location)
+                }
             }
             
             let viewControllers = self.tabBarController?.viewControllers
-            let vc:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
-            vc.dataSource = self.datasource
+            let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
+            locationsVC.dataSource = self.datasource
+            
+            let favsVC:MSFavoritesViewController = viewControllers![2] as! MSFavoritesViewController
+            favsVC.dataSource = favsDataSource
             
         } catch {
             print("json failed")

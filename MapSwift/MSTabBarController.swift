@@ -10,12 +10,11 @@ import UIKit
 
 class MSTabBarController: UITabBarController {
 
-    var favoritesViewController:MSFavoritesViewController?
+    var favoritesViewController:MSFavoritesViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,12 +25,17 @@ class MSTabBarController: UITabBarController {
     //MARK: selectors
     
     public func removeLocationFromFavoritesWithLocation(location: MSLocation){
-        var favs = self.favoritesViewController?.dataSource
-        favs?.removeWithObject(object: location)
+        
+        self.favoritesViewController = self.viewControllers![2] as! MSFavoritesViewController
+        var favs = self.favoritesViewController.dataSource
+        favs.removeWithObject(object: location)
+        self.favoritesViewController.dataSource = favs
     }
     
     public func addLocationToFavoritesWithLocation(location: MSLocation){
-        var favs = self.favoritesViewController?.dataSource
-        favs?.append(location)
+        self.favoritesViewController = self.viewControllers![2] as! MSFavoritesViewController
+        var favs = self.favoritesViewController.dataSource
+        favs.append(location)
+        self.favoritesViewController?.dataSource = favs
     }
 }

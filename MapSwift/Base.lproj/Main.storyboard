@@ -20,13 +20,27 @@
                     <view key="view" contentMode="scaleToFill" id="cMA-jl-p2G">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cOY-6H-ery">
+                                <rect key="frame" x="8" y="28" width="359" height="582"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="qDi-VT-bpz" id="oBM-oM-WuP"/>
+                                    <outlet property="delegate" destination="qDi-VT-bpz" id="TTD-4S-CxC"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="favorites" id="yxg-XT-tZB"/>
+                    <connections>
+                        <outlet property="tableView" destination="cOY-6H-ery" id="erP-x3-QGJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DEp-kx-BYR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-49" y="-627"/>
+            <point key="canvasLocation" x="-50.399999999999999" y="-627.4362818590705"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
