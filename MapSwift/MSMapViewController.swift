@@ -46,7 +46,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return NSMutableURLRequest(url: url!)
     }
     
-    /* NSURLSession is a large and rich API for downloading data */
+    /* URLSession is a large and rich API for downloading data */
     lazy var sessionlocations:URLSession = self.newSessionLocations()
     func newSessionLocations() -> URLSession{
         
@@ -131,12 +131,15 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func populateMap(){
         
         /**
-         NSURLSessionDataTask returns data directly to the app in a block. This time, the block is exectuted when the response comes from the server.
+         URLSessionDataTask returns data directly to the app in a block. This time, the block is exectuted when the response comes from the server.
          I like to lowercase block variables so that you can guess it's type.
          App transport security hack is required here.
          */
         
-        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with: self.locationsRequest as URLRequest, completionHandler: {(data, response, error) -> Void in
+        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+            self.locationsRequest as URLRequest, completionHandler:
+            {(data, response, error) -> Void in
+            
             print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
             if error == nil{
                 if data != nil{
