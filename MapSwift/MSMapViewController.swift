@@ -39,7 +39,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
     func  newLocationsRequest() -> NSMutableURLRequest{
         /**
-         As of iOS 9, apple requires that API endpoint use SSL. Were I to server this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
+         As of iOS 9, apple requires that API endpoint use SSL. Were I to serve this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
          */
         
         let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
@@ -110,8 +110,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     //MARK: selectors
     
-    func populateMap(){
-        
+    func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
         let jsonURL = URL(fileURLWithPath: jsonFile!)
@@ -126,9 +125,43 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         }
         
         /** serialize the bytes into a dictionary object */
+        self.layoutMapWithData(data: jsonData!)
+    }
+    
+    func populateMap(){
+        
+        /**
+         NSURLSessionDataTask returns data directly to the app in a block. This time, the block is exectuted when the response comes from the server.
+         I like to lowercase block variables so that you can guess it's type.
+         App transport security hack is required here.
+         */
+        
+        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with: self.locationsRequest as URLRequest, completionHandler: {(data, response, error) -> Void in
+            print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
+            if error == nil{
+                if data != nil{
+                  self.layoutMapWithData(data: data!)
+                }else{
+                    print("data was nil")
+                }
+            }else{
+                print("server error: \(error!.localizedDescription)")
+            }
+            
+        })
+
+        locationTask.resume()
+        
+        //getLocalData()
+        
+    }
+    
+    /* let's abstract reused code into one method */
+    func layoutMapWithData(data:Data){
+        /** serialize the bytes into a dictionary object */
         let jsonResponse:AnyObject
         do {
-            try jsonResponse = JSONSerialization.jsonObject(with: jsonData!, options: []) as AnyObject
+            try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
             let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
             print("json response \(jsonResponse)")
             let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
@@ -141,7 +174,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             
             for x in 0..<locationDictionaries.count{
                 let dict = locationDictionaries[x] as NSDictionary
-                let location:MSLocation = createLocationWithDictionary(dict: dict)
+                let location:MSLocation = self.createLocationWithDictionary(dict: dict)
                 self.datasource.append(location)
                 if favs.contains(location.locationID!){
                     favsDataSource.append(location)
@@ -158,7 +191,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         } catch {
             print("json failed")
         }
-        
     }
     
     func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
