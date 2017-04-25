@@ -54,7 +54,11 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
     //MARK: MSTableViewCellDelegate
     
     
-    func deleteButtonTappedFrom(cell: MSTableViewCell){
-        
+    func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
+        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        favs.removeWithObject(object: location.locationID!)
+        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        self.dataSource.removeWithObject(object: location)
+        self.tableView.reloadData()
     }
 }

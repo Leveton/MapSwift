@@ -158,7 +158,7 @@ class MSTableViewCell: UITableViewCell {
     //MARK: selectors
     
     func didTapDelete(){
-        delegate?.deleteButtonTappedFrom(cell: self)
+        delegate?.deleteButtonTappedFrom(cell: self, location: self.location!)
     }
     
     func verticallyCenteredFrameForChildFrame(frame:CGRect) -> CGRect{
@@ -173,5 +173,5 @@ class MSTableViewCell: UITableViewCell {
 
 /* use 'class' to guarantee that only classes will conform to this protocol */
 protocol MSTableViewCellDelegate: class {
-    func deleteButtonTappedFrom(cell: MSTableViewCell)
+    func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation)
 }
