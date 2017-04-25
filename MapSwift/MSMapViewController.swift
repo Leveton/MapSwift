@@ -16,6 +16,7 @@ private struct Constants {
 
 class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.manager.startUpdatingLocation()
@@ -33,7 +34,29 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         // Dispose of any resources that can be recreated.
     }
     
-//MARK: getters
+    //MARK: getters
+    
+    lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
+    func  newLocationsRequest() -> NSMutableURLRequest{
+        /**
+         As of iOS 9, apple requires that API endpoint use SSL. Were I to server this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
+         */
+        
+        let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
+        return NSMutableURLRequest(url: url!)
+    }
+    
+    /* NSURLSession is a large and rich API for downloading data */
+    lazy var sessionlocations:URLSession = self.newSessionLocations()
+    func newSessionLocations() -> URLSession{
+        
+        /**
+         use the default session configuration because we want the code executed immediately (not on a background thread like backgroundSessionConfigurationWithIdentifier), and, because the data's not sensitive, we want it to be cached (which ephemeral session doesn't do)
+         */
+        let config = URLSessionConfiguration.default
+        return URLSession(configuration: config)
+    }
+    
     lazy var manager:CLLocationManager = self.newManager()
     func newManager() -> CLLocationManager{
         let manager = CLLocationManager()
@@ -79,13 +102,13 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return  mapFrame;
     }
     
-//MARK: MKMapViewDelegate
+    //MARK: MKMapViewDelegate
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
     }
     
-//MARK: selectors
+    //MARK: selectors
     
     func populateMap(){
         
@@ -135,7 +158,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         } catch {
             print("json failed")
         }
-
+        
     }
     
     func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
