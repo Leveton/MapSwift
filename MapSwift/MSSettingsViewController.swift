@@ -16,6 +16,12 @@ private enum Sections:Int{
 
 class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
 
+    required init(coder:NSCoder){
+        super.init(coder: coder)!
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(MSViewController.handleThemeChange), name: NSNotification.Name(rawValue: GlobalStrings.FavoriteUpdated.rawValue), object: nil)
+    }
+    
     let cellID = "settingsCell"
     
     private var colorsArray = [String]()
@@ -51,6 +57,16 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         // Dispose of any resources that can be recreated.
     }
 
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        var tableFrame = self.tableView.frame
+        tableFrame.origin.y = 20.0
+        tableFrame.size.width = self.view.frame.width
+        tableFrame.size.height = self.view.frame.height - 30.0
+        self.tableView.frame = tableFrame
+        
+    }
     //MARK: UITableViewDelegate
     
     func numberOfSections(in tableView: UITableView) -> Int {

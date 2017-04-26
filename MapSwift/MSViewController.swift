@@ -29,4 +29,5 @@ class MSViewController: UIViewController {
 
 public enum GlobalStrings: String {
     case GlobalThemeChanged = "com.mapstack.themeWasChanged"
+    case FavoriteUpdated = "com.mapstack.favoritesUpdated"
 }
