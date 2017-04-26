@@ -76,6 +76,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1C2FF6251EB0C79200F86140 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1CA32F431E9C7946007E648D /* MSViewController.swift */,
+				1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */,
+				1CA32F411E9C7902007E648D /* MSLocationsViewController.swift */,
+				1C510BE31EA1AF6900C99FAD /* MSFavoritesViewController.swift */,
+				1C510BE51EA1AF8B00C99FAD /* MSSettingsViewController.swift */,
+				1C244D8F1EA84E6000BA0917 /* MSLocationDetailViewController.swift */,
+				1C32FCDD1EACCF7B006A2D3C /* MSTabBarController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		1C2FF6261EB0C79C00F86140 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1C32FCDF1EAD3260006A2D3C /* MSTableViewCell.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		1C2FF6271EB0C7A100F86140 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1CC916921EA5AD9B00F3CE95 /* MSLocation.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		1CE1EA991E8C5FCF00C4E87D = {
 			isa = PBXGroup;
 			children = (
@@ -97,17 +127,11 @@
 		1CE1EAA41E8C5FCF00C4E87D /* MapSwift */ = {
 			isa = PBXGroup;
 			children = (
+				1C2FF6271EB0C7A100F86140 /* Models */,
+				1C2FF6261EB0C79C00F86140 /* Views */,
+				1C2FF6251EB0C79200F86140 /* View Controllers */,
 				1CE1EAA51E8C5FCF00C4E87D /* AppDelegate.swift */,
-				1CA32F431E9C7946007E648D /* MSViewController.swift */,
-				1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */,
-				1CA32F411E9C7902007E648D /* MSLocationsViewController.swift */,
-				1C510BE31EA1AF6900C99FAD /* MSFavoritesViewController.swift */,
-				1C510BE51EA1AF8B00C99FAD /* MSSettingsViewController.swift */,
-				1CC916921EA5AD9B00F3CE95 /* MSLocation.swift */,
-				1C244D8F1EA84E6000BA0917 /* MSLocationDetailViewController.swift */,
 				1C32FCDB1EAA9F0A006A2D3C /* MSGlobals.swift */,
-				1C32FCDD1EACCF7B006A2D3C /* MSTabBarController.swift */,
-				1C32FCDF1EAD3260006A2D3C /* MSTableViewCell.swift */,
 				1CC916941EA5BBE700F3CE95 /* MapStackLocations.json */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
 				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,

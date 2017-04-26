@@ -67,11 +67,18 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         
         var array = [IndexPath]()
         array.append(IndexPath(row: cell.tag, section: 0))
+        
+        /* triggers a .3 second animation for all UI related calls in between 'beginUpdates' and 'endUpdates' */
         self.tableView.beginUpdates()
         self.tableView.deleteRows(at: array, with: UITableViewRowAnimation.automatic)
         self.tableView.endUpdates()
         
-        
+        /**
+         
+         GCD method to grab the main thread and execute the block of code after .3 seconds (when endUpdates returns).
+         Calling 'reloadData' outside this block would override 'beginUpdates'.
+         
+         */
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.tableView.reloadData()
         }
