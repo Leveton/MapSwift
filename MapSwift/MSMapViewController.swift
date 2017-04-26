@@ -36,6 +36,16 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     //MARK: getters
     
+    lazy var progressView:UIActivityIndicatorView = self.newProgressView()
+    func newProgressView() -> UIActivityIndicatorView{
+        let view = UIActivityIndicatorView()
+        view.frame = self.mapFrame()
+        view.layer.zPosition = 2.0
+        view.isHidden = true
+        self.view.addSubview(view)
+        return view
+    }
+    
     lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
     func  newLocationsRequest() -> NSMutableURLRequest{
         /**
@@ -71,6 +81,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         map.frame = self.mapFrame()
         map.delegate = self
         map.showsUserLocation = true
+        map.isHidden = true
         self.view.addSubview(map)
         return map
     }
@@ -136,6 +147,9 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
          App transport security hack is required here.
          */
         
+        self.progressView.isHidden = false
+        self.progressView.startAnimating()
+        
         let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
             self.locationsRequest as URLRequest, completionHandler:
             {(data, response, error) -> Void in
@@ -146,6 +160,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                     
                     //self.layoutMapWithData(data: data!)
                     DispatchQueue.main.async {
+                        self.progressView.stopAnimating()
+                        self.progressView.isHidden = true
                         self.layoutMapWithData(data: data!)
                     }
                     
@@ -196,6 +212,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 
                 let favsVC:MSFavoritesViewController = viewControllers![2] as! MSFavoritesViewController
                 favsVC.dataSource = favsDataSource
+                self.map.isHidden = false
                 
             } catch {
                 print("json failed")
