@@ -16,9 +16,9 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
     /* guarantee that dataSource is not nil */
     var dataSource = [MSLocation](){
         didSet{
-            if self.tableView != nil{
-                self.tableView.reloadData()
-            }
+//            if self.tableView != nil{
+//                self.tableView.reloadData()
+//            }
         }
     }
     
@@ -26,6 +26,11 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         super.viewDidLoad()
         
         tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,6 +64,16 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         favs.removeWithObject(object: location.locationID!)
         UserDefaults.standard.set(favs, forKey: "favoritesArray")
         self.dataSource.removeWithObject(object: location)
-        self.tableView.reloadData()
+        
+        var array = [IndexPath]()
+        array.append(IndexPath(row: cell.tag, section: 0))
+        self.tableView.beginUpdates()
+        self.tableView.deleteRows(at: array, with: UITableViewRowAnimation.automatic)
+        self.tableView.endUpdates()
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.tableView.reloadData()
+        }
     }
 }
