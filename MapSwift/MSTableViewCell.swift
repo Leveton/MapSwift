@@ -162,7 +162,7 @@ class MSTableViewCell: UITableViewCell {
     }
     
     func didTapDetail(){
-        //delegate?.detailsButtonTappedFromCell(cell: self, location: self.location!)
+        delegate?.detailsButtonTappedFromCell(cell: self, location: self.location!)
     }
     
     func verticallyCenteredFrameForChildFrame(frame:CGRect) -> CGRect{

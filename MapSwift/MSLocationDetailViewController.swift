@@ -63,6 +63,7 @@ class MSLocationDetailViewController: UIViewController {
         button.setImage(UIImage.init(named: "dismissButton"), for: .normal)
         button.sizeToFit()
         button.addTarget(self, action: #selector(MSLocationDetailViewController.didTapDismiss), for: .touchUpInside)
+        button.isHidden = !isViewPresented
         self.view.addSubview(button)
         return button
     }
@@ -70,8 +71,8 @@ class MSLocationDetailViewController: UIViewController {
     lazy var favoriteButton:UIButton = self.newFavoriteButton()
     func newFavoriteButton() ->UIButton{
         let button = UIButton(type: .system)
-        button.setImage(UIImage.init(named: "dismissButton"), for: .normal)
         button.addTarget(self, action: #selector(MSLocationDetailViewController.didTapFavorite), for: .touchUpInside)
+        button.isHidden = !isViewPresented
         self.view.addSubview(button)
         return button
     }
@@ -106,13 +107,14 @@ class MSLocationDetailViewController: UIViewController {
             self.favoriteButton.setImage(UIImage.init(named: "favoriteStarEmpty"), for: UIControlState.normal)
         }
         self.favoriteButton.sizeToFit()
+        
+        self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        let tabController = self.presentingViewController as! MSTabBarController
-//        tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
-//    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.favoriteButton.isHidden = !isViewPresented
+    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -120,8 +122,8 @@ class MSLocationDetailViewController: UIViewController {
         var imageFrame = self.imageView.frame
         imageFrame.origin.x = Constants.ViewMargin
         
-        /* the status bar is 20 points */
-        imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0
+        /* the status bar is 20 points, the navigation bar (if the vc was pushed) is 44 pts */
+        imageFrame.origin.y   = isViewPresented ? (Constants.ViewMargin * 2) + 20.0 : (Constants.ViewMargin * 2) + 64.0
         
         imageFrame.size.width = self.view.frame.width - (Constants.ViewMargin*2)
         imageFrame.size.height = Constants.ImageHeight

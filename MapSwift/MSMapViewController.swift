@@ -147,36 +147,36 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
          App transport security hack is required here.
          */
         
-        self.progressView.isHidden = false
-        self.progressView.startAnimating()
+//        self.progressView.isHidden = false
+//        self.progressView.startAnimating()
+//        
+//        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+//            self.locationsRequest as URLRequest, completionHandler:
+//            {(data, response, error) -> Void in
+//            
+//            print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
+//            if error == nil{
+//                if data != nil{
+//                    
+//                    //self.layoutMapWithData(data: data!)
+//                    DispatchQueue.main.async {
+//                        self.progressView.stopAnimating()
+//                        self.progressView.isHidden = true
+//                        self.layoutMapWithData(data: data!)
+//                    }
+//                    
+//                }else{
+//                    print("data was nil")
+//                }
+//            }else{
+//                print("server error: \(error!.localizedDescription)")
+//            }
+//            
+//        })
+//
+//        locationTask.resume()
         
-        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-            self.locationsRequest as URLRequest, completionHandler:
-            {(data, response, error) -> Void in
-            
-            print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-            if error == nil{
-                if data != nil{
-                    
-                    //self.layoutMapWithData(data: data!)
-                    DispatchQueue.main.async {
-                        self.progressView.stopAnimating()
-                        self.progressView.isHidden = true
-                        self.layoutMapWithData(data: data!)
-                    }
-                    
-                }else{
-                    print("data was nil")
-                }
-            }else{
-                print("server error: \(error!.localizedDescription)")
-            }
-            
-        })
-
-        locationTask.resume()
-        
-        //getLocalData()
+        getLocalData()
         
     }
     
@@ -210,7 +210,9 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
                 locationsVC.dataSource = self.datasource
                 
-                let favsVC:MSFavoritesViewController = viewControllers![2] as! MSFavoritesViewController
+                let nav:UINavigationController = viewControllers![2] as! UINavigationController
+                
+                let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
                 favsVC.dataSource = favsDataSource
                 self.map.isHidden = false
                 
