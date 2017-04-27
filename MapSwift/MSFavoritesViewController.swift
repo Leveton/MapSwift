@@ -60,12 +60,16 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
     
     
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
+        
+        /* get a mutable reference to our data source and remove the deleted location */
         var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
         favs.removeWithObject(object: location.locationID!)
         UserDefaults.standard.set(favs, forKey: "favoritesArray")
         self.dataSource.removeWithObject(object: location)
         
         var array = [IndexPath]()
+        
+        /* the parameter here is a class method to get the row that was tapped, our table has only 1 section so pass 0 */
         array.append(IndexPath(row: cell.tag, section: 0))
         
         /* triggers a .3 second animation for all UI related calls in between 'beginUpdates' and 'endUpdates' */
@@ -82,5 +86,14 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.tableView.reloadData()
         }
+    }
+    
+    func detailsButtonTappedFromCell(cell: MSTableViewCell, location: MSLocation) {
+        
+        /* Same code as 'didSelectRowAtIndexPath' from the last lesson */
+        let vc = MSLocationDetailViewController()
+        vc.isViewPresented = false
+        vc.location = location
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

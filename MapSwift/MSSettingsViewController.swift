@@ -116,6 +116,9 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         self.tableView.frame = tableFrame
         
     }
+    
+    
+    
     //MARK: UITableViewDelegate
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -137,7 +140,8 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        /* with different sizes, labels, types, etc, let's use some helpers */
+        
+        /* with different sizes, labels, types, etc, let's use some helpers instead of putting it all in-line */
         
         if (indexPath.section == Sections.ThemeColor.rawValue) {
             return  self.colorsCellForIndexPath(indexPath: indexPath)
@@ -155,10 +159,10 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         /* this flashes the cell upon tap which is good for UX */
         tableView.deselectRow(at: indexPath, animated: true)
         
+        /* toggle the cell's right-hand view hidden */
         if indexPath.section == Sections.ThemeColor.rawValue || indexPath.section == Sections.DistanceFilter.rawValue{
             let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
             cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
-            
         }
         
     }

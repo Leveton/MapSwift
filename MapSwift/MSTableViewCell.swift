@@ -68,7 +68,7 @@ class MSTableViewCell: UITableViewCell {
         button.backgroundColor = UIColor(red: 244/255, green: 244/255, blue: 244/255, alpha: 1.0)
         button.titleLabel?.textAlignment = NSTextAlignment.center
         button.setTitle("Details", for: UIControlState.normal)
-        button.addTarget(self, action: #selector(didTapDelete), for: UIControlEvents.touchUpInside)
+        button.addTarget(self, action: #selector(didTapDetail), for: UIControlEvents.touchUpInside)
         self.addSubview(button)
         return button
     }
@@ -161,6 +161,10 @@ class MSTableViewCell: UITableViewCell {
         delegate?.deleteButtonTappedFrom(cell: self, location: self.location!)
     }
     
+    func didTapDetail(){
+        //delegate?.detailsButtonTappedFromCell(cell: self, location: self.location!)
+    }
+    
     func verticallyCenteredFrameForChildFrame(frame:CGRect) -> CGRect{
         var frame = frame
         let myBounds = self.bounds
@@ -174,4 +178,5 @@ class MSTableViewCell: UITableViewCell {
 /* use 'class' to guarantee that only classes will conform to this protocol */
 protocol MSTableViewCellDelegate: class {
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation)
+    func detailsButtonTappedFromCell(cell: MSTableViewCell, location:MSLocation)
 }

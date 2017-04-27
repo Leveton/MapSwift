@@ -19,6 +19,9 @@ class MSLocationDetailViewController: UIViewController {
     
     private var isLocationFavorited:Bool = false
     
+    /* default will be a view pushed onto the navigation stack */
+    var isViewPresented:Bool = false
+    
     lazy var distanceLabel:UILabel = self.newDistanceLabel()
     func newDistanceLabel() -> UILabel{
         let label = UILabel()
