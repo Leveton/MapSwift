@@ -15,22 +15,72 @@ private enum Sections:Int{
 }
 
 class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
     required init(coder:NSCoder){
         super.init(coder: coder)!
         
-        NotificationCenter.default.addObserver(self, selector: #selector(MSViewController.handleThemeChange), name: NSNotification.Name(rawValue: GlobalStrings.FavoriteUpdated.rawValue), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.favoritesUpdated(_:)), name: NSNotification.Name(rawValue: GlobalStrings.FavoriteUpdated.rawValue), object: nil)
     }
     
-    let cellID = "settingsCell"
+    let settingsCellID = "settingsCell"
+    let colorsCellID = "colorsCell"
     
-    private var colorsArray = [String]()
-    private var typesArray = [String]()
+    private var colorsArray = ["blue color", "green color", "orange color"]
     private var distancesArray = [Double]()
+    private var typesArray = [String](){
+        didSet{
+            self.tableView.reloadData()
+        }
+    }
+    
+    /*dictionary literals for our labels */
+    let sectionTitleDictionary:[String: String] = [
+        "0" : NSLocalizedString("App Theme Color", comment: ""),
+        "1" : NSLocalizedString("Locations within range", comment: ""),
+        "2" : NSLocalizedString("Rearrange favorite types", comment: "")
+    ]
+    
+    let locationRangeDictionary:[String: String] = [
+        "0" : NSLocalizedString("one mile", comment: ""),
+        "1" : NSLocalizedString("two mile", comment: ""),
+        "2" : NSLocalizedString("five mile", comment: ""),
+        "3" : NSLocalizedString("ten mile", comment: ""),
+        "4" : NSLocalizedString("twenty mile", comment: ""),
+        "5" : NSLocalizedString("fifty mile", comment: ""),
+    ]
+    
     var locations = [MSLocation](){
         didSet{
             
         }
+    }
+    
+    //MARK: getters
+    
+    func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+        var cell = self.tableView.dequeueReusableCell(withIdentifier: colorsCellID)
+        if cell == nil{
+            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: colorsCellID)
+            let imageView = UIImageView(image: UIImage(named: "check"))
+            imageView.isHidden = true
+            cell?.accessoryView = imageView
+        }
+        
+        /* we can unwrap the optional because the cell is nil */
+        cell!.textLabel?.text = self.colorsArray[indexPath.row]
+        return cell!
+    }
+    
+    func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+        let cell = UITableViewCell()
+        let imageView = UIImageView(image: UIImage(named: "check"))
+        imageView.isHidden = true
+        cell.accessoryView = imageView
+        
+        /* we can unwrap the optional because the cell is nil */
+        let index:String = String(indexPath.row)
+        cell.textLabel?.text = self.locationRangeDictionary[index]
+        return cell
     }
     
     lazy var tableView:UITableView = self.newTableView()
@@ -40,7 +90,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         let tableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: settingsCellID)
         self.view.addSubview(tableView)
         tableView.allowsSelectionDuringEditing = true
         return tableView
@@ -48,15 +98,14 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
@@ -70,7 +119,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     //MARK: UITableViewDelegate
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return Sections.DistanceFilter.rawValue
+        return self.sectionTitleDictionary.keys.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -81,13 +130,65 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
             return self.typesArray.count
         }
         if (section == Sections.DistanceFilter.rawValue) {
-            return self.distancesArray.count
+            return self.locationRangeDictionary.keys.count
         }
         
         return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        /* with different sizes, labels, types, etc, let's use some helpers */
+        
+        if (indexPath.section == Sections.ThemeColor.rawValue) {
+            return  self.colorsCellForIndexPath(indexPath: indexPath)
+        }
+        
+        if (indexPath.section == Sections.DistanceFilter.rawValue) {
+            return  distanceCellForIndexPath(indexPath: indexPath)
+        }
+        
         return UITableViewCell()
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        /* this flashes the cell upon tap which is good for UX */
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if indexPath.section == Sections.ThemeColor.rawValue || indexPath.section == Sections.DistanceFilter.rawValue{
+            let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
+            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            
+        }
+        
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50)
+        headerView.backgroundColor = MSSingleton.sharedInstance.themeColor
+        
+        let label = UILabel(frame: headerView.frame)
+        label.textColor = UIColor.black
+        label.textAlignment = NSTextAlignment.center
+        
+        let key:String = String(section)
+        let value = self.sectionTitleDictionary[key]
+        
+        label.text = value
+        headerView.addSubview(label)
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func favoritesUpdated(_ notification: NSNotification){
+        if notification.object != nil{
+            self.typesArray = notification.object as! Array
+        }
+    }
+    
+    //MARK: selectors
+    
 }
