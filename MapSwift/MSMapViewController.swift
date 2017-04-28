@@ -89,8 +89,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     lazy var centerPoint:CLLocationCoordinate2D = self.newCenterPoint()
     func newCenterPoint() -> CLLocationCoordinate2D{
         var coordinate = CLLocationCoordinate2D()
-        coordinate.latitude  = 25.777599;
-        coordinate.longitude = -80.190793;
+        coordinate.latitude  = 25.777599
+        coordinate.longitude = -80.190793
         return coordinate;
     }
     
@@ -204,6 +204,11 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                     if favs.contains(location.locationID!){
                         favsDataSource.append(location)
                     }
+                    
+                    /* uncomment to see how copying an object would work */
+//                    let newloc = location.copy() as! MSLocation
+//                    newloc.type = "foo"
+//                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
                 }
                 
                 let viewControllers = self.tabBarController?.viewControllers

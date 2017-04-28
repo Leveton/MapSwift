@@ -193,6 +193,28 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == Sections.TypeFilter.rawValue{
+            return true
+        }
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        let sourceString:String = self.typesArray[sourceIndexPath.row]
+        typesArray.remove(at: sourceIndexPath.row)
+        typesArray.insert(sourceString, at: destinationIndexPath.row)
+//        /*update our data source to refect the change */
+//        NSMutableArray *mutableTypes = [[NSMutableArray alloc]initWithArray:[self typesArray]];
+//        NSString *sourceString       = [[self typesArray] objectAtIndex:sourceIndexPath.row];
+//        [mutableTypes removeObjectAtIndex:sourceIndexPath.row];
+//        [mutableTypes insertObject:sourceString atIndex:destinationIndexPath.row];
+//        [self setTypesArray:mutableTypes];
+//        
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"com.mapstack.favoritesOrderWasRearranged" object:[self typesArray] userInfo:nil];
+    }
+    
     //MARK: selectors
     
 }
