@@ -180,9 +180,33 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         
         label.text = value
         headerView.addSubview(label)
+        
+        if (section == Sections.TypeFilter.rawValue){
+
+            let button = UIButton(type: .system)
+            var editFrame = headerView.frame
+            editFrame.origin.x = self.view.bounds.width - 40.0
+            button.frame = editFrame
+            button.titleLabel?.textAlignment = NSTextAlignment.center
+            button.setTitleColor(MSSingleton.sharedInstance.themeColor, for: .normal)
+            button.setTitle(NSLocalizedString("Edit", comment: ""), for: .normal)
+            button.titleLabel?.font = UIFont(name: "Chalkduster", size: 5)
+            
+            /* the color for when the finger is actually on the button */
+            button.setTitleColor(UIColor.blue, for: UIControlState.highlighted)
+            
+            button.addTarget(self, action: #selector(self.didTapEditTypes), for: UIControlEvents.touchUpInside)
+            button.backgroundColor = UIColor.darkGray
+            headerView.addSubview(button)
+    
+        }
+        
         return headerView
     }
     
+    func didTapEditTypes(){
+    
+    }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
     }
@@ -202,17 +226,11 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
+        /*update our data source to refect the change */
         let sourceString:String = self.typesArray[sourceIndexPath.row]
         typesArray.remove(at: sourceIndexPath.row)
         typesArray.insert(sourceString, at: destinationIndexPath.row)
-//        /*update our data source to refect the change */
-//        NSMutableArray *mutableTypes = [[NSMutableArray alloc]initWithArray:[self typesArray]];
-//        NSString *sourceString       = [[self typesArray] objectAtIndex:sourceIndexPath.row];
-//        [mutableTypes removeObjectAtIndex:sourceIndexPath.row];
-//        [mutableTypes insertObject:sourceString atIndex:destinationIndexPath.row];
-//        [self setTypesArray:mutableTypes];
-//        
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"com.mapstack.favoritesOrderWasRearranged" object:[self typesArray] userInfo:nil];
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: self.typesArray)
     }
     
     //MARK: selectors
