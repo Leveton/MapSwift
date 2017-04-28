@@ -26,7 +26,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         self.map.setRegion(adjustedRegion, animated: true)
         
         populateMap()
-        
     }
     
     override func didReceiveMemoryWarning() {

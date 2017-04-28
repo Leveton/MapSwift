@@ -26,18 +26,15 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     let colorsCellID = "colorsCell"
     
     private var colorsArray = ["blue color", "green color", "orange color"]
+    private var typesArray = ["Hospital", "School", "StartUp","Random","Restaurant"]
     private var distancesArray = [Double]()
-    private var typesArray = [String](){
-        didSet{
-            self.tableView.reloadData()
-        }
-    }
+    
     
     /*dictionary literals for our labels */
     let sectionTitleDictionary:[String: String] = [
         "0" : NSLocalizedString("App Theme Color", comment: ""),
-        "1" : NSLocalizedString("Locations within range", comment: ""),
-        "2" : NSLocalizedString("Rearrange favorite types", comment: "")
+        "1" : NSLocalizedString("Rearrange Favorite Types", comment: ""),
+        "2" : NSLocalizedString("Set Locations Range", comment: "")
     ]
     
     let locationRangeDictionary:[String: String] = [
@@ -80,6 +77,19 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         /* we can unwrap the optional because the cell is nil */
         let index:String = String(indexPath.row)
         cell.textLabel?.text = self.locationRangeDictionary[index]
+        return cell
+    }
+    
+    func typeCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+        let cell = UITableViewCell()
+        
+        /*prevent highlight upon tap */
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        
+        /* allow cell to be reoredered */
+        cell.showsReorderControl = true
+        
+        cell.textLabel?.text = self.typesArray[indexPath.row]
         return cell
     }
     
@@ -147,6 +157,10 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
             return  self.colorsCellForIndexPath(indexPath: indexPath)
         }
         
+        if (indexPath.section == Sections.TypeFilter.rawValue) {
+            return  self.typeCellForIndexPath(indexPath: indexPath)
+        }
+        
         if (indexPath.section == Sections.DistanceFilter.rawValue) {
             return  distanceCellForIndexPath(indexPath: indexPath)
         }
@@ -166,6 +180,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         }
         
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50)
@@ -186,15 +201,17 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
             let button = UIButton(type: .system)
             var editFrame = headerView.frame
             editFrame.origin.x = self.view.bounds.width - 40.0
+            editFrame.size.width = 40.0
             button.frame = editFrame
             button.titleLabel?.textAlignment = NSTextAlignment.center
             button.setTitleColor(MSSingleton.sharedInstance.themeColor, for: .normal)
             button.setTitle(NSLocalizedString("Edit", comment: ""), for: .normal)
-            button.titleLabel?.font = UIFont(name: "Chalkduster", size: 5)
+            button.titleLabel?.font = UIFont(name: "Chalkduster", size: 10)
             
             /* the color for when the finger is actually on the button */
             button.setTitleColor(UIColor.blue, for: UIControlState.highlighted)
             
+            button.layer.zPosition = 2.0
             button.addTarget(self, action: #selector(self.didTapEditTypes), for: UIControlEvents.touchUpInside)
             button.backgroundColor = UIColor.darkGray
             headerView.addSubview(button)
@@ -204,9 +221,6 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return headerView
     }
     
-    func didTapEditTypes(){
-    
-    }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
     }
@@ -224,6 +238,14 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return false
     }
     
+    /* prevents animations on non-type cells */
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == Sections.TypeFilter.rawValue{
+            return true
+        }
+        return false
+    }
+    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         /*update our data source to refect the change */
@@ -233,6 +255,15 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: self.typesArray)
     }
     
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.none
+    }
+    
     //MARK: selectors
+    
+    func didTapEditTypes(){
+        //[[self tableView] setEditing:![[self tableView] isEditing] animated:YES];
+        self.tableView.setEditing(!self.tableView.isEditing, animated: true)
+    }
     
 }
