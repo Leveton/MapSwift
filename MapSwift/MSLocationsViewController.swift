@@ -15,6 +15,14 @@ private struct Constants {
 class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let cellID = "CellIdentifier"
+    var copiedDataSource:Array<MSLocation>?
+    
+    var range:MSRange?{
+        didSet{
+            self.sortByDistance()
+            self.tableView.reloadData()
+        }
+    }
     
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
@@ -33,9 +41,12 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
              Uncomment sorting by title to get the MDC locations in alphabetical order. Or use a more advanced sorting filter.
              */
             
-            //self.dataSource.sort{$0.title! < $1.title!}
-            self.dataSource.sort{$0.distance! < $1.distance!}
-            self.tableView.reloadData()
+            if range == nil{
+                self.copiedDataSource = self.dataSource
+                //self.dataSource.sort{$0.title! < $1.title!}
+                self.dataSource.sort{$0.distance! < $1.distance!}
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -104,4 +115,19 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         self.present(vc, animated: true, completion: nil)
     }
     
+    //MARK: selectors
+    
+    func sortByDistance(){
+        
+        if range != nil{
+            /* sort by range as selected in settings */
+            self.dataSource = self.copiedDataSource
+            
+            let predicate = NSPredicate(format: "distance BETWEEN {\(range!.startPoint), \(range!.endPoint)}")
+            self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+        }else{
+            /* sort by distance from highest to lowest */
+            self.dataSource.sort{$0.distance! < $1.distance!}
+        }
+    }
 }

@@ -44,7 +44,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         "3" : NSLocalizedString("ten mile", comment: ""),
         "4" : NSLocalizedString("twenty mile", comment: ""),
         "5" : NSLocalizedString("fifty mile", comment: ""),
-    ]
+        ]
     
     var locations = [MSLocation](){
         didSet{
@@ -173,12 +173,36 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         /* this flashes the cell upon tap which is good for UX */
         tableView.deselectRow(at: indexPath, animated: true)
         
+        let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
+        
         /* toggle the cell's right-hand view hidden */
-        if indexPath.section == Sections.ThemeColor.rawValue || indexPath.section == Sections.DistanceFilter.rawValue{
-            let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
+        if indexPath.section == Sections.ThemeColor.rawValue{
+            hideAllChecksForIndexPath(indexPath: indexPath)
             cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            
+            switch indexPath.row {
+            case 0:
+                MSSingleton.sharedInstance.themeColor = UIColor.blue
+            case 1:
+                MSSingleton.sharedInstance.themeColor = UIColor.green
+            case 2:
+                MSSingleton.sharedInstance.themeColor = UIColor.red
+            default:
+                MSSingleton.sharedInstance.themeColor = UIColor.blue
+            }
+            
+            self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
+            self.tableView.reloadData()
         }
         
+        if  indexPath.section == Sections.DistanceFilter.rawValue{
+            hideAllChecksForIndexPath(indexPath: indexPath)
+            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            
+            let vc = self.tabBarController?.viewControllers?[1] as! MSLocationsViewController
+            vc.range = self.getRangeFromIndexPath(index: indexPath)
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -197,7 +221,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         headerView.addSubview(label)
         
         if (section == Sections.TypeFilter.rawValue){
-
+            
             let button = UIButton(type: .system)
             var editFrame = headerView.frame
             editFrame.origin.x = self.view.bounds.width - 40.0
@@ -215,7 +239,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
             button.addTarget(self, action: #selector(self.didTapEditTypes), for: UIControlEvents.touchUpInside)
             button.backgroundColor = UIColor.darkGray
             headerView.addSubview(button)
-    
+            
         }
         
         return headerView
@@ -261,9 +285,46 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     //MARK: selectors
     
+    func hideAllChecksForIndexPath(indexPath: IndexPath){
+        for i in 0...self.tableView.numberOfRows(inSection: indexPath.section){
+            let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))
+            cell?.accessoryView?.isHidden = true
+        }
+    }
+    
     func didTapEditTypes(){
-        //[[self tableView] setEditing:![[self tableView] isEditing] animated:YES];
         self.tableView.setEditing(!self.tableView.isEditing, animated: true)
     }
     
+    //TODO: Refactor case 4 for a cleaner implementation. notice that this 'todo' shows up if you tap the file helper at the top
+    func getRangeFromIndexPath(index: IndexPath) -> MSRange{
+        let range = MSRange()
+        
+        if index.section == Sections.DistanceFilter.rawValue{
+            switch index.row {
+            case 0:
+                range.startPoint = 0.0
+                range.endPoint = 300.0
+            case 1:
+                range.startPoint = 300.0
+                range.endPoint = 750.0
+            case 2:
+                range.startPoint = 750.0
+                range.endPoint = 3000.0
+            case 3:
+                range.startPoint = 3000.0
+                range.endPoint = 10000.0
+            case 4:
+                
+                /* larger than the globe */
+                range.startPoint = 0.0
+                range.endPoint = 1000000000000.0
+            default:
+                range.startPoint = 0.0
+                range.endPoint = 1000000.0
+            }
+        }
+        
+        return range
+    }
 }

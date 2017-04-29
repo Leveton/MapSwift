@@ -13,6 +13,13 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
     private let cellID = "CellIdentifier"
     @IBOutlet weak var tableView: UITableView!
     
+    required init(coder:NSCoder){
+        super.init(coder: coder)!
+        
+        /* don't put this in viewDidLoad because the it's only called if the user visits the view  */
+        NotificationCenter.default.addObserver(self, selector: #selector(self.favoritesReordered(_:)), name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: nil)
+    }
+    
     /* guarantee that dataSource is not nil */
     var dataSource = [MSLocation](){
         didSet{
@@ -58,7 +65,6 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
 
     //MARK: MSTableViewCellDelegate
     
-    
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
         
         /* get a mutable reference to our data source and remove the deleted location */
@@ -96,4 +102,27 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         vc.location = location
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    //MARK: selectors
+//    - (void)setFavoritesOrder:(NSArray *)favoritesOrder{
+//    _favoritesOrder = favoritesOrder;
+//    
+//    [_favoritesOrder enumerateObjectsUsingBlock:^(NSString *item, NSUInteger idx, BOOL *stop) {
+//    [[self favoritesOrderDictionary] setObject:@(idx) forKey:item];
+//    }];
+//    
+//    [self sortDataByOrder];
+//    [[self tableView] reloadData];
+//    }
+    
+    func favoritesReordered(_ notification: NSNotification){
+        if (notification.object != nil){
+            
+        }
+    }
+//    - (void)favoritesReordered:(NSNotification *)note{
+//    if ([note object]){
+//    [self setFavoritesOrder:[note object]];
+//    }
+//    }
 }
