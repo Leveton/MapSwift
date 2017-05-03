@@ -56,6 +56,11 @@ class FirstViewController: UIViewController {
         
         car.startEngine()
         
+        honda.numberOfWindows = 2
+        honda.numberOfDoors = 2
+        
+        /* color stays blue because computed properties dcompose */
+        print("honda \(honda.windowsAndDoors) color \(honda.color)")
     }
     
     func configureHouse(){
