@@ -13,13 +13,16 @@ class Car{
     
     var numberOfDoors:Int = 0
     
-    var color:String{
+    var color:String = "Blue"
+    
+    //computed property
+    var windowsAndDoors:Int{
         get{
-            return self.color
+            return self.numberOfDoors + self.numberOfWindows
         }
         set{
-            if (newValue == "Red"){
-                self.numberOfWindows = 3
+            if (newValue == 4){
+                self.color = "Green"
             }
         }
     }

@@ -1,6 +1,6 @@
 <img src="https://raw.githubusercontent.com/Leveton/MapStack/master/images/launchCode.png" alt="TSNavigationStripView examples" />
 
-[Lesson 1 slides - web](https://docs.google.com/presentation/d/15B_jY6toJ-k6zZZH5_XxCuPILBRchCiCJA6rTVzu5bo/pub?start=false&loop=false&delayms=3000)
+[Lesson 1 slides - web](https://docs.google.com/presentation/d/1KrSyvaG4KgMuJgHUQB0deb6W6f5S6X_flVHnlAgl3Y4/pub?start=false&loop=false&delayms=3000)
 
 [Lesson 1 slides - Speaker Deck](https://speakerdeck.com/leveton/mapswift-lesson-1)
 

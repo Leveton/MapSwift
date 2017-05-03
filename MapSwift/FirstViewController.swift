@@ -46,7 +46,9 @@ class FirstViewController: UIViewController {
         car.numberOfWindows = 5
         car.color = "Red"
         
-        print("number of doors again \(car.numberOfDoors) number of windows \(car.numberOfWindows)")
+        print("number of doors and windows \(car.windowsAndDoors)")
+        car.windowsAndDoors = 4
+        print("color \(car.color)")
         
         let honda = Honda()
         honda.model = .Accord
