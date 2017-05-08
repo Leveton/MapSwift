@@ -9,7 +9,7 @@
 
 [guard vs let](https://medium.com/@mimicatcodes/unwrapping-optional-values-in-swift-3-0-guard-let-vs-if-let-40a0b05f9e69)
 
-[Stanford iOS slides](http://www.bloomberg.com/graphics/2015-paul-ford-what-is-code)
+Stanford iOS course lecture slides on views (posted in Slack)
 
 
 <hr />
