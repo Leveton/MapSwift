@@ -58,6 +58,9 @@ class FirstViewController: UIViewController {
         
         car.startEngine()
         
+        car.numberOfDoors = 1
+        print("axles: \(car.numberOfAxles)")
+        
     }
     
     func configureHouse(){

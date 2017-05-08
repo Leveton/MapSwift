@@ -28,9 +28,17 @@ class Car{
         }
     }
     
+    var numberOfAxles:Int{
+        if self.numberOfDoors > 2 {
+            return 4
+        }
+        return 2
+    }
+    
     /* this is an encapsulated public method of the Car class */
     func startEngine(){
         print("vooom")
+
     }
     
     /* this is an encapsulated private method of the Car class */
