@@ -128,7 +128,8 @@ class FirstViewController: UIViewController {
         boat.hullSize = CGSize(width: 200, height: 100)
         boat.bulbousBow = CGPoint(x: 200.0, y: 0.0)
         boat.flagPosition = CGRect(origin: boat.bulbousBow, size: boat.hullSize)
-        print("hull size \(boat.hullSize.width) bow point \(boat.bulbousBow.y) flag right \(boat.flagPosition.origin.x+boat.flagPosition.size.width)")
+        print("hull \(boat.hullSize.width) bow \(boat.bulbousBow.y)")
+        print("flag \(boat.flagPosition.origin.x+boat.flagPosition.size.width)")
         
     }
     
