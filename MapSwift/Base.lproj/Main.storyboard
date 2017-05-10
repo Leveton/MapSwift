@@ -1,32 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Favorites View Controller-->
-        <scene sceneID="i6w-l4-kGh">
+        <!--Navigation Controller-->
+        <scene sceneID="m7J-s7-bBf">
             <objects>
-                <viewController id="qDi-VT-bpz" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="11B-5V-H9M" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="favorites" id="Cu6-5J-77I"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ix8-E7-3BC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="hnJ-Id-ehR" kind="relationship" relationship="rootViewController" id="44a-FZ-udo"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rgs-rv-Ys4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1051" y="-718"/>
+        </scene>
+        <!--Favorites View Controller-->
+        <scene sceneID="kB3-BN-6DI">
+            <objects>
+                <viewController id="hnJ-Id-ehR" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ha9-6M-aSL"/>
-                        <viewControllerLayoutGuide type="bottom" id="a5R-ZM-lhK"/>
+                        <viewControllerLayoutGuide type="top" id="18s-S7-7VK"/>
+                        <viewControllerLayoutGuide type="bottom" id="Lls-7h-mVC"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="cMA-jl-p2G">
+                    <view key="view" contentMode="scaleToFill" id="Kxl-AE-i1D">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="favorites" id="yxg-XT-tZB"/>
+                    <navigationItem key="navigationItem" id="3ES-YO-YF7"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DEp-kx-BYR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rFm-9E-RAf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-49" y="-627"/>
+            <point key="canvasLocation" x="-170" y="-758"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -110,8 +127,8 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
-                        <segue destination="qDi-VT-bpz" kind="relationship" relationship="viewControllers" id="pR7-iB-UDA"/>
                         <segue destination="z1J-8Z-6sB" kind="relationship" relationship="viewControllers" id="TtO-QI-7rH"/>
+                        <segue destination="11B-5V-H9M" kind="relationship" relationship="viewControllers" id="UYG-cc-vCy"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
