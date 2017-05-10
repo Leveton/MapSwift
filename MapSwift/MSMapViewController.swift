@@ -75,4 +75,13 @@ class MSMapViewController: MSViewController, MKMapViewDelegate, CLLocationManage
         
         return  mapFrame;
     }
+    
+//MARK: CLLocationManagerDelegate
+    
+//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+//        for i in 1..<locations.count {
+//            print("locations \(locations[i])")
+//        }
+//    }
 }
+
