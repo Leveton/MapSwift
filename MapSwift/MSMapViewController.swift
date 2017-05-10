@@ -7,16 +7,22 @@
 //
 
 import UIKit
+import MapKit
 
-class MSMapViewController: MSViewController {
+private struct Constants {
+    static let MapSide = CGFloat(300)
+    static let TabBarHeight = CGFloat(49)
+}
 
-    @IBOutlet weak var label:UILabel!
+class MSMapViewController: MSViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.label.layer.borderColor = UIColor.black.cgColor
-        self.label.layer.borderWidth = 2.0
-        self.label.text = "Hello World"
+        self.manager.startUpdatingLocation()
+        
+        /* 1 mile radius */
+        let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
+        self.map.setRegion(adjustedRegion, animated: true)
         
     }
 
@@ -26,14 +32,47 @@ class MSMapViewController: MSViewController {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+//MARK: lazy inits
+    
+    lazy var map:MKMapView = self.newMap()
+    func newMap() -> MKMapView{
+        let map = MKMapView()
+        map.frame = self.mapFrame()
+        map.delegate = self
+        map.showsUserLocation = true
+        self.view.addSubview(map)
+        return map
     }
-    */
+    
+    lazy var manager:CLLocationManager = self.newManager()
+    func newManager() -> CLLocationManager{
+        let manager = CLLocationManager()
+        manager.requestWhenInUseAuthorization()
+        manager.delegate = self
+        return manager
+    }
+    
+    lazy var centerPoint:CLLocationCoordinate2D = self.newCenterPoint()
+    func newCenterPoint() -> CLLocationCoordinate2D{
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = 25.777599
+        coordinate.longitude = -80.190793
+        return coordinate;
+    }
 
+ //MARK: selectors
+    
+    func mapFrame() -> CGRect{
+        
+        var mapFrame = CGRect.zero
+        mapFrame.size = CGSize(width: Constants.MapSide, height: Constants.MapSide)
+        
+        /* Calculate the map's position of the view using Core Graphic helper methods */
+        let xOffset = (self.view.frame.width - Constants.MapSide)/2
+        let yOffset = (self.view.frame.height - Constants.MapSide)/2
+        let mapOrigin = CGPoint(x: xOffset, y: yOffset)
+        mapFrame.origin = mapOrigin
+        
+        return  mapFrame;
+    }
 }
