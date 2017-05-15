@@ -17,6 +17,7 @@
 		1CE1EAB21E8C5FCF00C4E87D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */; };
 		1CE1EABD1E8C5FCF00C4E87D /* MapSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EABC1E8C5FCF00C4E87D /* MapSwiftTests.swift */; };
 		1CE1EAC81E8C645300C4E87D /* MSMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */; };
+		7AFD07771ECA5B980095F3EA /* MapStackLocations.json in Resources */ = {isa = PBXBuildFile; fileRef = 7AFD07761ECA5B980095F3EA /* MapStackLocations.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		1CE1EABC1E8C5FCF00C4E87D /* MapSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSwiftTests.swift; sourceTree = "<group>"; };
 		1CE1EABE1E8C5FCF00C4E87D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSMapViewController.swift; sourceTree = "<group>"; };
+		7AFD07761ECA5B980095F3EA /* MapStackLocations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = MapStackLocations.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
 				1CE1EAB31E8C5FCF00C4E87D /* Info.plist */,
+				7AFD07761ECA5B980095F3EA /* MapStackLocations.json */,
 			);
 			path = MapSwift;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 			files = (
 				1CE1EAB21E8C5FCF00C4E87D /* LaunchScreen.storyboard in Resources */,
 				1CE1EAAF1E8C5FCF00C4E87D /* Assets.xcassets in Resources */,
+				7AFD07771ECA5B980095F3EA /* MapStackLocations.json in Resources */,
 				1CE1EAAD1E8C5FCF00C4E87D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
