@@ -9,12 +9,16 @@
 import UIKit
 import MapKit
 
-class MSLocation: NSObject {
+class MSLocation: NSObject, MKAnnotation {
 
     var title:String?
-    var coordinate:CLLocationCoordinate2D?
+    var coordinate:CLLocationCoordinate2D
     var distance:CGFloat?
     var locationImage:UIImage?
+    
+    init(coordinate:CLLocationCoordinate2D){
+        self.coordinate = coordinate
+    }
     
     func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
         /* if you square a negative number, you get a quiet nan */
