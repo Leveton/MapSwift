@@ -11,11 +11,13 @@ import MapKit
 
 class MSLocation: NSObject, MKAnnotation {
 
+    var locationID:Int?
     var title:String?
     var type:String?
     @objc var coordinate:CLLocationCoordinate2D
     var distance:CGFloat?
     var locationImage:UIImage?
+    var subtitle: String?
     
     init(coordinate:CLLocationCoordinate2D) {
         self.coordinate = coordinate
@@ -23,6 +25,6 @@ class MSLocation: NSObject, MKAnnotation {
     
     func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
         /* if you square a negative number, you get a quiet nan */
-        return sqrt(abs(((pointA.latitude - pointB.latitude) * 2) + ((pointA.longitude - pointB.longitude) * 2)))
+        return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
     }
 }
