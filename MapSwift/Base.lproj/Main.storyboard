@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,20 +13,12 @@
         <scene sceneID="i6w-l4-kGh">
             <objects>
                 <viewController id="qDi-VT-bpz" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ha9-6M-aSL"/>
-                        <viewControllerLayoutGuide type="bottom" id="a5R-ZM-lhK"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="cMA-jl-p2G">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
                     <tabBarItem key="tabBarItem" title="" image="favorites" id="yxg-XT-tZB"/>
+                    <navigationItem key="navigationItem" id="spP-Sz-xXY"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DEp-kx-BYR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-49" y="-627"/>
+            <point key="canvasLocation" x="-338" y="-576"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -83,7 +75,24 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gNq-ui-JVV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="18" y="688"/>
+            <point key="canvasLocation" x="-98" y="913"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="gh0-Eu-wfI">
+            <objects>
+                <navigationController id="Rns-tf-hvT" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" image="favorites" id="aVj-RO-Uxj"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="d9T-Zk-F3e">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="qDi-VT-bpz" kind="relationship" relationship="rootViewController" id="rbm-KU-Pqa"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gCS-2a-0ut" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1175" y="-481"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -98,8 +107,8 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
-                        <segue destination="qDi-VT-bpz" kind="relationship" relationship="viewControllers" id="pR7-iB-UDA"/>
-                        <segue destination="z1J-8Z-6sB" kind="relationship" relationship="viewControllers" id="TtO-QI-7rH"/>
+                        <segue destination="Rns-tf-hvT" kind="relationship" relationship="viewControllers" id="drb-tO-6XZ"/>
+                        <segue destination="z1J-8Z-6sB" kind="relationship" relationship="viewControllers" id="ZPo-gM-ZGj"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>
