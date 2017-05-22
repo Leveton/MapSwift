@@ -8,8 +8,24 @@
 
 import UIKit
 
-class MSLocationsViewController: MSViewController {
+private struct Constants{
+    static let TableViewPadding = CGFloat(20)
+}
 
+class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        //this is where the lazy init is triggered. it's triggered only once
+        var tableFrame = self.tableView.frame
+        tableFrame.origin.x = Constants.TableViewPadding
+        tableFrame.origin.y = Constants.TableViewPadding
+        tableFrame.size.width = self.view.frame.width - (Constants.TableViewPadding * 2)
+        tableFrame.size.height = self.view.frame.height - (Constants.TableViewPadding * 2) - 48.0
+        self.tableView.frame = tableFrame
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -26,16 +42,45 @@ class MSLocationsViewController: MSViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    lazy var tableView:UITableView = self.newTableView()
+    func newTableView() -> UITableView{
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        self.view.addSubview(tableView)
+        return tableView
     }
-    */
+    //MARK: UITableViewDelegate
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1000
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let identifier:String = "cellID"
+        //try to grab a cell that's being reused. dequeue is FIFO - first in, the cell from the bottom, first out - the cell that leaves the top.
+        var cell = tableView.dequeueReusableCell(withIdentifier: identifier)
+        
+        //if cell exists, print it and draw its label
+        if let cell = cell{
+            print("reused cell")
+            cell.textLabel?.text = "index path row \(indexPath.row) for section \(indexPath.section)"
+            return cell
+        }else{
+            //allocate and init the cell and draw its label
+            print("new cell")
+            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier:identifier)
+            //cell?.textLabel?.text = "index path row \(indexPath.row) for section \(indexPath.section)"
+            return cell!
+        }
+    }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row%2 == 0{
+            
+        }
+    }
 }
