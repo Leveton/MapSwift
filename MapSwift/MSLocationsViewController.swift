@@ -59,38 +59,38 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     //MARK: UITableViewDelegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return self.dataSource.count
-        return 1000
+        //returns roughly 15
+        return self.dataSource.count
+        //return 1000
     }
-    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-//        cell.textLabel?.text = location.title
-//        return cell
-//    }
 
     /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        
-        if (cell == nil){
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            print("new cell")
-        }else{
-            print("old cell")
-        }
-        cell?.textLabel?.text = "row: \(indexPath.row)"
-        return cell!
-    }
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        
+//        let str:String = "cellid"
+//        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+//        
+//        if (cell == nil){
+//            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+//            print("new cell")
+//        }else{
+//            print("old cell")
+//        }
+//        cell?.textLabel?.text = "row: \(indexPath.row)"
+//        return cell!
+//    }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let location = self.dataSource[indexPath.row];
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
+        cell.textLabel?.text = location.title
+        return cell
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let location = self.dataSource[indexPath.row]
         let vc = MSLocationDetailViewController()
         vc.location = location
-        vc.view.backgroundColor = UIColor.red
+        vc.view.backgroundColor = UIColor.yellow
         self.present(vc, animated: true, completion: nil)
     }
 }

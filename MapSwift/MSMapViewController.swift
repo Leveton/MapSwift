@@ -117,11 +117,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                     //first bang is saying that jsonDict["some key"] exists i swear on my family, second bang is promising that locationdictiionaries exists
                     let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
                     
+                    var datasource = [MSLocation]()
                     for x in 0..<locationDictionaries.count{
                         let dict = locationDictionaries[x]
                         let location = self.createLocationWithDictionary(dict: dict)
                         map.addAnnotation(location)
+                        datasource.append(location)
                     }
+                    let viewcontrollers = self.tabBarController?.viewControllers
+                    let vc:MSLocationsViewController = viewcontrollers![1] as! MSLocationsViewController
+                    vc.dataSource = datasource
+                    
                     print("dicts \(locationDictionaries)")
                 } catch{
                     print("json failed")
