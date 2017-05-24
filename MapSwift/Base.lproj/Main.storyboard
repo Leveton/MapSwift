@@ -9,24 +9,41 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Favorites View Controller-->
-        <scene sceneID="i6w-l4-kGh">
+        <!--Item-->
+        <scene sceneID="IJF-YJ-cUJ">
             <objects>
-                <viewController id="qDi-VT-bpz" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController id="vdi-yf-oIe" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" image="favorites" id="rrs-yi-xqC"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gN1-yX-n57">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="NsG-7u-sox" kind="relationship" relationship="rootViewController" id="7uT-eT-Edw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YV5-vp-yv5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-548" y="-615"/>
+        </scene>
+        <!--Favorites View Controller-->
+        <scene sceneID="pCC-vb-Uz1">
+            <objects>
+                <viewController id="NsG-7u-sox" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ha9-6M-aSL"/>
-                        <viewControllerLayoutGuide type="bottom" id="a5R-ZM-lhK"/>
+                        <viewControllerLayoutGuide type="top" id="zD7-Ol-0JE"/>
+                        <viewControllerLayoutGuide type="bottom" id="rfP-Yn-Ksu"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="cMA-jl-p2G">
+                    <view key="view" contentMode="scaleToFill" id="U3P-bB-xat">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="favorites" id="yxg-XT-tZB"/>
+                    <navigationItem key="navigationItem" id="sGK-1y-iz8"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DEp-kx-BYR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t9e-Jh-bLO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-49" y="-627"/>
+            <point key="canvasLocation" x="252" y="-614"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -45,7 +62,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="-320"/>
+            <point key="canvasLocation" x="900" y="-99"/>
         </scene>
         <!--Locations View Controller-->
         <scene sceneID="wg7-f3-ORb">
@@ -83,7 +100,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gNq-ui-JVV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="18" y="688"/>
+            <point key="canvasLocation" x="-18" y="780"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
@@ -98,8 +115,8 @@
                     <connections>
                         <segue destination="9pv-A4-QxB" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="8rJ-Kc-sve" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
-                        <segue destination="qDi-VT-bpz" kind="relationship" relationship="viewControllers" id="pR7-iB-UDA"/>
-                        <segue destination="z1J-8Z-6sB" kind="relationship" relationship="viewControllers" id="TtO-QI-7rH"/>
+                        <segue destination="vdi-yf-oIe" kind="relationship" relationship="viewControllers" id="BuB-aB-y9Y"/>
+                        <segue destination="z1J-8Z-6sB" kind="relationship" relationship="viewControllers" id="0MX-JZ-5GQ"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HuB-VB-40B" sceneMemberID="firstResponder"/>

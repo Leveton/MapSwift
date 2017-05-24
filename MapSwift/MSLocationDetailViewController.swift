@@ -38,20 +38,6 @@ class MSLocationDetailViewController: UIViewController {
         return label
     }
     
-    lazy var tap:UITapGestureRecognizer = self.newTap()
-    func newTap() -> UITapGestureRecognizer{
-        let tap = UITapGestureRecognizer(target: self, action: #selector(MSLocationDetailViewController.didTapLabel))
-        tap.numberOfTapsRequired = 2
-        return tap
-    }
-    
-    lazy var pan:UIPanGestureRecognizer = self.newPan()
-    func newPan() -> UIPanGestureRecognizer{
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(MSLocationDetailViewController.didPanImageView))
-        return pan
-    }
-    
-    
     lazy var dismissButton:UIButton = self.newDismssButton()
     func newDismssButton() ->UIButton{
         let button = UIButton(type: .system)
@@ -78,6 +64,23 @@ class MSLocationDetailViewController: UIViewController {
             self.imageView.image = location?.locationImage
         }
     }
+    
+    
+    
+    lazy var tap:UITapGestureRecognizer = self.newTap()
+    func newTap() -> UITapGestureRecognizer{
+        let tap = UITapGestureRecognizer(target: self, action: #selector(MSLocationDetailViewController.didTapLabel))
+        tap.numberOfTapsRequired = 2
+        return tap
+    }
+    
+    lazy var pan:UIPanGestureRecognizer = self.newPan()
+    func newPan() -> UIPanGestureRecognizer{
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(MSLocationDetailViewController.didPanImageView))
+        return pan
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
