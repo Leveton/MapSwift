@@ -21,13 +21,14 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        tableView.register(MSLocationTableViewCell.self, forCellReuseIdentifier: cellID)
         self.view.addSubview(tableView)
         return tableView
     }
     
     var dataSource:Array<MSLocation>!{
         didSet{
+            self.dataSource.sort{$0.distance! > $1.distance!}
             self.tableView.reloadData()
         }
     }
@@ -82,10 +83,16 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row];
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        cell.textLabel?.text = location.title
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! MSLocationTableViewCell
+        cell.mainLabel.text = location.title
+        cell.subLabel.text = "dist \(String(describing: location.distance!))"
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 130
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let location = self.dataSource[indexPath.row]
         let vc = MSLocationDetailViewController()

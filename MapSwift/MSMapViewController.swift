@@ -148,6 +148,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         location.distance = dict.object(forKey: "distance") as? CGFloat
         location.coordinate = coordinate
         location.subtitle = "this is a subtile"
+        location.locationImage = UIImage.init(named: dict.object(forKey: "image") as! String)
         return location
     }
 }
