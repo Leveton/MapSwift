@@ -121,7 +121,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         } catch {
             print("json failed")
         }
-
+        
     }
     
     func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
@@ -130,9 +130,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
         
         let location = MSLocation(coordinate: coordinate)
-        location.locationID = dict.object(forKey: "locationId") as? Int
         location.title = dict.object(forKey: "name") as? String
-        location.type = dict.object(forKey: "type") as? String
+        location.type = dict.object(forKey: "name") as? String
         location.distance = dict.object(forKey: "distance") as? CGFloat
         location.coordinate = coordinate
         

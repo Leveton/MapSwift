@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MSFavoritesViewController: MSViewController {
+class MSFavoritesViewController: UITableViewController {
 
     var dataSource = [MSLocation]()
     
