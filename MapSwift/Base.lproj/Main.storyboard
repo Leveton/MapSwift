@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="NsG-7u-sox" kind="relationship" relationship="rootViewController" id="7uT-eT-Edw"/>
+                        <segue destination="Scj-L5-KLn" kind="relationship" relationship="rootViewController" id="YI1-bi-KsU"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YV5-vp-yv5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -27,23 +27,33 @@
             <point key="canvasLocation" x="-548" y="-615"/>
         </scene>
         <!--Favorites View Controller-->
-        <scene sceneID="pCC-vb-Uz1">
+        <scene sceneID="0Xo-dE-LOw">
             <objects>
-                <viewController id="NsG-7u-sox" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="zD7-Ol-0JE"/>
-                        <viewControllerLayoutGuide type="bottom" id="rfP-Yn-Ksu"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="U3P-bB-xat">
+                <tableViewController id="Scj-L5-KLn" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="jeb-aA-R9f">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="sGK-1y-iz8"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="t9e-Jh-bLO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="iif-GQ-B4S">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iif-GQ-B4S" id="lK5-lz-wlR">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Scj-L5-KLn" id="WEh-Q6-ibX"/>
+                            <outlet property="delegate" destination="Scj-L5-KLn" id="y0f-tH-b0t"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="puh-Pc-keM"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hEp-hM-Mfj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="252" y="-614"/>
+            <point key="canvasLocation" x="251" y="-721"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
