@@ -53,6 +53,8 @@ class MSLocationDetailViewController: UIViewController {
         let imageView = UIImageView(frame: CGRect.zero)
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(self.pan)
+        imageView.contentMode = .scaleToFill
+        imageView.clipsToBounds = true
         self.view.addSubview(imageView)
         return imageView
     }
@@ -62,6 +64,7 @@ class MSLocationDetailViewController: UIViewController {
             self.label.text = location?.title
             self.distanceLabel.text = NSString(format: "distance: %f", (location?.distance)!) as String
             self.imageView.image = location?.locationImage
+            print("image width \(imageView.image?.size.width) image height \(imageView.image?.size.height)")
         }
     }
     
@@ -171,7 +174,7 @@ class MSLocationDetailViewController: UIViewController {
         let yOffset = self.distanceLabel.isHidden ? -Constants.AnimationHeight : Constants.AnimationHeight
         frame.origin.y = frame.origin.y + yOffset
         
-        UIView.animate(withDuration: 0.3, delay: 0.1, options: .curveLinear, animations: {() -> Void in
+        UIView.animate(withDuration: 0.1, delay: 0.1, options: .curveLinear, animations: {() -> Void in
             self.distanceLabel.frame = frame
         }, completion: {(finished) -> Void in
             /* animation complete. allow the user to toggle the label */

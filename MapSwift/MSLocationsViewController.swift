@@ -30,6 +30,10 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     var dataSource:Array<MSLocation>!{
         didSet{
             self.tableView.reloadData()
+            let tab = self.tabBarController?.viewControllers
+            let nav = tab?[2] as! UINavigationController
+            let vc = nav.viewControllers[0] as! MSFavoritesViewController
+            vc.dataSource = dataSource
         }
     }
     

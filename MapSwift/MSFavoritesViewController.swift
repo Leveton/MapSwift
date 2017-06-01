@@ -10,6 +10,8 @@ import UIKit
 
 class MSFavoritesViewController: UITableViewController {
 
+    var dataSource = [MSLocation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -25,15 +27,21 @@ class MSFavoritesViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    //MARK: UITableViewDelegate
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataSource.count
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let location:MSLocation = self.dataSource[indexPath.row]
+        let iden = "FavsCell"
+        // if the ref to deqeueReuse is nil, create a new UITableViewCell()
+        let cell:MSFavoritesTableViewCell = tableView.dequeueReusableCell(withIdentifier: iden) as? MSFavoritesTableViewCell ?? MSFavoritesTableViewCell(style: .subtitle, reuseIdentifier: iden)
+        //cell.label.text = location.title
+        //cell.detailTextLabel?.text = "dist: \(location.distance)"
+        cell.imageView?.image = location.locationImage
+        return cell
+    }
 
 }
