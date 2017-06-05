@@ -16,7 +16,7 @@
 
 <hr />
 
-<img src="https://raw.githubusercontent.com/Leveton/MapStack/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
+<img src="https://raw.githubusercontent.com/Leveton/MapSwift/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
 
 
 ## License
