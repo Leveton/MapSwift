@@ -33,9 +33,12 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
              Uncomment sorting by title to get the MDC locations in alphabetical order. Or use a more advanced sorting filter.
              */
             
-            //self.dataSource.sort{$0.title! < $1.title!}
-            self.dataSource.sort{$0.distance! < $1.distance!}
+            //self.dataSource.sort{$0.distance! < $1.distance!}
             self.tableView.reloadData()
+            let tab = self.tabBarController?.viewControllers
+            let nav = tab?[2] as! UINavigationController
+            let vc = nav.viewControllers[0] as! MSFavoritesViewController
+            vc.dataSource = dataSource
         }
     }
     
