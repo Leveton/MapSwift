@@ -7,7 +7,7 @@
 
 ## Links 
 
-[Closures - try to do all the exorcises](https://www.weheartswift.com/closures)
+[Closures - try to do all the exercises](https://www.weheartswift.com/closures)
 
 <hr />
 
