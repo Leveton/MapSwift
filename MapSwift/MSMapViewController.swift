@@ -131,7 +131,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
         let location = MSLocation(coordinate: coordinate)
         location.title = dict.object(forKey: "name") as? String
-        location.type = dict.object(forKey: "name") as? String
+        location.locationID = dict.object(forKey: "locationId") as? Int
+        location.type = dict.object(forKey: "type") as? String
         location.distance = dict.object(forKey: "distance") as? CGFloat
         location.coordinate = coordinate
         
