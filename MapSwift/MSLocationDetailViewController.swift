@@ -17,6 +17,8 @@ private struct Constants{
 
 class MSLocationDetailViewController: UIViewController {
     
+    var isPresented = false
+    
     private var isLocationFavorited:Bool = false
     
     lazy var distanceLabel:UILabel = self.newDistanceLabel()
@@ -105,20 +107,23 @@ class MSLocationDetailViewController: UIViewController {
         self.favoriteButton.sizeToFit()
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        let tabController = self.presentingViewController as! MSTabBarController
-//        tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
-//    }
+    //    override func viewDidAppear(_ animated: Bool) {
+    //        super.viewDidAppear(animated)
+    //        let tabController = self.presentingViewController as! MSTabBarController
+    //        tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
+    //    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        
+        //turnary operator. thing of ? as if and : as else
+        let topPadding:CGFloat = isPresented ? 0.0 : 64
         
         var imageFrame = self.imageView.frame
         imageFrame.origin.x = Constants.ViewMargin
         
         /* the status bar is 20 points */
-        imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0
+        imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0 + topPadding
         
         imageFrame.size.width = self.view.frame.width - (Constants.ViewMargin*2)
         imageFrame.size.height = Constants.ImageHeight
@@ -143,13 +148,13 @@ class MSLocationDetailViewController: UIViewController {
         dismissFrame.origin.x = Constants.ViewMargin
         
         /* the status bar is 20 points */
-        dismissFrame.origin.y = CGFloat(20)
+        dismissFrame.origin.y = CGFloat(20) + topPadding
         self.dismissButton.frame = dismissFrame
         
         
         var favoriteFrame = self.favoriteButton.frame
         favoriteFrame.origin.x = self.view.frame.width - (favoriteFrame.size.width + Constants.ViewMargin)
-        favoriteFrame.origin.y = 20.0
+        favoriteFrame.origin.y = 20.0 + topPadding
         self.favoriteButton.frame = favoriteFrame
     }
     
@@ -175,7 +180,11 @@ class MSLocationDetailViewController: UIViewController {
     }
     
     func didTapDismiss(){
-        self.dismiss(animated: true, completion: handleDismiss)
+        if isPresented{
+            self.dismiss(animated: true, completion: handleDismiss)
+        }else{
+            self.navigationController?.popViewController(animated: true)
+        }
         
         /* notice that this was logged out BEFORE "completion block fired" was logged out */
         print("reached end of didTapDismiss scope")
