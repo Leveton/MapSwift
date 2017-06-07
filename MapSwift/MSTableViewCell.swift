@@ -12,7 +12,6 @@ class MSTableViewCell: UITableViewCell {
     
     weak var delegate:MSTableViewCellDelegate?
     
-    @IBOutlet weak var dividerLine: UIView!
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var subLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!

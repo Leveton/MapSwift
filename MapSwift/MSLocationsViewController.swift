@@ -33,9 +33,16 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
              Uncomment sorting by title to get the MDC locations in alphabetical order. Or use a more advanced sorting filter.
              */
             
-            //self.dataSource.sort{$0.title! < $1.title!}
-            self.dataSource.sort{$0.distance! < $1.distance!}
             self.tableView.reloadData()
+            //grab array of view controllers. those things at the bottom
+            let tab = self.tabBarController?.viewControllers
+            
+            //3rd vc is a nav controller. allowing u to push and pop
+            let nav = tab?[2] as! UINavigationController
+            
+            //nav also has array of vc's y we grabbed the root or 0 vc and then set it's data source
+            let vc = nav.viewControllers[0] as! MSFavoritesViewController
+            vc.dataSource = dataSource
         }
     }
     
@@ -98,6 +105,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let vc = MSLocationDetailViewController()
         vc.location = location
         vc.view.backgroundColor = UIColor.red
+        vc.isPresented = true
         self.present(vc, animated: true, completion: nil)
     }
 }
