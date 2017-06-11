@@ -118,6 +118,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             let vc:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
             vc.dataSource = self.datasource
             
+            configureUserDefaults(locations: self.datasource)
+            
         } catch {
             print("json failed")
         }
@@ -143,4 +145,21 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
         return location
     }
+    
+    func configureUserDefaults(locations:Array<MSLocation>){
+        var holderArray = [MSLocation]()
+        let favs:Array<Int> = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        for i in 0..<locations.count{
+            let location = locations[i]
+            if favs.contains(location.locationID!){
+                holderArray.append(location)
+            }
+        }
+        
+        let nav = self.tabBarController?.viewControllers?[2] as! UINavigationController
+        let vc = nav.viewControllers[0] as! MSFavoritesViewController
+        vc.dataSource = holderArray
+        vc.copiedDataSource = holderArray
+        
+     }
 }

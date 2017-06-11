@@ -35,14 +35,16 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             
             self.tableView.reloadData()
             //grab array of view controllers. those things at the bottom
-            let tab = self.tabBarController?.viewControllers
+            //let tab = self.tabBarController?.viewControllers
             
             //3rd vc is a nav controller. allowing u to push and pop
-            let nav = tab?[2] as! UINavigationController
+            //let nav = tab?[2] as! UINavigationController
             
             //nav also has array of vc's y we grabbed the root or 0 vc and then set it's data source
-            let vc = nav.viewControllers[0] as! MSFavoritesViewController
-            vc.dataSource = dataSource
+            //let vc = nav.viewControllers[0] as! MSFavoritesViewController
+            
+            //this is a SETTER. it's didSet{} in favs vc now gets called and copiedDataSource gets set
+            //vc.dataSource = dataSource
         }
     }
     

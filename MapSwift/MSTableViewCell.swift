@@ -12,6 +12,8 @@ class MSTableViewCell: UITableViewCell {
     
     weak var delegate:MSTableViewCellDelegate?
     
+    @IBOutlet weak var bottomBorder: UIView!
+    @IBOutlet weak var topBorder: UIView!
     @IBOutlet weak var mainLabel: UILabel!
     @IBOutlet weak var subLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
@@ -21,7 +23,9 @@ class MSTableViewCell: UITableViewCell {
     var location:MSLocation?
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        print("top border \(self.topBorder.layer.zPosition) bottom \(self.bottomBorder.layer.zPosition)")
+        self.topBorder.layer.zPosition = 2.0
+        self.bottomBorder.layer.zPosition = 2.0
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

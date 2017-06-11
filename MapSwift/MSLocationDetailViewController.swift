@@ -252,4 +252,5 @@ class MSLocationDetailViewController: UIViewController {
             self.label.isUserInteractionEnabled = finished
         })
     }
+
 }
