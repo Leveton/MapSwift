@@ -320,7 +320,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     //TODO: Refactor case 4 for a cleaner implementation. notice that this 'todo' shows up if you tap the file helper at the top
     func getRangeFromIndexPath(index: IndexPath) -> MSRange{
-        let range = MSRange()
+        var range = MSRange()
         
         if index.section == Sections.DistanceFilter.rawValue{
             switch index.row {

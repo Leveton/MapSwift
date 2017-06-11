@@ -7,7 +7,7 @@
 
 ## Links 
 
-[Instruments - SOP](https://medium.com/@kazmiekr/what-every-ios-developer-should-be-doing-with-instruments-d1661eeaf64f)
+[New Swift course](https://cur.at/EtltUqx?m=email&sid=gPu5gDr)
 
 <hr />
 
