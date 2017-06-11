@@ -18,7 +18,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     @IBOutlet weak var distanceFilter: UISwitch!
     @IBOutlet weak var nameFilter: UISwitch!
     
-    private let cellID = "CellIdentifier"
+    private let cellID = "MSTableViewCell"
     
     /* guarantee that dataSource is not nil */
     var dataSource = [MSLocation](){
