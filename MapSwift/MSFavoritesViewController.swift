@@ -101,7 +101,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
         /* triggers a .3 second animation for all UI related calls in between 'beginUpdates' and 'endUpdates' */
         self.tableView.beginUpdates()
-        self.tableView.deleteRows(at: array, with: UITableViewRowAnimation.automatic)
+        self.tableView.deleteRows(at: array, with: .automatic)
         self.tableView.endUpdates()
         
         /**

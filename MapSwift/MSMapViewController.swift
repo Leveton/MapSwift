@@ -155,23 +155,14 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             {(data, response, error) -> Void in
             
             print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-            if error == nil{
-                if data != nil{
-                    
-                    //self.layoutMapWithData(data: data!)
-                    DispatchQueue.main.async {
-                        self.progressView.stopAnimating()
-                        self.progressView.isHidden = true
-                        self.layoutMapWithData(data: data!)
-                    }
-                    
-                }else{
-                    print("data was nil")
+                guard error == nil, data == data else{
+                    return
                 }
-            }else{
-                print("server error: \(error!.localizedDescription)")
-            }
-            
+                DispatchQueue.main.async {
+                    self.progressView.stopAnimating()
+                    self.progressView.isHidden = true
+                    self.layoutMapWithData(data: data!)
+                }
         })
 
         locationTask.resume()
