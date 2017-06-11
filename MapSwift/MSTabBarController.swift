@@ -30,6 +30,7 @@ class MSTabBarController: UITabBarController {
         var favs = self.favoritesViewController.dataSource
         favs.removeWithObject(object: location)
         self.favoritesViewController.dataSource = favs
+        self.favoritesViewController.copiedDataSource = favs
     }
     
     public func addLocationToFavoritesWithLocation(location: MSLocation){
@@ -38,5 +39,6 @@ class MSTabBarController: UITabBarController {
         var favs = self.favoritesViewController.dataSource
         favs.append(location)
         self.favoritesViewController?.dataSource = favs
+        self.favoritesViewController.copiedDataSource = favs
     }
 }

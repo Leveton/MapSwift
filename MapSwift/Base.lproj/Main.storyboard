@@ -131,12 +131,13 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="bottomBorder" destination="hXN-GU-h15" id="bjl-Wf-7oG"/>
                                     <outlet property="deleteButton" destination="WpY-Qj-q2U" id="r2I-j5-Psz"/>
                                     <outlet property="detailsButton" destination="lmO-Rc-C6k" id="K1r-Ij-yj5"/>
-                                    <outlet property="dividerLine" destination="ZSD-H2-le5" id="IaU-Xh-46w"/>
                                     <outlet property="locationImageView" destination="Qnc-x4-9Z9" id="814-6c-8ps"/>
                                     <outlet property="mainLabel" destination="Uag-94-DI4" id="dPn-bX-ayt"/>
                                     <outlet property="subLabel" destination="BPW-71-D7F" id="4VL-x9-S1B"/>
+                                    <outlet property="topBorder" destination="ZSD-H2-le5" id="uKT-UD-WVE"/>
                                     <outlet property="typeLabel" destination="ZeB-Kx-tDL" id="Qrh-XO-6su"/>
                                 </connections>
                             </tableViewCell>

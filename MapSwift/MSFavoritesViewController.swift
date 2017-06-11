@@ -8,6 +8,16 @@
 
 import UIKit
 
+struct combinedLocation{
+    var total:CGFloat!
+    var collection:Array<MSLocation>!
+    
+    init(_ total:CGFloat, _ collection:Array<MSLocation>){
+        self.total = total
+        self.collection = collection
+    }
+}
+
 class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate {
 
     @IBOutlet weak var nameLabel: UILabel!
@@ -27,12 +37,18 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     
     /* guarantee that dataSource is not nil */
-    var dataSource = [MSLocation]()
+    var dataSource = [MSLocation](){
+        didSet{
+            if copiedDataSource == nil{
+                copiedDataSource = self.dataSource
+            }
+        }
+    }
+    
+    var copiedDataSource:Array<MSLocation>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -52,11 +68,20 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? MSTableViewCell
-        cell?.delegate = self
-        cell?.location = location
-        cell?.tag = indexPath.row
-        return cell!
+        let iden = "MSTableViewCell"
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: iden) as? MSTableViewCell ?? MSTableViewCell(style: .subtitle, reuseIdentifier: iden)
+        cell.delegate = self
+        cell.location = location
+        cell.mainLabel.text = location.title
+        cell.subLabel.text = "dist: \(String(describing: location.distance!))"
+        cell.typeLabel.text = location.type
+        cell.locationImageView.image = location.locationImage
+        
+        //call some method on the cell class that adjusts the z-axis of the top and bottom borders
+        //e.g. cell.adjustBorders()
+        cell.selectionStyle = .none
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -104,25 +129,90 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     
     //MARK: selectors
-//    - (void)setFavoritesOrder:(NSArray *)favoritesOrder{
-//    _favoritesOrder = favoritesOrder;
-//    
-//    [_favoritesOrder enumerateObjectsUsingBlock:^(NSString *item, NSUInteger idx, BOOL *stop) {
-//    [[self favoritesOrderDictionary] setObject:@(idx) forKey:item];
-//    }];
-//    
-//    [self sortDataByOrder];
-//    [[self tableView] reloadData];
-//    }
+
+    //MARK: selectors
+    
+    //we're checking to see if copiedData source is NOT nil
+    func resetDataSource(){
+        if let copiedDataSource = copiedDataSource{
+            print("copied!")
+            self.dataSource = copiedDataSource
+            self.tableView.reloadData()
+        }else{
+            print("failed!")
+        }
+    }
+    
+    @IBAction func nameSwitched(_ sender: Any) {
+        let control = sender as! UISwitch
+        control.isOn = !control.isOn
+        distanceFilter.isOn = false
+        typeFilter.isOn = false
+        
+        if control.isOn{
+            //make sure title property is not nil, if it is, compare empty strings
+            self.dataSource.sort{($0.title ?? "") < ($1.title ?? "")}
+            self.tableView.reloadData()
+        }else{
+            resetDataSource()
+        }
+        
+    }
+    @IBAction func distanceSwitched(_ sender: Any) {
+        //casting to UISwitch so we have access to isOn
+        let control = sender as! UISwitch
+        control.isOn = !control.isOn
+        nameFilter.isOn = false
+        typeFilter.isOn = false
+        
+        if control.isOn{
+            self.dataSource.sort{($0.distance ?? 0.0) < ($1.distance ?? 0.0)}
+            self.tableView.reloadData()
+        }else{
+            resetDataSource()
+        }
+        
+    }
+    @IBAction func distanceTypeSwitched(_ sender: Any) {
+        let control = sender as! UISwitch
+        //control.isOn = !control.isOn
+        nameFilter.isOn = false
+        distanceFilter.isOn = false
+        
+        if control.isOn{
+            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type! == "Random"}
+            let rested:Array<MSLocation> = self.dataSource.filter{$0.type! == "Restaurant"}
+            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type! == "School"}
+            let started:Array<MSLocation> = self.dataSource.filter{$0.type! == "StartUp"}
+            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type! == "Hospital"}
+            
+            let randomTotal = randomed.reduce(0, {$0 + $1.distance!})
+            let restedTotal = rested.reduce(0, {$0 + $1.distance!})
+            let schoolTotal = schooled.reduce(0, {$0 + $1.distance!})
+            let startedTotal = started.reduce(0, {$0 + $1.distance!})
+            let hospitalTotal = hospitaled.reduce(0, {$0 + $1.distance!})
+            
+            let random = combinedLocation(randomTotal, randomed)
+            let school = combinedLocation(schoolTotal, schooled)
+            let rest = combinedLocation(restedTotal, rested)
+            let start = combinedLocation(startedTotal, started)
+            let hospital = combinedLocation(hospitalTotal, hospitaled)
+            
+            var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
+            foo.sort{$0.total! < $1.total!}
+            
+            let finally = foo[0].collection + foo[1].collection + foo[2].collection! + foo[3].collection + foo[4].collection
+            self.dataSource = finally
+            self.tableView.reloadData()
+            
+        }else{
+            resetDataSource()
+        }
+    }
     
     func favoritesReordered(_ notification: NSNotification){
         if (notification.object != nil){
             
         }
     }
-//    - (void)favoritesReordered:(NSNotification *)note{
-//    if ([note object]){
-//    [self setFavoritesOrder:[note object]];
-//    }
-//    }
 }

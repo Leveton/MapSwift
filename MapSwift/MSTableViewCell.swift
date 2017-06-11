@@ -21,6 +21,7 @@ class MSTableViewCell: UITableViewCell {
     @IBOutlet weak var deleteButton: UIButton!
     @IBOutlet weak var locationImageView: UIImageView!
     var location:MSLocation?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         print("top border \(self.topBorder.layer.zPosition) bottom \(self.bottomBorder.layer.zPosition)")
