@@ -54,22 +54,18 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     //MARK: getters
     
-    func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
-        var cell = self.tableView.dequeueReusableCell(withIdentifier: colorsCellID)
-        if cell == nil{
-            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: colorsCellID)
-            let imageView = UIImageView(image: UIImage(named: "check"))
-            imageView.isHidden = true
-            cell?.accessoryView = imageView
-        }
-        
-        /* we can unwrap the optional because the cell is nil */
-        cell!.textLabel?.text = self.colorsArray[indexPath.row]
-        return cell!
+     func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+        let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSColorTableViewCell
+        let imageView = UIImageView(image: UIImage(named: "check"))
+        imageView.isHidden = true
+        cell.accessoryView = imageView
+        cell.textLabel?.text = self.colorsArray[indexPath.row]
+        return cell
     }
     
+    // you don't always have to use dequeue cells
     func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSDistanceTableViewCell
         let imageView = UIImageView(image: UIImage(named: "check"))
         imageView.isHidden = true
         cell.accessoryView = imageView
@@ -81,7 +77,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     func typeCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSTypeTableViewCell
         
         /*prevent highlight upon tap */
         cell.selectionStyle = UITableViewCellSelectionStyle.none
@@ -100,7 +96,10 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         let tableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: settingsCellID)
+        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: settingsCellID)
+        tableView.registerReusableCell(MSTypeTableViewCell.self)
+        tableView.registerReusableCell(MSDistanceTableViewCell.self) // This will register using the class without using a UINib
+        tableView.registerReusableCell(MSColorTableViewCell.self)
         self.view.addSubview(tableView)
         tableView.allowsSelectionDuringEditing = true
         return tableView
@@ -151,18 +150,41 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        //let cell: UITableViewCell
         /* with different sizes, labels, types, etc, let's use some helpers instead of putting it all in-line */
         
         if (indexPath.section == Sections.ThemeColor.rawValue) {
-            return  self.colorsCellForIndexPath(indexPath: indexPath)
+//            cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSColorTableViewCell
+//            let imageView = UIImageView(image: UIImage(named: "check"))
+//            imageView.isHidden = true
+//            cell.accessoryView = imageView
+//            cell.textLabel?.text = self.colorsArray[indexPath.row]
+            return colorsCellForIndexPath(indexPath: indexPath)
         }
         
         if (indexPath.section == Sections.TypeFilter.rawValue) {
-            return  self.typeCellForIndexPath(indexPath: indexPath)
+//            cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSTypeTableViewCell
+//            /*prevent highlight upon tap */
+//            cell.selectionStyle = UITableViewCellSelectionStyle.none
+//            
+//            /* allow cell to be reoredered */
+//            cell.showsReorderControl = true
+//            
+//            cell.textLabel?.text = self.typesArray[indexPath.row]
+            return typeCellForIndexPath(indexPath: indexPath)
         }
         
         if (indexPath.section == Sections.DistanceFilter.rawValue) {
-            return  distanceCellForIndexPath(indexPath: indexPath)
+//            cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSDistanceTableViewCell
+//            let imageView = UIImageView(image: UIImage(named: "check"))
+//            imageView.isHidden = true
+//            cell.accessoryView = imageView
+//            
+//            /* we can unwrap the optional because the cell is nil */
+//            let index:String = String(indexPath.row)
+//            cell.textLabel?.text = self.locationRangeDictionary[index]
+//            return cell
+            return distanceCellForIndexPath(indexPath: indexPath)
         }
         
         return UITableViewCell()

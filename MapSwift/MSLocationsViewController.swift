@@ -44,7 +44,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             if range == nil{
                 self.copiedDataSource = self.dataSource
                 //self.dataSource.sort{$0.title! < $1.title!}
-                self.dataSource.sort{$0.distance! < $1.distance!}
+                self.dataSource.sort{$0.distance < $1.distance}
                 self.tableView.reloadData()
             }
         }
@@ -102,7 +102,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         
         //cell?.delegate = self
         cell?.textLabel?.text = location.title
-        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
+        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)) as String
         return cell!
     }
     
@@ -127,7 +127,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
         }else{
             /* sort by distance from highest to lowest */
-            self.dataSource.sort{$0.distance! < $1.distance!}
+            self.dataSource.sort{$0.distance < $1.distance}
         }
     }
 }
