@@ -220,7 +220,11 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         location.locationID = dict.object(forKey: "locationId") as? Int
         location.title = dict.object(forKey: "name") as? String
         location.type = dict.object(forKey: "type") as? String
-        location.distance = dict.object(forKey: "distance") as? CGFloat
+        let fl = dict.object(forKey: "distance") as? CGFloat
+        if let fl = fl{
+            location.distance = fl
+            location.subtitle = "dist: \(String(describing: fl))"
+        }
         location.coordinate = coordinate
         
         let image = UIImage(named: dict.object(forKey: "image") as! String)

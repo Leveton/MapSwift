@@ -100,6 +100,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let vc = MSLocationDetailViewController()
         vc.location = location
         vc.view.backgroundColor = UIColor.red
+        vc.isViewPresented = true
         self.present(vc, animated: true, completion: nil)
     }
     
