@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-class MSRange : NSObject{
-    var startPoint:CGFloat = 0.0{
+struct MSRange{
+    var startPoint:Float = 0.0{
         didSet{
             
         }
     }
-    var endPoint:CGFloat = 0.0{
+    var endPoint:Float = 0.0{
         didSet{
         
         }

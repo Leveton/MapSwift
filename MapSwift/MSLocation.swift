@@ -15,12 +15,13 @@ class MSLocation: NSObject, MKAnnotation, NSCopying {
     var type:String?
     var subtitle: String?
     @objc var coordinate:CLLocationCoordinate2D
-    var distance:CGFloat?
+    @objc var distance:CGFloat
     var locationImage:UIImage?
     var locationID:Int?
     
-    init(coordinate:CLLocationCoordinate2D) {
+    init(coordinate:CLLocationCoordinate2D, distance:CGFloat) {
         self.coordinate = coordinate
+        self.distance = distance
     }
     
     func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
@@ -32,10 +33,9 @@ class MSLocation: NSObject, MKAnnotation, NSCopying {
         var coordinate = CLLocationCoordinate2D()
         coordinate.latitude  = 0
         coordinate.longitude = 0
-        let location = MSLocation(coordinate: coordinate)
+        let location = MSLocation(coordinate: coordinate, distance: self.distance)
         location.title = self.title
         location.type = self.type
-        location.distance = self.distance
         location.locationImage = self.locationImage
         location.locationID = self.locationID
         return location
