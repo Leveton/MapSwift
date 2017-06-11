@@ -26,14 +26,16 @@ class MSTabBarController: UITabBarController {
     
     public func removeLocationFromFavoritesWithLocation(location: MSLocation){
         
-        self.favoritesViewController = self.viewControllers![2] as! MSFavoritesViewController
+        let nav = self.viewControllers![2] as! UINavigationController
+        self.favoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
         var favs = self.favoritesViewController.dataSource
         favs.removeWithObject(object: location)
         self.favoritesViewController.dataSource = favs
     }
     
     public func addLocationToFavoritesWithLocation(location: MSLocation){
-        self.favoritesViewController = self.viewControllers![2] as! MSFavoritesViewController
+        let nav = self.viewControllers![2] as! UINavigationController
+        self.favoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
         var favs = self.favoritesViewController.dataSource
         favs.append(location)
         self.favoritesViewController?.dataSource = favs

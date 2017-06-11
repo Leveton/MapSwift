@@ -8,10 +8,17 @@
 
 import UIKit
 
-class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableViewDataSource, MSTableViewCellDelegate {
+class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate {
 
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var typeLabel: UILabel!
+    
+    @IBOutlet weak var typeFilter: UISwitch!
+    @IBOutlet weak var distanceFilter: UISwitch!
+    @IBOutlet weak var nameFilter: UISwitch!
+    
     private let cellID = "CellIdentifier"
-    @IBOutlet weak var tableView: UITableView!
     
     /* guarantee that dataSource is not nil */
     var dataSource = [MSLocation](){
@@ -39,11 +46,11 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
     }
 
     //MARK: UITableViewDelegate
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? MSTableViewCell
         cell?.delegate = self
@@ -52,8 +59,8 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100  
     }
 
     //MARK: MSTableViewCellDelegate
@@ -88,7 +95,7 @@ class MSFavoritesViewController: MSViewController, UITableViewDelegate, UITableV
         }
     }
     
-    func detailsButtonTappedFromCell(cell: MSTableViewCell, location: MSLocation) {
+    func detailButtonTappedFrom(cell: MSTableViewCell, location: MSLocation) {
         
         /* Same code as 'didSelectRowAtIndexPath' from the last lesson */
         let vc = MSLocationDetailViewController()

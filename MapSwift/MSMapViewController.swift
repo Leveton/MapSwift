@@ -209,9 +209,10 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 let viewControllers = self.tabBarController?.viewControllers
                 let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
                 locationsVC.dataSource = self.datasource
-                
-                let favsVC:MSFavoritesViewController = viewControllers![2] as! MSFavoritesViewController
+                let nav:UINavigationController = viewControllers![2] as! UINavigationController
+                let favsVC = nav.viewControllers[0] as! MSFavoritesViewController
                 favsVC.dataSource = favsDataSource
+                
                 self.map.isHidden = false
                 
             } catch {
@@ -238,4 +239,5 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
         return location
     }
+    
 }
