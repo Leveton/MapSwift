@@ -13,6 +13,7 @@ class MSLocation: NSObject, MKAnnotation, NSCopying {
 
     var title:String?
     var type:String?
+    var subtitle: String?
     @objc var coordinate:CLLocationCoordinate2D
     var distance:CGFloat?
     var locationImage:UIImage?

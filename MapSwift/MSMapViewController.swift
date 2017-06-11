@@ -146,83 +146,86 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
          App transport security hack is required here.
          */
         
-//        self.progressView.isHidden = false
-//        self.progressView.startAnimating()
-//        
-//        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-//            self.locationsRequest as URLRequest, completionHandler:
-//            {(data, response, error) -> Void in
-//            
-//            print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-//            if error == nil{
-//                if data != nil{
-//                    
-//                    //self.layoutMapWithData(data: data!)
-//                    DispatchQueue.main.async {
-//                        self.progressView.stopAnimating()
-//                        self.progressView.isHidden = true
-//                        self.layoutMapWithData(data: data!)
-//                    }
-//                    
-//                }else{
-//                    print("data was nil")
-//                }
-//            }else{
-//                print("server error: \(error!.localizedDescription)")
-//            }
-//            
-//        })
-//
-//        locationTask.resume()
+        self.progressView.isHidden = false
+        self.progressView.startAnimating()
         
-        getLocalData()
+        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+            self.locationsRequest as URLRequest, completionHandler:
+            {(data, response, error) -> Void in
+                
+                print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
+                self.progressView.isHidden = false
+                self.progressView.startAnimating()
+                
+                let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+                    self.locationsRequest as URLRequest, completionHandler:
+                    {(data, response, error) -> Void in
+                        
+                        print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
+                        guard error == nil, data == data else{
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            self.progressView.stopAnimating()
+                            self.progressView.isHidden = true
+                            self.layoutMapWithData(data: data!)
+                        }
+                })
+                
+                locationTask.resume()
+                
+        })
+        
+        locationTask.resume()
+        
+        //getLocalData()
         
     }
     
     /* let's abstract reused code into one method */
     func layoutMapWithData(data:Data){
         
-            /** serialize the bytes into a dictionary object */
-            let jsonResponse:AnyObject
-            do {
-                try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
-                let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-                print("json response \(jsonResponse)")
-                let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-                print("json dictionaries \(locationDictionaries)")
-                
-                /* Populate the favorites vc */
-                let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-                print("favs from MSMAPVC: \(favs)")
-                var favsDataSource = [MSLocation]()
-                
-                for x in 0..<locationDictionaries.count{
-                    let dict = locationDictionaries[x] as NSDictionary
-                    let location:MSLocation = self.createLocationWithDictionary(dict: dict)
-                    self.datasource.append(location)
-                    if favs.contains(location.locationID!){
-                        favsDataSource.append(location)
-                    }
-                    
-                    /* uncomment to see how copying an object would work */
-//                    let newloc = location.copy() as! MSLocation
-//                    newloc.type = "foo"
-//                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+        /** serialize the bytes into a dictionary object */
+        let jsonResponse:AnyObject
+        do {
+            try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
+            let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
+            print("json response \(jsonResponse)")
+            let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
+            print("json dictionaries \(locationDictionaries)")
+            
+            /* Populate the favorites vc */
+            let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+            print("favs from MSMAPVC: \(favs)")
+            var favsDataSource = [MSLocation]()
+            
+            for x in 0..<locationDictionaries.count{
+                let dict = locationDictionaries[x] as NSDictionary
+                let location:MSLocation = self.createLocationWithDictionary(dict: dict)
+                self.datasource.append(location)
+                if favs.contains(location.locationID!){
+                    favsDataSource.append(location)
                 }
                 
-                let viewControllers = self.tabBarController?.viewControllers
-                let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
-                locationsVC.dataSource = self.datasource
-                
-                let nav:UINavigationController = viewControllers![2] as! UINavigationController
-                
-                let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
-                favsVC.dataSource = favsDataSource
-                self.map.isHidden = false
-                
-            } catch {
-                print("json failed")
+                /* uncomment to see how copying an object would work */
+                //                    let newloc = location.copy() as! MSLocation
+                //                    newloc.type = "foo"
+                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
             }
+            
+            let viewControllers = self.tabBarController?.viewControllers
+            let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
+            locationsVC.dataSource = self.datasource
+            
+            let nav:UINavigationController = viewControllers![2] as! UINavigationController
+            
+            let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
+            favsVC.dataSource = favsDataSource
+            self.map.isHidden = false
+            
+        } catch {
+            print("json failed")
+        }
     }
     
     func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
@@ -234,7 +237,11 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         location.locationID = dict.object(forKey: "locationId") as? Int
         location.title = dict.object(forKey: "name") as? String
         location.type = dict.object(forKey: "type") as? String
-        location.distance = dict.object(forKey: "distance") as? CGFloat
+        let fl = dict.object(forKey: "distance") as? CGFloat
+        if let fl = fl{
+            location.distance = fl
+            location.subtitle = "dist: \(String(describing: fl))"
+        }
         location.coordinate = coordinate
         
         let image = UIImage(named: dict.object(forKey: "image") as! String)
