@@ -34,10 +34,6 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             if self.copiedDataSource == nil{
               self.copiedDataSource = self.dataSource
             }
-    
-            if self.tableView != nil{
-                self.tableView.reloadData()
-            }
         }
     }
     
@@ -47,6 +43,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         super.viewDidLoad()
         
         tableView.register(MSTableViewCell.self, forCellReuseIdentifier: cellID)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated);
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
