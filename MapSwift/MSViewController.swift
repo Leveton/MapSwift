@@ -38,7 +38,3 @@ class MSViewController: UIViewController {
         view.backgroundColor = note.object as? UIColor
     }
 }
-
-public enum GlobalStrings: String {
-    case GlobalThemeChanged = "com.mapstack.themeWasChanged"
-}

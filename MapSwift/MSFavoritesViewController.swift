@@ -44,6 +44,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         super.viewDidLoad()
     }
     
+    //gets called everytime the view is at the top level of the stack
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
@@ -54,9 +55,30 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         // Dispose of any resources that can be recreated.
     }
 
-    
+    //I must implement this method because if conform to MSTableViewCellDelegate
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
+        //get a ref to our data source
+        var favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
+        let locId = location.locationID
         
+        //makes sure that location.locationID is not nil
+        if let locId = locId{
+            favs.removeWithObject(locId)
+            UserDefaults.standard.set(favs, forKey: GlobalStrings.FavoritesArray.rawValue)
+            self.dataSource.removeWithObject(location)
+            var array = [IndexPath]()
+            array.append(IndexPath(row: cell.tag, section: 0))
+            
+            //triggers a .3 second animation for all calls between 'beginUpdates' and 'endUpdates'
+            self.tableView.beginUpdates()
+            self.tableView.deleteRows(at: array, with: .automatic)
+            self.tableView.endUpdates()
+            
+            //calling the main thread of execution. it grabs the thread after 0.3 seconds have elapsed.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3){
+                self.tableView.reloadData()
+            }
+        }
     }
     
     func detailButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
@@ -79,7 +101,10 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         let iden = "MSTableViewCell"
         
         let cell = tableView.dequeueReusableCell(withIdentifier: iden) as? MSTableViewCell ?? MSTableViewCell(style: .subtitle, reuseIdentifier: iden)
-        cell.delegate = self
+        cell.tag = indexPath.row
+        // if delegate were to be a strong property, then cell would have a strong reference to favs view controller AND favs view controller could have a strong reference to the cell. if two objects have a strong reference to each other, they may never be deallocated.
+        
+        cell.delegate = self //self is favs view controller
         cell.location = location
         cell.mainLabel.text = location.title
         cell.subLabel.text = "dist: \(String(describing: location.distance!))"
@@ -89,6 +114,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         //call some method on the cell class that adjusts the z-axis of the top and bottom borders
         //e.g. cell.adjustBorders()
         cell.selectionStyle = .none
+        cell.topBorder.isHidden = indexPath.row != 0
         return cell
     }
     
@@ -124,6 +150,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         }
         
     }
+    
     @IBAction func distanceSwitched(_ sender: Any) {
         //casting to UISwitch so we have access to isOn
         let control = sender as! UISwitch

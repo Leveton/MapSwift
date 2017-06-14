@@ -10,7 +10,12 @@ import UIKit
 
 class MSTableViewCell: UITableViewCell {
     
-    weak var delegate:MSTableViewCellDelegate?
+    //weak storage - when it's assigned, the retain count is not incremented ++
+    weak var delegate:MSTableViewCellDelegate?{
+        didSet{
+            
+        }
+    }
     
     @IBOutlet weak var bottomBorder: UIView!
     @IBOutlet weak var topBorder: UIView!
@@ -37,6 +42,7 @@ class MSTableViewCell: UITableViewCell {
     //MARK: selectors
     
     @IBAction func didTapDelete(_ sender: Any) {
+        // the delegate is the employee is the msfavorites view controller
         delegate?.deleteButtonTappedFrom(cell: self, location: self.location!)
     }
     

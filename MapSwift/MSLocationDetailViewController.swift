@@ -95,7 +95,7 @@ class MSLocationDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
         print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: location?.locationID))")
         isLocationFavorited = favs.contains((self.location?.locationID)!)
         
@@ -197,21 +197,21 @@ class MSLocationDetailViewController: UIViewController {
         
         self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
         
-        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        var favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
         print("favs from user defaults: \(favs)")
         
         /* grab our custom tabbar controller at the root of the project and cascade down */
         let tabController = self.presentingViewController as! MSTabBarController
         
         if isLocationFavorited{
-            favs.removeWithObject(object: self.location!.locationID!)
+            favs.removeWithObject(self.location!.locationID!)
             tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
         }else{
             favs.append(self.location!.locationID!)
             tabController.addLocationToFavoritesWithLocation(location: self.location!)
         }
         
-        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        UserDefaults.standard.set(favs, forKey: GlobalStrings.FavoritesArray.rawValue)
         isLocationFavorited = !isLocationFavorited
         
         /* this is redundant code, so let's refactor it */

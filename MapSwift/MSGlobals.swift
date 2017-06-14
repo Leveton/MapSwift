@@ -16,10 +16,15 @@ public class MSSingleton{
 
 public extension Array where Element: Equatable {
     // Remove first collection element that is equal to the given `object`:
-    mutating func removeWithObject(object: Element) {
+    mutating func removeWithObject(_ object: Element) {
         print("looping thru array")
         if let index = index(of: object) {
             remove(at: index)
         }
     }
+}
+
+public enum GlobalStrings: String {
+    case GlobalThemeChanged = "com.mapstack.themeWasChanged"
+    case FavoritesArray = "favoritesArray"
 }

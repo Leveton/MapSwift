@@ -148,7 +148,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     func configureUserDefaults(locations:Array<MSLocation>){
         var holderArray = [MSLocation]()
-        let favs:Array<Int> = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        let favs:Array<Int> = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
         for i in 0..<locations.count{
             let location = locations[i]
             if favs.contains(location.locationID!){

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Root View Controller-->
+        <!--Favs-->
         <scene sceneID="jAZ-bH-SnZ">
             <objects>
                 <tableViewController id="Dyj-LH-hU1" customClass="MSFavoritesViewController" customModule="MapSwift" customModuleProvider="target" sceneMemberID="viewController">
@@ -71,7 +71,7 @@
                                 <rect key="frame" x="0.0" y="128" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RqG-il-3ga" id="Gqv-Ga-LDz">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8oA-aA-UlJ">
@@ -145,7 +145,7 @@
                         </connections>
                     </tableView>
                     <tabBarItem key="tabBarItem" title="Item" image="favoriteStar" id="8fz-pv-Znr"/>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="5HA-WZ-kh0"/>
+                    <navigationItem key="navigationItem" title="Favs" id="5HA-WZ-kh0"/>
                     <connections>
                         <outlet property="distanceFilter" destination="Nge-vx-zB8" id="Ybh-yC-VKi"/>
                         <outlet property="distanceLabel" destination="p6T-GS-R1W" id="4dj-71-DuE"/>
