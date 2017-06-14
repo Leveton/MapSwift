@@ -154,36 +154,14 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         /* with different sizes, labels, types, etc, let's use some helpers instead of putting it all in-line */
         
         if (indexPath.section == Sections.ThemeColor.rawValue) {
-//            cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSColorTableViewCell
-//            let imageView = UIImageView(image: UIImage(named: "check"))
-//            imageView.isHidden = true
-//            cell.accessoryView = imageView
-//            cell.textLabel?.text = self.colorsArray[indexPath.row]
             return colorsCellForIndexPath(indexPath: indexPath)
         }
         
         if (indexPath.section == Sections.TypeFilter.rawValue) {
-//            cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSTypeTableViewCell
-//            /*prevent highlight upon tap */
-//            cell.selectionStyle = UITableViewCellSelectionStyle.none
-//            
-//            /* allow cell to be reoredered */
-//            cell.showsReorderControl = true
-//            
-//            cell.textLabel?.text = self.typesArray[indexPath.row]
             return typeCellForIndexPath(indexPath: indexPath)
         }
         
         if (indexPath.section == Sections.DistanceFilter.rawValue) {
-//            cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSDistanceTableViewCell
-//            let imageView = UIImageView(image: UIImage(named: "check"))
-//            imageView.isHidden = true
-//            cell.accessoryView = imageView
-//            
-//            /* we can unwrap the optional because the cell is nil */
-//            let index:String = String(indexPath.row)
-//            cell.textLabel?.text = self.locationRangeDictionary[index]
-//            return cell
             return distanceCellForIndexPath(indexPath: indexPath)
         }
         
@@ -284,14 +262,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return false
     }
     
-    /* prevents animations on non-type cells */
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == Sections.TypeFilter.rawValue{
-            return true
-        }
-        return false
-    }
-    
+    //gets called after we've let go of the cell
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
         /*update our data source to refect the change */
@@ -299,6 +270,14 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         typesArray.remove(at: sourceIndexPath.row)
         typesArray.insert(sourceString, at: destinationIndexPath.row)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: self.typesArray)
+    }
+    
+    /* prevents animations on non-type cells */
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == Sections.TypeFilter.rawValue{
+            return true
+        }
+        return false
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {

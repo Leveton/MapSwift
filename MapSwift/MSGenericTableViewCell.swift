@@ -18,8 +18,20 @@ extension Reusable {
         // I like to use the class's name as an identifier
         // so this makes a decent default value.
         print("reusable string \(Self.self)")
+        
+        //Self is the thing conforming to the protocol, in this case a subclass of UITableViewCell
         return String(describing: Self.self)
     }
+    
+}
+
+class MSColorTableViewCell: UITableViewCell, Reusable {
+    
+}
+class MSTypeTableViewCell: UITableViewCell, Reusable {
+    
+}
+class MSDistanceTableViewCell: UITableViewCell, Reusable {
     
 }
 
@@ -29,18 +41,10 @@ extension UITableView{
         return self.dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as! T
     }
     
+    //T.type is how you ask for SomeClass.self
+    //The where clause makes sure that it only registeres UITableViewCells that coform to Reusable
     func registerReusableCell<T: UITableViewCell>(_: T.Type) where T: Reusable {
         self.register(T.self, forCellReuseIdentifier: T.reuseIdentifier)
     }
 }
 
-
-class MSColorTableViewCell: UITableViewCell, Reusable {
-
-}
-class MSTypeTableViewCell: UITableViewCell, Reusable {
-    
-}
-class MSDistanceTableViewCell: UITableViewCell, Reusable {
-    
-}
