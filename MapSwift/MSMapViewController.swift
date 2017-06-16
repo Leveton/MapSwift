@@ -45,14 +45,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return view
     }
     
-    lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
-    func  newLocationsRequest() -> NSMutableURLRequest{
+    lazy var locationsRequest:URLRequest? = self.newLocationsRequest()
+    func newLocationsRequest() -> URLRequest?{
         /**
          As of iOS 9, apple requires that API endpoint use SSL. Were I to serve this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
          */
-        
         let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
-        return NSMutableURLRequest(url: url!)
+        if let url = url{
+            return URLRequest(url: url)
+        }else{
+            return nil
+        }
     }
     
     /* URLSession is a large and rich API for downloading data */
@@ -149,36 +152,25 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         self.progressView.isHidden = false
         self.progressView.startAnimating()
         
-        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-            self.locationsRequest as URLRequest, completionHandler:
-            {(data, response, error) -> Void in
-                
-                print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-                self.progressView.isHidden = false
-                self.progressView.startAnimating()
-                
-                let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-                    self.locationsRequest as URLRequest, completionHandler:
-                    {(data, response, error) -> Void in
-                        
-                        print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-                        guard error == nil, data == data else{
-                            return
-                        }
-                        DispatchQueue.main.async {
-                            self.progressView.stopAnimating()
-                            self.progressView.isHidden = true
-                            self.layoutMapWithData(data: data!)
-                        }
-                })
-                
-                locationTask.resume()
-                
-        })
+        if let request = self.locationsRequest{
+            let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+                request, completionHandler:
+                {(data, response, error) -> Void in
+                    
+                    DispatchQueue.main.async {
+                        self.progressView.stopAnimating()
+                        self.progressView.isHidden = true
+                        self.layoutMapWithData(data: data!)
+                    }
+                    
+            })
+            
+            locationTask.resume()
+        }else{
+            getLocalData()
+        }
         
-        locationTask.resume()
-        
-        //getLocalData()
+        //
         
     }
     
