@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C06411A1EF1FD6700E0CF3A /* MSGenericTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0641191EF1FD6700E0CF3A /* MSGenericTableViewCell.swift */; };
 		1C0BF0711EE611210086F476 /* MSTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0BF0701EE611210086F476 /* MSTableViewCell.swift */; };
 		1C244D901EA84E6000BA0917 /* MSLocationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C244D8F1EA84E6000BA0917 /* MSLocationDetailViewController.swift */; };
 		1C32FCDC1EAA9F0A006A2D3C /* MSGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C32FCDB1EAA9F0A006A2D3C /* MSGlobals.swift */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C0641191EF1FD6700E0CF3A /* MSGenericTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSGenericTableViewCell.swift; sourceTree = "<group>"; };
 		1C0BF0701EE611210086F476 /* MSTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSTableViewCell.swift; sourceTree = "<group>"; };
 		1C244D8F1EA84E6000BA0917 /* MSLocationDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSLocationDetailViewController.swift; sourceTree = "<group>"; };
 		1C32FCDB1EAA9F0A006A2D3C /* MSGlobals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MSGlobals.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				1C0BF0701EE611210086F476 /* MSTableViewCell.swift */,
+				1C0641191EF1FD6700E0CF3A /* MSGenericTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 				1CC916931EA5AD9B00F3CE95 /* MSLocation.swift in Sources */,
 				1CE1EAC81E8C645300C4E87D /* MSMapViewController.swift in Sources */,
 				1CE1EAA61E8C5FCF00C4E87D /* AppDelegate.swift in Sources */,
+				1C06411A1EF1FD6700E0CF3A /* MSGenericTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

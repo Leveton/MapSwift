@@ -16,6 +16,8 @@ class MSViewController: UIViewController {
 
         //MSSingleton.sharedInstance.themeColor = UIColor.red
         self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleThemeChange(_:)), name: Notification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -23,18 +25,7 @@ class MSViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    func handleThemeChange(note: Notification) {
+    func handleThemeChange(_ note: Notification) {
         view.backgroundColor = note.object as? UIColor
     }
 }

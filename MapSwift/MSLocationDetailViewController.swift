@@ -92,8 +92,22 @@ class MSLocationDetailViewController: UIViewController {
         }
     }
     
+    func addTapped(){
+        let vc = MSLocationDetailViewController()
+        vc.location = self.location
+        vc.view.backgroundColor = UIColor.orange
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    func addCancel(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //uncomment to see LIFO stack data structure
+        //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+        //self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(addCancel))
         
         let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
         print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: location?.locationID))")

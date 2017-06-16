@@ -42,8 +42,15 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     //MARK: view lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleThemeChange(_:)), name: Notification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
     }
     
+    func handleThemeChange(_ note: Notification) {
+        nameLabel.backgroundColor = note.object as? UIColor
+        distanceLabel.backgroundColor = note.object as? UIColor
+        typeLabel.backgroundColor = note.object as? UIColor
+        
+    }
     //gets called everytime the view is at the top level of the stack
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
