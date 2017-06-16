@@ -127,23 +127,29 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     }
     
     func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
-        var coordinate = CLLocationCoordinate2D()
-        coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
-        coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
         
-        let location = MSLocation(coordinate: coordinate)
-        location.title = dict.object(forKey: "name") as? String
-        location.locationID = dict.object(forKey: "locationId") as? Int
-        location.type = dict.object(forKey: "type") as? String
-        location.distance = dict.object(forKey: "distance") as? CGFloat
-        location.coordinate = coordinate
-        
-        let image = UIImage(named: dict.object(forKey: "image") as! String)
-        location.locationImage = image
-        
-        map.addAnnotation(location)
-        
-        return location
+        let fl = dict.object(forKey: "distance") as? CGFloat
+        if let fl = fl{
+            var coordinate = CLLocationCoordinate2D()
+            coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
+            coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
+            
+            let location = MSLocation(coordinate: coordinate, distance:fl)
+            location.subtitle = "dist: \(String(describing: fl))"
+            location.locationID = dict.object(forKey: "locationId") as? Int
+            location.title = dict.object(forKey: "name") as? String
+            location.type = dict.object(forKey: "type") as? String
+            location.coordinate = coordinate
+            
+            let image = UIImage(named: dict.object(forKey: "image") as! String)
+            location.locationImage = image
+            
+            map.addAnnotation(location)
+            
+            return location
+        }else{
+            return MSLocation(coordinate: CLLocationCoordinate2D(), distance: 0.0)
+        }
     }
     
     func configureUserDefaults(locations:Array<MSLocation>){

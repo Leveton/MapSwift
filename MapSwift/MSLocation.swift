@@ -14,12 +14,14 @@ class MSLocation: NSObject, MKAnnotation {
     var title:String?
     var type:String?
     @objc var coordinate:CLLocationCoordinate2D
-    var distance:CGFloat?
+    var distance:CGFloat
     var locationImage:UIImage?
     var locationID:Int?
+    var subtitle: String?
     
-    init(coordinate:CLLocationCoordinate2D) {
+    init(coordinate:CLLocationCoordinate2D, distance:CGFloat) {
         self.coordinate = coordinate
+        self.distance = distance
     }
     
     func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
