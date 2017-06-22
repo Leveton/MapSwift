@@ -15,12 +15,16 @@ private enum Sections:Int{
 }
 
 class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
-
+    
+    var selectedColor:IndexPath?
+    var selectedDistance:IndexPath?
+    
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
         let tableView = UITableView(frame:CGRect.zero, style: .grouped)
         tableView.delegate   = self
         tableView.dataSource = self
+        tableView.allowsSelectionDuringEditing = true
         
         //the class name becomes the cell id
         tableView.registerCell(MSColorTableViewCell.self)
@@ -32,11 +36,21 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     let sectionDict:[String:String] = [
-    
+        
         "0": NSLocalizedString("App Theme Color", comment: ""),
         "1": NSLocalizedString("Rearrange Favorite Types", comment: ""),
         "2": NSLocalizedString("Set Locations Range", comment: "")
     ]
+    
+    let locationsDictionary:[String:String] = [
+        
+        "0" : NSLocalizedString("one mile", comment: ""),
+        "1" : NSLocalizedString("two miles", comment: ""),
+        "2" : NSLocalizedString("five miles", comment: ""),
+        "3" : NSLocalizedString("ten miles", comment: ""),
+        "4" : NSLocalizedString("twenty miles", comment: ""),
+        "5" : NSLocalizedString("fifty miles", comment: ""),
+        ]
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -58,7 +72,12 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
         let cell = tableView.reusableCell(indexPath: indexPath) as MSColorTableViewCell
         let imageView = UIImageView(image: UIImage(named: "check"))
-        imageView.isHidden = true
+        if indexPath == selectedColor{
+            imageView.isHidden = false
+        }else{
+            imageView.isHidden = true
+        }
+        
         cell.accessoryView = imageView
         cell.textLabel?.text = self.colorsArray[indexPath.row]
         return cell
@@ -75,9 +94,15 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
         let cell = tableView.reusableCell(indexPath: indexPath) as MSDistanceTableViewCell
         let imageView = UIImageView(image: UIImage(named: "check"))
-        imageView.isHidden = true
+        if indexPath == selectedDistance{
+            imageView.isHidden = false
+        }else{
+            imageView.isHidden = true
+        }
         cell.accessoryView = imageView
-        cell.textLabel?.text = "foo"
+        
+        let index:String = String(indexPath.row)
+        cell.textLabel?.text = self.locationsDictionary[index]
         return cell
     }
     
@@ -133,7 +158,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         }else if section == Sections.TypeFilter.rawValue{
             return self.typesArray.count
         }else{
-            return 0
+            return self.locationsDictionary.keys.count
         }
     }
     
@@ -185,37 +210,93 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return headerView
     }
     
+    func hideChecksForIndexPath(indexPath:IndexPath){
+        //loop thru all cells in this section and hide the check image
+        for i in 0...self.tableView.numberOfRows(inSection: indexPath.section){
+            if let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section)){
+                cell.accessoryView?.isHidden = true
+            }
+        }
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == Sections.ThemeColor.rawValue{
-            
-            var color = UIColor()
-            switch indexPath.row {
-            case 0:
-                color = UIColor.blue
-            case 1:
-                color = UIColor.green
-            case 2:
-                color = UIColor.orange
-            default:
-                color = UIColor.orange
+        
+        //standard way to grab an individual cell in table views
+        //let's unwrap so that we can use it without a !
+        if let cell = tableView.cellForRow(at: indexPath){
+            if indexPath.section == Sections.ThemeColor.rawValue{
+                hideChecksForIndexPath(indexPath: indexPath)
+                cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+                selectedColor = indexPath
+                
+                var color = UIColor()
+                switch indexPath.row {
+                case 0:
+                    color = UIColor.blue
+                case 1:
+                    color = UIColor.green
+                case 2:
+                    color = UIColor.orange
+                default:
+                    color = UIColor.orange
+                }
+                
+                //posting a broadcast message that our whole app can listen to
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object:color)
+                
             }
             
-            //posting a broadcast message that our whole app can listen to
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object:color)
-            
+            if indexPath.section == Sections.DistanceFilter.rawValue{
+                hideChecksForIndexPath(indexPath: indexPath)
+                cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+                selectedDistance = indexPath
+                
+                if let vc = self.tabBarController?.viewControllers?[1] as? MSLocationsViewController{
+                    vc.range = self.getRangeFromIndexPath(indexPath:indexPath)
+                }
+            }
         }
     }
     
+    func getRangeFromIndexPath(indexPath: IndexPath) -> MSRange{
+        var range = MSRange()
+        
+        if indexPath.section == Sections.DistanceFilter.rawValue{
+            switch indexPath.row {
+            case 0:
+                range.startPoint = 0.0
+                range.endPoint = 300.0
+            case 1:
+                range.startPoint = 300.0
+                range.endPoint = 750.0
+            case 2:
+                range.startPoint = 750.0
+                range.endPoint = 3000.0
+            case 3:
+                range.startPoint = 3000.0
+                range.endPoint = 10000.0
+            case 4:
+                
+                /* larger than the globe */
+                range.startPoint = 0.0
+                range.endPoint = 1000000000000.0
+            default:
+                range.startPoint = 0.0
+                range.endPoint = 1000000.0
+            }
+        }
+        
+        return range
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         //this singleton will not be allocated more than once so it saves CPU cycles and memory
         self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
 }

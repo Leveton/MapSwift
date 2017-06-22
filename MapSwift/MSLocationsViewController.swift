@@ -15,6 +15,14 @@ private struct Constants {
 class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let cellID = "CellIdentifier"
+    var copiedDataSource:Array<MSLocation>?
+    
+    var range:MSRange?{
+        didSet{
+            self.sortByDistance()
+            self.tableView.reloadData()
+        }
+    }
     
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
@@ -33,18 +41,10 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
              Uncomment sorting by title to get the MDC locations in alphabetical order. Or use a more advanced sorting filter.
              */
             
-            self.tableView.reloadData()
-            //grab array of view controllers. those things at the bottom
-            //let tab = self.tabBarController?.viewControllers
-            
-            //3rd vc is a nav controller. allowing u to push and pop
-            //let nav = tab?[2] as! UINavigationController
-            
-            //nav also has array of vc's y we grabbed the root or 0 vc and then set it's data source
-            //let vc = nav.viewControllers[0] as! MSFavoritesViewController
-            
-            //this is a SETTER. it's didSet{} in favs vc now gets called and copiedDataSource gets set
-            //vc.dataSource = dataSource
+            if range == nil{
+                self.copiedDataSource = self.dataSource
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -110,4 +110,21 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         vc.isPresented = true
         self.present(vc, animated: true, completion: nil)
     }
+    
+    //MARK: selectors
+    
+    func sortByDistance(){
+        if let range = range{
+            self.dataSource = self.copiedDataSource
+            //a predicate creates a condition that must be met
+            //"distance between" is some objective-c DSL for allowing to create predicates. similar to our sorting, map, filter, reduce
+            let predicate = NSPredicate(format: "distance BETWEEN {\(range.startPoint), \(range.endPoint)}")
+            
+            //because i'm using objecte-c predicates, I have to cast my datasource to NSArray, sort the thing, and the cast it back to Array
+            self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+        }else{
+            self.dataSource.sort{$0.distance < $1.distance}
+        }
+    }
 }
+

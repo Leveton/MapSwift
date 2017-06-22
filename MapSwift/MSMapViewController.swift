@@ -33,7 +33,41 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         // Dispose of any resources that can be recreated.
     }
     
-//MARK: getters
+    //MARK: getters
+    
+    //anytime you're doing networking you want to show/hide a spinner
+    lazy var progressView:UIActivityIndicatorView = self.newProgressView()
+    func newProgressView() -> UIActivityIndicatorView{
+        let view = UIActivityIndicatorView()
+        view.frame = self.mapFrame()
+        view.layer.zPosition = 2.0
+        view.isHidden = true
+        self.view.addSubview(view)
+        return view
+    }
+    
+    //allow this property to be nil because that url might not exist
+    lazy var locationsRequest:URLRequest? = self.newLocationsRequest()
+    func newLocationsRequest() -> URLRequest?{
+        let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
+        
+        if let url = url{
+            return URLRequest(url:url)
+        }else{
+            return nil
+        }
+    }
+    
+    lazy var sessionLocations:URLSession = self.newSessionLocations()
+    func newSessionLocations() -> URLSession{
+        
+        //cache the request with default
+        let config = URLSessionConfiguration.default
+        return URLSession(configuration: config)
+    }
+    
+    
+    
     lazy var manager:CLLocationManager = self.newManager()
     func newManager() -> CLLocationManager{
         let manager = CLLocationManager()
@@ -79,16 +113,15 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return  mapFrame;
     }
     
-//MARK: MKMapViewDelegate
+    //MARK: MKMapViewDelegate
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
     }
     
-//MARK: selectors
+    //MARK: selectors
     
-    func populateMap(){
-        
+    func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
         let jsonURL = URL(fileURLWithPath: jsonFile!)
@@ -103,27 +136,84 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         }
         
         /** serialize the bytes into a dictionary object */
+        self.layoutMapWithData(data: jsonData!)
+    }
+    
+    func layoutMapWithData(data:Data){
+        /** serialize the bytes into a dictionary object */
         let jsonResponse:AnyObject
         do {
-            try jsonResponse = JSONSerialization.jsonObject(with: jsonData!, options: []) as AnyObject
+            try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
             let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
             print("json response \(jsonResponse)")
             let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
             print("json dictionaries \(locationDictionaries)")
+            
+            /* Populate the favorites vc */
+            let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+            print("favs from MSMAPVC: \(favs)")
+            var favsDataSource = [MSLocation]()
+            
             for x in 0..<locationDictionaries.count{
-                self.datasource.append(createLocationWithDictionary(dict: locationDictionaries[x] as NSDictionary))
+                let dict = locationDictionaries[x] as NSDictionary
+                let location:MSLocation = self.createLocationWithDictionary(dict: dict)
+                self.datasource.append(location)
+                if favs.contains(location.locationID!){
+                    favsDataSource.append(location)
+                }
+                
+                /* uncomment to see how copying an object would work */
+                //                    let newloc = location.copy() as! MSLocation
+                //                    newloc.type = "foo"
+                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
             }
             
             let viewControllers = self.tabBarController?.viewControllers
-            let vc:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
-            vc.dataSource = self.datasource
+            let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
+            locationsVC.dataSource = self.datasource
             
-            configureUserDefaults(locations: self.datasource)
+            let nav:UINavigationController = viewControllers![2] as! UINavigationController
+            
+            let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
+            favsVC.dataSource = favsDataSource
+            self.map.isHidden = false
             
         } catch {
             print("json failed")
         }
+    }
+    
+    func populateMap(){
+    
+        self.map.isHidden = true
+        self.progressView.isHidden = false
+        self.progressView.startAnimating()
         
+        //first we'll try to download, then we'll fetch locally if failed
+        if let request = self.locationsRequest{
+            //DONE in a background thread. so it's executed AFTER resume() is executed, resume() is how triggers it.
+            let locationTask:URLSessionDataTask = self.sessionLocations.dataTask(with: request, completionHandler: {(data, response, error) ->
+                //exectuting some code that can be passed around, in an encapsulated call-stack, but not returning anything.
+                Void in
+            
+                //data has downloaded so grab the main thread to update the UI
+                //we use async because it's asynchronous, because if it were syncronous, it would stop the program until it was finished.
+                DispatchQueue.main.async {
+                    self.progressView.stopAnimating()
+                    self.progressView.isHidden = true
+                    self.layoutMapWithData(data:data!)
+                    self.map.isHidden = false
+                }
+//                self.progressView.stopAnimating()
+//                self.progressView.isHidden = true
+//                self.layoutMapWithData(data:data!)
+            })
+            
+            //this horribly named method kicks off the download
+            locationTask.resume()
+        }else{
+            getLocalData()
+        }
     }
     
     func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
@@ -167,5 +257,5 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         vc.dataSource = holderArray
         vc.copiedDataSource = holderArray
         
-     }
+    }
 }
