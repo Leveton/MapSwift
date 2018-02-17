@@ -64,7 +64,7 @@ class MSLocationDetailViewController: UIViewController {
             self.label.text = location?.title
             self.distanceLabel.text = NSString(format: "distance: %f", (location?.distance)!) as String
             self.imageView.image = location?.locationImage
-            print("image width \(imageView.image?.size.width) image height \(imageView.image?.size.height)")
+            print("image width \(String(describing: imageView.image?.size.width)) image height \(String(describing: imageView.image?.size.height))")
         }
     }
     
@@ -135,12 +135,12 @@ class MSLocationDetailViewController: UIViewController {
     
     //MARK: selectors
     
-    func didTapLabel(){
+    @objc func didTapLabel(){
         self.distanceLabel.isHidden = !self.distanceLabel.isHidden
         animateDistanceLabel()
     }
     
-    func didPanImageView(panRecongnizer:UIPanGestureRecognizer){
+    @objc func didPanImageView(panRecongnizer:UIPanGestureRecognizer){
         panRecongnizer.view?.center = panRecongnizer.location(in: panRecongnizer.view?.superview)
         
     }
@@ -149,7 +149,7 @@ class MSLocationDetailViewController: UIViewController {
         print("completion block fired")
     }
     
-    func didTapDismiss(){
+    @objc func didTapDismiss(){
         self.dismiss(animated: true, completion: handleDismiss)
         
         /* notice that this was logged out BEFORE "completion block fired" was logged out */
