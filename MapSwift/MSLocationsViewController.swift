@@ -34,7 +34,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         super.viewDidAppear(animated)
         
         /* broadcast a system-wide notification that the user changed the app's theme color to purple */
-        let themeColor:UIColor = UIColor.init(colorLiteralRed: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
+        let themeColor:UIColor = UIColor.init(red: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: themeColor)
     }
 

@@ -36,7 +36,7 @@ class MSViewController: UIViewController {
     }
     */
     
-    func handleThemeChange(note: Notification) {
+    @objc func handleThemeChange(note: Notification) {
         view.backgroundColor = note.object as? UIColor
     }
 }
