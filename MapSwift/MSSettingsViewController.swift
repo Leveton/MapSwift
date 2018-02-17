@@ -166,7 +166,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return 50
     }
     
-    func didTapEditTypes(){
+    @objc func didTapEditTypes(){
         self.tableView.setEditing(!self.tableView.isEditing, animated: true)
     }
     

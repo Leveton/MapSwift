@@ -25,7 +25,7 @@ class MSViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func handleThemeChange(_ note: Notification) {
+    @objc func handleThemeChange(_ note: Notification) {
         view.backgroundColor = note.object as? UIColor
     }
 }

@@ -45,7 +45,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleThemeChange(_:)), name: Notification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
     }
     
-    func handleThemeChange(_ note: Notification) {
+    @objc func handleThemeChange(_ note: Notification) {
         nameLabel.backgroundColor = note.object as? UIColor
         distanceLabel.backgroundColor = note.object as? UIColor
         typeLabel.backgroundColor = note.object as? UIColor

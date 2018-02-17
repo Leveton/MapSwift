@@ -11,7 +11,7 @@ import UIKit
 
 public class MSSingleton{
     static let sharedInstance = MSSingleton()
-    var themeColor = UIColor.init(colorLiteralRed: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
+    var themeColor = UIColor.init(red: 0.208, green: 0.2, blue: 0.7, alpha: 1.0)
 }
 
 public extension Array where Element: Equatable {
