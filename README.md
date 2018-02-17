@@ -1,20 +1,20 @@
-[<img style="width: 200px;" src="https://upload.wikimedia.org/wikipedia/en/3/3a/Harvard_Wreath_Logo_1.svg" alt="Harvard University" />](http://www.harvard.edu/)
+[<img style="width: 200px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Harvard_Wreath_Logo_1.png/246px-Harvard_Wreath_Logo_1.png" alt="Harvard University" />](http://www.harvard.edu/)
 [<img style="width: 200px;" src="http://i.imgur.com/7Rjxn1J.png" alt="The Idea Center" />](http://theideacenter.co/)
 [<img style="width: 200px;" src="http://i.imgur.com/wzb1fU6.png" alt="Miami Dade College" />](http://www.mdc.edu/)
 
-This is the curriculum for the iOS track for graduates of Harvard University's CS50xMiami course at The Idea Center, Miami Dade College's hub of entrepreneurship.
+This is the iOS track curriculum for graduates of Harvard University's CS50xMiami course at The Idea Center, Miami Dade College's entrepreneurship hub.
 
-The course consists of 179 slides centering around MapSwift - a location services iOS app that is versioned here.
+The course consists of thirteen lessons with slides centering around MapSwift - a location services iOS app.
 
-Each lesson has its own git branch. Teachers and students can switch branches to see the app come together - from the call to the main function in lesson 0 to the completed app in lesson 8.
+Each lesson has its own git branch. Teachers and students will switch branches to see the app progress - from the main function call in lesson 0 to the completed app in lesson 13.
 
 <hr />
 
 <img src="https://raw.githubusercontent.com/Leveton/MapStack/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
 
-As a versioned document, both the app and the lessons will be periodically updated to keep up with the latest devices and operating systems.
+As a versioned document, both the app and the lessons will be periodically updated to keep up with the latest devices, operating systems, and Swift versions.
 
-You can send me a pull request to fix any issues/ add any features.
+You can send me a pull request to fix any issues or add any features.
 
 <hr />
 
@@ -25,41 +25,27 @@ You can send me a pull request to fix any issues/ add any features.
 
 ## Themes
 
-The course is opinionated. There is less convention in the iOS community than in the Ruby-on-Rails community or the Java community due to Apple’s traditionally closed nature. Also, there wasn’t much enthusiasm for the platform between the 80’s and the launch of The App Store.
+The course is opinionated. There is less convention in the iOS community than in other communities (e.g. Rails or Java). Apple's closed nature, intermittent enthusiasm for the platform, and other factors account for this.
 
-The essential concepts that are often confusing to students are given the most weight.
+The essential concepts most often confusing to students are given the most weight.
 
-Table views are the heart of the app because it’s the standard way to navigate on mobile. They also showcase the delegate pattern which separates beginner Apple devs from more competent devs.
-
-The course resembles [Ry’s Objective-C Tutorial](http://rypress.com/tutorials/objective-c/index) in spirit.
+Table views are the heart of the app, being the standard way to navigate on mobile.
 
 ## Course Rationale
 
-Reviewing iOS and Objective-C introductory books before teaching the course, I was struck by how shallowness of the material. Essential concepts like reference counting, delegation, and the object lifecycle were glossed over or excluded altogether. We prefer depth to breadth. MapSwift is missing many cool features but the features that are there are shared across the vast majority of iOS apps. The implementation of these features is both dwelled upon and repeated to stress their importance and facilitate learning.
+I noticed a lack of material depth when reviewing iOS and Objective-C introductory books while developing the course curriculum. Essential concepts like reference counting, delegation, and the object lifecycle were glossed over or excluded altogether. This course tries for a balance of depth and breadth. MapSwift's features are shared across the majority of iOS apps and we implement these features in various ways to stress the non-standardized nature of iOS development.
 
-Depth is also preferred as there are over 3,000 methods and 200 classes available in Cocoa Touch.
-
-There’s also a lack of pedagogical understanding. Programmers write programming books. Often after decades of programming experience. Their day to day conversations are peppered with trade language and over time they begin to see the world through  a that prism. Along the way they forget a non-engineer’s mindset. As a former teacher and someone acutely interested in Apple’s solving of the ‘user experience’ problem, my approach is humanistic - the material is grounded in reality, not abstraction. I do this through metaphors, visuals, and lessons that are hands-on.
-
-Harvard's CS50xMiami does an excellent job fighting the reputation of difficulty that iPhone/iPad development has. There's a Quora post where a respected contributor comments that building an iOS application will probably be “the most difficult thing you will ever do in your life”.
-
-This isn’t a course for people who have never written a working program. CS50xMiami students do problem sets that are more difficult than the average assignments many junior or even senior developers get.
+This isn’t a course for beginning coders. The CS50 graduates coming into this class have done difficult problem sets in C and often find that course more difficult than any of the graduate tracks.
 
 ## Prerequisites
 
-All students are graduates of Harvard's CS50xMiami course. They should know C-style control flow, basic data types, stack vs heap, dequeuing, FIFO and LIFO. Procedural programming in C.
-
-For CS50xMiami students struggling with pointers, iOS and this course provide a visual way to see them in action.
-
-## Homework
-
-Due the the brevity of the course, students are given much homework - including small projects - it's the only way for them to begin to grok the huge iOS universe.
+All students are graduates of Harvard's CS50xMiami course. They should know C-style control flow, basic data types, stack vs heap, dequeuing, FIFO and LIFO and procedural programming.
 
 ## License
 
 MapSwift is available under the MIT license.
 
-Copyright © 2017 Mike Leveton
+Copyright © 2018 Mike Leveton
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
