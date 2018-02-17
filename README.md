@@ -10,7 +10,7 @@ Each lesson has its own git branch. Teachers and students will switch branches t
 
 <hr />
 
-<img src="https://raw.githubusercontent.com/Leveton/MapStack/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
+<img src="https://raw.githubusercontent.com/Leveton/MapSwift/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
 
 As a versioned document, both the app and the lessons will be periodically updated to keep up with the latest devices, operating systems, and Swift versions.
 
