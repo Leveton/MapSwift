@@ -44,7 +44,7 @@ class MSLocationDetailViewController: MSViewController {
         tap.numberOfTapsRequired = 2
         return tap
     }
-    func didTapLabel(){
+    @objc func didTapLabel(){
         self.distanceLabel.isHidden = !self.distanceLabel.isHidden
         animateDistanceLabel()
     }
@@ -72,7 +72,7 @@ class MSLocationDetailViewController: MSViewController {
         print("view dismissed")
     }
     
-    func didTapDismiss(sender: UIButton){
+    @objc func didTapDismiss(sender: UIButton){
         
         //creating another thread
 //        self.dismiss(animated: true, completion: {() -> Void in
