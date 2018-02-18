@@ -81,13 +81,10 @@ class FirstViewController: UIViewController {
         let boat = Boat()
         boat.color = "Red"
         
-        /* kar and car both point to the same chunk of memory */
+        /* boat and ship both point to the same chunk of memory */
         let ship = boat
         ship.color = boat.color
-        print("boat color \(boat.color) ship color \(ship.color)")
-        
         boat.color = "Green"
-        print("boat color \(boat.color) ship color \(ship.color)")
         
         var someSize = SomeSize()
         someSize.width = 20
@@ -95,10 +92,7 @@ class FirstViewController: UIViewController {
         /* anotherSize is copied on assignment creating a new chunk of memory */
         var anotherSize = someSize
         anotherSize.width = someSize.width
-        print("some size width \(someSize.width) another size width \(anotherSize.width)")
-        
         someSize.width = 40
-        print("some size width again \(someSize.width) another size width again \(anotherSize.width)")
         
     }
 }
