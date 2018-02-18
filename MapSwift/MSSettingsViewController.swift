@@ -249,7 +249,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return 50
     }
     
-    func favoritesUpdated(_ notification: NSNotification){
+    @objc func favoritesUpdated(_ notification: NSNotification){
         if notification.object != nil{
             self.typesArray = notification.object as! Array
         }
@@ -292,7 +292,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func didTapEditTypes(){
+    @objc func didTapEditTypes(){
         self.tableView.setEditing(!self.tableView.isEditing, animated: true)
     }
     

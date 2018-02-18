@@ -168,12 +168,12 @@ class MSLocationDetailViewController: UIViewController {
     
     //MARK: selectors
     
-    func didTapLabel(){
+    @objc func didTapLabel(){
         self.distanceLabel.isHidden = !self.distanceLabel.isHidden
         animateDistanceLabel()
     }
     
-    func didPanImageView(panRecongnizer:UIPanGestureRecognizer){
+    @objc func didPanImageView(panRecongnizer:UIPanGestureRecognizer){
         panRecongnizer.view?.center = panRecongnizer.location(in: panRecongnizer.view?.superview)
         
     }
@@ -182,14 +182,14 @@ class MSLocationDetailViewController: UIViewController {
         print("completion block fired")
     }
     
-    func didTapDismiss(){
+    @objc func didTapDismiss(){
         self.dismiss(animated: true, completion: handleDismiss)
         
         /* notice that this was logged out BEFORE "completion block fired" was logged out */
         print("reached end of didTapDismiss scope")
     }
     
-    func didTapFavorite(){
+    @objc func didTapFavorite(){
         
         /*let's prevent interaction until the method returns */
         self.favoriteButton.isEnabled = false
