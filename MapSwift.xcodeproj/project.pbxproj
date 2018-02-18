@@ -86,8 +86,8 @@
 				1CE1EAA91E8C5FCF00C4E87D /* SecondViewController.swift */,
 				1CE1EAC71E8C645300C4E87D /* MSMapViewController.swift */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
-				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
+				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB31E8C5FCF00C4E87D /* Info.plist */,
 			);
 			path = MapSwift;
@@ -394,7 +394,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.mikeleveton.MapSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapSwift.app/MapSwift";
 			};
@@ -410,7 +410,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.mikeleveton.MapSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapSwift.app/MapSwift";
 			};
