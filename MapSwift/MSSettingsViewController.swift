@@ -187,7 +187,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return 50
     }
     
-    func favoritesUpdated(_ notification: NSNotification){
+    @objc func favoritesUpdated(_ notification: NSNotification){
         if notification.object != nil{
             self.typesArray = notification.object as! Array
         }
