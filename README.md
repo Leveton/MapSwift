@@ -9,8 +9,6 @@
 
 [Swift 3.1 tutorial on fetching JSON from a URL](https://www.simplifiedios.net/swift-json-tutorial/)
 
-[Swift 3.0 on GCD](https://swiftable.io/2016/06/dispatch-queues-swift-3/)
-
 <hr />
 
 <img src="https://raw.githubusercontent.com/Leveton/MapSwift/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
