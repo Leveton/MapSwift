@@ -140,8 +140,8 @@
 				1C32FCDB1EAA9F0A006A2D3C /* MSGlobals.swift */,
 				1CC916941EA5BBE700F3CE95 /* MapStackLocations.json */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
-				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
+				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB31E8C5FCF00C4E87D /* Info.plist */,
 			);
 			path = MapSwift;
@@ -207,11 +207,13 @@
 					1CE1EAA11E8C5FCF00C4E87D = {
 						CreatedOnToolsVersion = 8.3;
 						DevelopmentTeam = 2SPMBW99YZ;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 					1CE1EAB71E8C5FCF00C4E87D = {
 						CreatedOnToolsVersion = 8.3;
 						DevelopmentTeam = 2SPMBW99YZ;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 1CE1EAA11E8C5FCF00C4E87D;
 					};
@@ -418,7 +420,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.mikeleveton.MapSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -431,7 +434,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.mikeleveton.MapSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -445,7 +449,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.mikeleveton.MapSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapSwift.app/MapSwift";
 			};
 			name = Debug;
@@ -460,7 +465,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = co.mikeleveton.MapSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapSwift.app/MapSwift";
 			};
 			name = Release;

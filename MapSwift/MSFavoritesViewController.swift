@@ -210,7 +210,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         }
     }
     
-    func favoritesReordered(_ notification: NSNotification){
+    @objc func favoritesReordered(_ notification: NSNotification){
         if (notification.object != nil){
             
         }
