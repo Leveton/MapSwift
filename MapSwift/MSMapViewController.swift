@@ -13,6 +13,10 @@ private struct Constants {
     static let MapSide = CGFloat(300)
     static let TabBarHeight = CGFloat(49)
 }
+private enum locationDownloadFailures:String{
+    case noNetwork = "com.MapSwift.locationDownloadFailures.noNetwork"
+    case badJson = "com.MapSwift.locationDownloadFailures.badJson"
+}
 
 class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
@@ -126,19 +130,28 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
-        let jsonURL = URL(fileURLWithPath: jsonFile!)
-        
+        /** make sure it's not nil **/
+        guard let file = jsonFile else{
+            handleLocationFailure(failureType: .badJson)
+            return
+        }
+        let jsonURL = URL(fileURLWithPath: file)
         /**convert it to bytes*/
         let jsonData: Data?
         do {
             jsonData = try Data(contentsOf: jsonURL)
-            
+            /** serialize the bytes into a dictionary object */
+            if let jsonData = jsonData{
+                self.layoutMapWithData(data: jsonData)
+            }else{
+                handleLocationFailure(failureType: .badJson)
+            }
+        /** jsonData was nil, fail gracefully */
         } catch _ {
             jsonData = nil
+            handleLocationFailure(failureType: .badJson)
+            return
         }
-        
-        /** serialize the bytes into a dictionary object */
-        self.layoutMapWithData(data: jsonData!)
     }
     
     func populateMap(){
@@ -254,6 +267,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             return location
         }else{
             return MSLocation(coordinate: CLLocationCoordinate2D(), distance: 0.0)
+        }
+    }
+    func temp(){
+        
+    }
+    fileprivate func handleLocationFailure(failureType:locationDownloadFailures){
+        switch failureType {
+        case .noNetwork:
+            temp()
+        default:
+            temp()
         }
     }
 }
