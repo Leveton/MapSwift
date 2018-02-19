@@ -205,13 +205,25 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
             }
             
-            let viewControllers = self.tabBarController?.viewControllers
-            let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
+            guard let viewControllers = self.tabBarController?.viewControllers else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                //fail gracefully
+                return
+            }
+            guard let nav:UINavigationController = viewControllers[2] as? UINavigationController else{
+                //fail gracefully
+                return
+            }
+            guard let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
+                //fail gracefully
+                return
+            }
+            
             locationsVC.dataSource = self.datasource
-            
-            let nav:UINavigationController = viewControllers![2] as! UINavigationController
-            
-            let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
             favsVC.dataSource = favsDataSource
             self.map.isHidden = false
             
