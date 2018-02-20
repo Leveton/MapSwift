@@ -124,11 +124,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                         map.addAnnotation(location)
                         datasource.append(location)
                     }
-                    let viewcontrollers = self.tabBarController?.viewControllers
-                    let vc:MSLocationsViewController = viewcontrollers![1] as! MSLocationsViewController
+                    guard let viewControllers = self.tabBarController?.viewControllers else{
+                        //fail gracefullly
+                        return
+                    }
+                    guard let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else {
+                        //fail gracefullly
+                        return
+                    }
                     vc.dataSource = datasource
                     
-                    print("dicts \(locationDictionaries)")
+                    
                 } catch{
                     print("json failed")
                 }
@@ -143,12 +149,15 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
         let location = MSLocation(coordinate: coordinate)
         location.locationID = dict.object(forKey: "locationId") as? Int
-        location.title = dict.object(forKey: "name") as? String
         location.type = dict.object(forKey: "type") as? String
         location.distance = dict.object(forKey: "distance") as? CGFloat
-        location.coordinate = coordinate
-        location.subtitle = "this is a subtile"
         location.locationImage = UIImage.init(named: dict.object(forKey: "image") as! String)
+        
+        /*required for the MKAnnotation conformance */
+        location.coordinate = coordinate
+        location.title = dict.object(forKey: "name") as? String
+        location.subtitle = "this is a subtile"
+        
         return location
     }
 }
