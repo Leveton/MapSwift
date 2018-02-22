@@ -109,9 +109,20 @@ class MSLocationDetailViewController: UIViewController {
         //self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
         //self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(addCancel))
         
-        let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
-        print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: location?.locationID))")
-        isLocationFavorited = favs.contains((self.location?.locationID)!)
+        /* Initialize a global favorites array if it hasn't been already */
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+            let favs = [Int]()
+            UserDefaults.standard.set(favs, forKey:GlobalStrings.FavoritesArray.rawValue)
+            return
+        }
+        
+        
+        guard let loc = self.location else{
+            return
+        }
+        
+        print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: loc.locationID))")
+        isLocationFavorited = favs.contains((loc.locationID)!)
         
         if isLocationFavorited{
             self.favoriteButton.setImage(UIImage.init(named: "favoriteStar"), for: UIControlState.normal)
@@ -206,22 +217,33 @@ class MSLocationDetailViewController: UIViewController {
     
     @objc func didTapFavorite(){
         
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+            return
+        }
+        var mutableFavs = favs
+        
+        /* grab our custom tabbar controller at the root of the project and cascade down */
+        
+        guard let tabController = self.presentingViewController as? MSTabBarController else{
+            return
+        }
+        
         /*let's prevent interaction until the method returns */
         self.favoriteButton.isEnabled = false
         
-        self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
+        /*we don't return if this fails because it's not mission critical */
+        if let favsImgView = self.favoriteButton.imageView{
+            favsImgView.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
+        }
         
-        var favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
-        print("favs from user defaults: \(favs)")
+        print("favs from user defaults: \(mutableFavs)")
         
-        /* grab our custom tabbar controller at the root of the project and cascade down */
-        let tabController = self.presentingViewController as! MSTabBarController
         
         if isLocationFavorited{
-            favs.removeWithObject(self.location!.locationID!)
+            mutableFavs.removeWithObject(self.location!.locationID!)
             tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
         }else{
-            favs.append(self.location!.locationID!)
+            mutableFavs.append(self.location!.locationID!)
             tabController.addLocationToFavoritesWithLocation(location: self.location!)
         }
         

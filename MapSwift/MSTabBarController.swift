@@ -27,27 +27,42 @@ class MSTabBarController: UITabBarController {
     //MARK: selectors
     
     func updateFavorites(favs:Array<MSLocation>, withRemoval:Bool, location:MSLocation){
-        let nav = self.viewControllers?[2] as! UINavigationController
-        self.favoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController
-        var favs:Array<MSLocation> = self.favoritesViewController!.dataSource
-        if withRemoval{
-            favs.removeWithObject(location)
-        }else{
-            favs.append(location)
+        guard let nav = self.viewControllers?[2] as? UINavigationController else{
+            return
         }
-        self.favoritesViewController?.dataSource = favs
-        self.favoritesViewController?.copiedDataSource = favs
+        self.favoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController
+        guard let favs = self.favoritesViewController else{
+            return
+        }
+        var data:Array<MSLocation> = favs.dataSource
+        if withRemoval{
+            data.removeWithObject(location)
+        }else{
+            data.append(location)
+        }
+        favs.dataSource = data
+        favs.copiedDataSource = data
     }
     
     public func removeLocationFromFavoritesWithLocation(location: MSLocation){
-        let nav = self.viewControllers?[2] as! UINavigationController
+        guard let nav = self.viewControllers?[2] as? UINavigationController else{
+            return
+        }
         self.favoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController
-        updateFavorites(favs: self.favoritesViewController!.dataSource, withRemoval: true, location: location)
+        guard let favs = self.favoritesViewController else{
+            return
+        }
+        updateFavorites(favs: favs.dataSource, withRemoval: true, location: location)
     }
     
     public func addLocationToFavoritesWithLocation(location: MSLocation){
-        let nav = self.viewControllers?[2] as! UINavigationController
+        guard let nav = self.viewControllers?[2] as? UINavigationController else{
+            return
+        }
         self.favoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController
-        updateFavorites(favs: self.favoritesViewController!.dataSource, withRemoval: false, location: location)
+        guard let favs = self.favoritesViewController else{
+            return
+        }
+        updateFavorites(favs: favs.dataSource, withRemoval: false, location: location)
     }
 }
