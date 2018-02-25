@@ -23,9 +23,9 @@ class FirstViewController: UIViewController {
         arrayA = Array()
         
         
-//        configureCar()
-//        configureHouse()
-//        configureBoat()
+        configureCar()
+        configureHouse()
+        configureBoat()
         compareReferenceAndValue()
     }
 
@@ -44,9 +44,8 @@ class FirstViewController: UIViewController {
         
         car.numberOfDoors = 3
         car.numberOfWindows = 5
-        car.color = "Red"
         
-        print("number of doors again \(car.numberOfDoors) number of windows \(car.numberOfWindows)")
+        print("number of doors again \(car.numberOfDoors) number of windows \(car.numberOfWindows) color \(car.color)")
         
         let honda = Honda()
         honda.model = .Accord
