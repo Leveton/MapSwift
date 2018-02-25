@@ -105,10 +105,8 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         self.tableView.endUpdates()
         
         /**
-         
          GCD method to grab the main thread and execute the block of code after .3 seconds (when endUpdates returns).
          Calling 'reloadData' outside this block would override 'beginUpdates'.
-         
          */
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.tableView.reloadData()
