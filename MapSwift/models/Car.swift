@@ -15,7 +15,7 @@ class Car{
     
     var color:String = "Blue"
     
-    //computed property
+    //computed property that's not get only
     var windowsAndDoors:Int{
         get{
             return self.numberOfDoors + self.numberOfWindows
