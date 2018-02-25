@@ -208,9 +208,12 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 }
                 
                 /* uncomment to see how copying an object would work */
-                //                    let newloc = location.copy() as! MSLocation
-                //                    newloc.type = "foo"
-                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+//                let newloc = location.copy() as? MSLocation
+//                if let newloc = newloc{
+//                    newloc.type = "foo"
+//                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+//                }
+                
             }
             
             let viewControllers = self.tabBarController?.viewControllers
