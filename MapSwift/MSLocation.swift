@@ -16,13 +16,13 @@ class MSLocation: NSObject, MKAnnotation {
     var distance:CGFloat?
     var locationImage:UIImage?
     
-    init(coordinate:CLLocationCoordinate2D, distance:CGFloat){
+    init(coordinate:CLLocationCoordinate2D){
         self.coordinate = coordinate
-        self.distance = distance
     }
     
     func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
         /* if you square a negative number, you get a quiet nan */
-        return sqrt(abs(((pointA.latitude - pointB.latitude) * 2) + ((pointA.longitude - pointB.longitude) * 2)))
+        return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
     }
+
 }
