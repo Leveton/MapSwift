@@ -16,8 +16,9 @@ class MSLocation: NSObject, MKAnnotation {
     var distance:CGFloat?
     var locationImage:UIImage?
     
-    init(coordinate:CLLocationCoordinate2D){
+    init(coordinate:CLLocationCoordinate2D, distance:CGFloat){
         self.coordinate = coordinate
+        self.distance = distance
     }
     
     func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
