@@ -6,6 +6,8 @@
 //  Copyright © 2017 mikeleveton. All rights reserved.
 //
 
+import UIKit
+
 class Car{
     
     /* number of doors is an encapsulated property of the Car class */
@@ -13,18 +15,10 @@ class Car{
     
     var numberOfDoors:Int = 0
     
-    /* why do you have to do this to prevent crash? */
-    var newColor:String = ""
-    
+    /* get only computed property */
     var color:String{
         get{
-            return self.newColor
-        }
-        set{
-            newColor = newValue
-            if (newValue == "Red"){
-                self.numberOfWindows = 3
-            }
+            return NSLocalizedString("red", comment: "that key should not be hardcoded!")
         }
     }
     
