@@ -24,10 +24,9 @@ class MSLocation: NSObject, MKAnnotation, NSCopying {
         self.distance = distance
     }
     
-    func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
-        let xVals:Double = pointB.latitude - pointA.latitude
-        let yVals:Double = pointB.longitude - pointA.longitude
-        return sqrt((xVals * xVals) + (yVals * yVals))
+    func getDistanceFromPoint2(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
+        /* if you square a negative number, you get a quiet nan */
+        return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
     }
     
     func copy(with zone: NSZone? = nil) -> Any{
