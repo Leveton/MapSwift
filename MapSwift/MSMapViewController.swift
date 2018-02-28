@@ -169,7 +169,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             locationsVC.dataSource = self.datasource
             favsVC.dataSource = favsDataSource
             self.map.isHidden = false
-            print("json \(self.datasource)")
+            
         } catch {
             print("json failed")
         }
@@ -196,6 +196,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         location.locationID = dict["locationId"] as? Int
         location.title = dict["name"] as? String
         location.type = dict["type"] as? String
+        location.subtitle = "dist: \(String(describing: dist))"
         
         /*make sure the string exists and is the right type before trying to build the image with the string */
         if let imgStr = dict["image"] as? String{
