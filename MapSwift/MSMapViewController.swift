@@ -259,6 +259,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         }
     }
     
+    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
     func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
         guard let dist = dict["distance"] as? CGFloat else{
             return nil
@@ -274,6 +275,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         coordinate.longitude = long
         
         let location = MSLocation(coordinate: coordinate, distance:dist)
+        location.subtitle = "dist: \(String(describing: dist))"
+        
         /* we'll allow the rest of our properties to be possibly nil */
         location.locationID = dict["locationId"] as? Int
         location.title = dict["name"] as? String
