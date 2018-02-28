@@ -182,7 +182,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     /* let's abstract reused code into one method */
     func layoutMapWithData(data:Data){
-        
             /** serialize the bytes into a dictionary object */
             let jsonResponse:AnyObject
             do {
@@ -217,6 +216,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 self.map.isHidden = false
                 
             } catch {
+                //This closure is called if JSONSerialization.jsonObject() errors out. Nothing after JSONSerialization.jsonObject would be executed
                 print("json failed")
             }
     }
