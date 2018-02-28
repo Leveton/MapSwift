@@ -33,7 +33,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         // Dispose of any resources that can be recreated.
     }
     
-//MARK: getters
+    //MARK: getters
     lazy var manager:CLLocationManager = self.newManager()
     func newManager() -> CLLocationManager{
         let manager = CLLocationManager()
@@ -79,13 +79,13 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return  mapFrame;
     }
     
-//MARK: MKMapViewDelegate
+    //MARK: MKMapViewDelegate
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
     }
     
-//MARK: selectors
+    //MARK: selectors
     
     func populateMap(){
         
@@ -111,7 +111,10 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
             print("json dictionaries \(locationDictionaries)")
             for x in 0..<locationDictionaries.count{
-                self.datasource.append(createLocationWithDictionary(dict: locationDictionaries[x] as NSDictionary))
+                if let location = createLocationWithDictionary(dict: locationDictionaries[x] as! Dictionary<AnyHashable, Any>){
+                    map.addAnnotation(location)
+                    self.datasource.append(location)
+                }
             }
             
             let viewControllers = self.tabBarController?.viewControllers
@@ -124,22 +127,36 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
     }
     
-    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
+    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
+        guard let dist = dict["distance"] as? CGFloat else{
+            return nil
+        }
+        guard let lat = dict["latitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        guard let long = dict["longitude"] as? CLLocationDegrees else{
+            return nil
+        }
         var coordinate = CLLocationCoordinate2D()
-        coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
-        coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
+        coordinate.latitude  = lat
+        coordinate.longitude = long
         
         let location = MSLocation(coordinate: coordinate)
-        location.locationID = dict.object(forKey: "locationId") as? Int
-        location.title = dict.object(forKey: "name") as? String
-        location.type = dict.object(forKey: "type") as? String
-        location.distance = dict.object(forKey: "distance") as? CGFloat
+        location.distance = dist
         location.coordinate = coordinate
         
-        let image = UIImage(named: dict.object(forKey: "image") as! String)
-        location.locationImage = image
+        /* we'll allow the rest of our properties to be possibly nil */
+        location.locationID = dict["locationId"] as? Int
+        location.title = dict["name"] as? String
+        location.type = dict["type"] as? String
         
-        map.addAnnotation(location)
+        /*make sure the string exists and is the right type before trying to build the image with the string */
+        if let imgStr = dict["image"] as? String{
+            if let image = UIImage(named:imgStr){
+                location.locationImage = image
+            }
+        }
         
         return location
     }
