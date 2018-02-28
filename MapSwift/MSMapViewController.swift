@@ -199,7 +199,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 return
             }
             
-            guard let locationDictionaries = (jsonDict["MapStackLocationsArray"]) as? [NSDictionary] else{
+            guard let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>] else{
                 //fail gracefully
                 return
             }
@@ -212,12 +212,14 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             var favsDataSource = [MSLocation]()
             
             for x in 0..<locationDictionaries.count{
-                let dict = locationDictionaries[x] as NSDictionary
-                let location:MSLocation = self.createLocationWithDictionary(dict: dict)
-                self.datasource.append(location)
-                if let locID = location.locationID{
-                    if favs.contains(locID){
-                        favsDataSource.append(location)
+                if let location = createLocationWithDictionary(dict: locationDictionaries[x]){
+                    map.addAnnotation(location)
+                    self.datasource.append(location)
+                    
+                    if let locID = location.locationID{
+                        if favs.contains(locID){
+                            favsDataSource.append(location)
+                        }
                     }
                 }
                 
@@ -257,30 +259,34 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         }
     }
     
-    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
-        let fl = dict.object(forKey: "distance") as? CGFloat
-        if let fl = fl{
-            var coordinate = CLLocationCoordinate2D()
-            coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
-            coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
-            
-            let location = MSLocation(coordinate: coordinate, distance:fl)
-            location.subtitle = "dist: \(String(describing: fl))"
-            location.locationID = dict.object(forKey: "locationId") as? Int
-            location.title = dict.object(forKey: "name") as? String
-            location.type = dict.object(forKey: "type") as? String
-            location.coordinate = coordinate
-            
-            let image = UIImage(named: dict.object(forKey: "image") as! String)
-            location.locationImage = image
-            
-            map.addAnnotation(location)
-            
-            return location
-        }else{
-            //default to no distance
-            return MSLocation(coordinate: CLLocationCoordinate2D(), distance: 0.0)
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
+        guard let dist = dict["distance"] as? CGFloat else{
+            return nil
         }
+        guard let lat = dict["latitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        guard let long = dict["longitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = lat
+        coordinate.longitude = long
+        
+        let location = MSLocation(coordinate: coordinate, distance:dist)
+        /* we'll allow the rest of our properties to be possibly nil */
+        location.locationID = dict["locationId"] as? Int
+        location.title = dict["name"] as? String
+        location.type = dict["type"] as? String
+        
+        /*make sure the string exists and is the right type before trying to build the image with the string */
+        if let imgStr = dict["image"] as? String{
+            if let image = UIImage(named:imgStr){
+                location.locationImage = image
+            }
+        }
+        
+        return location
     }
 
     fileprivate func handleLocationFailure(failureType:locationDownloadFailures){
@@ -290,8 +296,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             msg = NSLocalizedString("No Network", comment:"")
         case .badJson:
             msg = NSLocalizedString("Bad JSON", comment:"")
-//        default:
-//            msg = NSLocalizedString("Something happened", comment:"")
         }
         let alert = UIAlertController(title:msg, message:NSLocalizedString("Try again in a moment", comment:""), preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title:NSLocalizedString("Ok", comment:""), style: UIAlertActionStyle.default, handler: nil))
