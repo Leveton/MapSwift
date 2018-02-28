@@ -132,6 +132,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             
             for x in 0..<locationDictionaries.count{
                 if let location:MSLocation = self.createLocationWithDictionary(dict: locationDictionaries[x]){
+                    map.addAnnotation(location)
                     self.datasource.append(location)
                     if let locID = location.locationID{
                         if favs.contains(locID){
@@ -192,11 +193,12 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         coordinate.longitude = long
         
         let location = MSLocation(coordinate: coordinate, distance:dist)
+        location.subtitle = "dist: \(String(describing: dist))"
+        
         /* we'll allow the rest of our properties to be possibly nil */
         location.locationID = dict["locationId"] as? Int
         location.title = dict["name"] as? String
         location.type = dict["type"] as? String
-        location.subtitle = "dist: \(String(describing: dist))"
         
         /*make sure the string exists and is the right type before trying to build the image with the string */
         if let imgStr = dict["image"] as? String{
