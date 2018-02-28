@@ -194,25 +194,39 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let jsonResponse:AnyObject
         do {
             try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
-            let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-            let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
+            guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationDictionaries = (jsonDict["MapStackLocationsArray"]) as? [NSDictionary] else{
+                //fail gracefully
+                return
+            }
             
             /* Populate the favorites vc */
-            let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
+                //fail gracefully
+                return
+            }
             var favsDataSource = [MSLocation]()
             
             for x in 0..<locationDictionaries.count{
                 let dict = locationDictionaries[x] as NSDictionary
                 let location:MSLocation = self.createLocationWithDictionary(dict: dict)
                 self.datasource.append(location)
-                if favs.contains(location.locationID!){
-                    favsDataSource.append(location)
+                if let locID = location.locationID{
+                    if favs.contains(locID){
+                        favsDataSource.append(location)
+                    }
                 }
                 
                 /* uncomment to see how copying an object would work */
-                //                    let newloc = location.copy() as! MSLocation
+                //                let newloc = location.copy() as? MSLocation
+                //                if let newloc = newloc{
                 //                    newloc.type = "foo"
                 //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+                //                }
             }
             
             guard let viewControllers = self.tabBarController?.viewControllers else{
