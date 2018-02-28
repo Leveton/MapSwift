@@ -189,22 +189,31 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let jsonResponse:AnyObject
         do {
             try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
-            let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-            print("json response \(jsonResponse)")
-            let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-            print("json dictionaries \(locationDictionaries)")
+            guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationDictionaries = (jsonDict["MapStackLocationsArray"]) as? [NSDictionary] else{
+                //fail gracefully
+                return
+            }
             
             /* Populate the favorites vc */
-            let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-            print("favs from MSMAPVC: \(favs)")
+            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
+                //fail gracefully
+                return
+            }
             var favsDataSource = [MSLocation]()
             
             for x in 0..<locationDictionaries.count{
                 let dict = locationDictionaries[x] as NSDictionary
                 let location:MSLocation = self.createLocationWithDictionary(dict: dict)
                 self.datasource.append(location)
-                if favs.contains(location.locationID!){
-                    favsDataSource.append(location)
+                if let locID = location.locationID{
+                    if favs.contains(locID){
+                      favsDataSource.append(location)
+                    }
                 }
                 
                 /* uncomment to see how copying an object would work */
@@ -213,20 +222,32 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
 //                    newloc.type = "foo"
 //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
 //                }
-                
             }
             
-            let viewControllers = self.tabBarController?.viewControllers
-            let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
+            guard let viewControllers = self.tabBarController?.viewControllers else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                //fail gracefully
+                return
+            }
+            guard let nav:UINavigationController = viewControllers[2] as? UINavigationController else{
+                //fail gracefully
+                return
+            }
+            guard let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
+                //fail gracefully
+                return
+            }
+            
             locationsVC.dataSource = self.datasource
-            
-            let nav:UINavigationController = viewControllers![2] as! UINavigationController
-            
-            let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
             favsVC.dataSource = favsDataSource
             self.map.isHidden = false
             
         } catch {
+            //This closure is called if JSONSerialization.jsonObject() errors out. Nothing after JSONSerialization.jsonObject would be executed
             print("json failed")
         }
     }
