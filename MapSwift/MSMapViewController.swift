@@ -195,13 +195,10 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         do {
             try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
             let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-            print("json response \(jsonResponse)")
             let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-            print("json dictionaries \(locationDictionaries)")
             
             /* Populate the favorites vc */
             let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-            print("favs from MSMAPVC: \(favs)")
             var favsDataSource = [MSLocation]()
             
             for x in 0..<locationDictionaries.count{
@@ -241,6 +238,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             self.map.isHidden = false
             
         } catch {
+            //This closure is called if JSONSerialization.jsonObject() errors out. Nothing after JSONSerialization.jsonObject would be executed
             print("json failed")
         }
     }
@@ -266,18 +264,23 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             
             return location
         }else{
+            //default to no distance
             return MSLocation(coordinate: CLLocationCoordinate2D(), distance: 0.0)
         }
     }
-    func temp(){
-        
-    }
+
     fileprivate func handleLocationFailure(failureType:locationDownloadFailures){
+        var msg = ""
         switch failureType {
         case .noNetwork:
-            temp()
-        default:
-            temp()
+            msg = NSLocalizedString("No Network", comment:"")
+        case .badJson:
+            msg = NSLocalizedString("Bad JSON", comment:"")
+//        default:
+//            msg = NSLocalizedString("Something happened", comment:"")
         }
+        let alert = UIAlertController(title:msg, message:NSLocalizedString("Try again in a moment", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title:NSLocalizedString("Ok", comment:""), style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated:true, completion:nil)
     }
 }
