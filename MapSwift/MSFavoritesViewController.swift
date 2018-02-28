@@ -70,7 +70,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         cell.delegate = self
         cell.location = location
         cell.mainLabel.text = location.title
-        cell.subLabel.text = "dist: \(String(describing: location.distance!))"
+        cell.subLabel.text = "dist: \(String(describing: location.distance))"
         cell.typeLabel.text = location.type
         cell.locationImageView.image = location.locationImage
         return cell
@@ -92,10 +92,10 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             let schooled = self.dataSource.filter{$0.type! == "School"}
             let started = self.dataSource.filter{$0.type! == "StartUp"}
             
-            let randomTotal = randomed.reduce(0, {$0 + $1.distance!})
-            let restedTotal = rested.reduce(0, {$0 + $1.distance!})
-            let schoolTotal = schooled.reduce(0, {$0 + $1.distance!})
-            let startedTotal = started.reduce(0, {$0 + $1.distance!})
+            let randomTotal = randomed.reduce(0, {$0 + $1.distance})
+            let restedTotal = rested.reduce(0, {$0 + $1.distance})
+            let schoolTotal = schooled.reduce(0, {$0 + $1.distance})
+            let startedTotal = started.reduce(0, {$0 + $1.distance})
             
             let random = combinedLocation(randomTotal, randomed)
             let school = combinedLocation(schoolTotal, schooled)

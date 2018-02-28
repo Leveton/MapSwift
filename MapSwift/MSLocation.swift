@@ -9,21 +9,36 @@
 import UIKit
 import MapKit
 
-class MSLocation: NSObject, MKAnnotation {
-
+class MSLocation: NSObject, MKAnnotation, NSCopying {
+    
     var title:String?
     var type:String?
+    var subtitle: String?
     @objc var coordinate:CLLocationCoordinate2D
-    var distance:CGFloat?
+    @objc var distance:CGFloat
     var locationImage:UIImage?
     var locationID:Int?
     
-    init(coordinate:CLLocationCoordinate2D) {
+    init(coordinate:CLLocationCoordinate2D, distance:CGFloat) {
         self.coordinate = coordinate
+        self.distance = distance
     }
     
-    func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
+    func getDistanceFromPoint2(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
         /* if you square a negative number, you get a quiet nan */
         return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
+    }
+    
+    func copy(with zone: NSZone? = nil) -> Any{
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = 0
+        coordinate.longitude = 0
+        let location = MSLocation(coordinate: coordinate, distance: self.distance)
+        location.title = self.title
+        location.type = self.type
+        location.distance = self.distance
+        location.locationImage = self.locationImage
+        location.locationID = self.locationID
+        return location
     }
 }

@@ -90,8 +90,11 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func populateMap(){
         
         /** grab the local json file */
-        let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
-        let jsonURL = URL(fileURLWithPath: jsonFile!)
+        guard let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json") else{
+            return
+        }
+        
+        let jsonURL = URL(fileURLWithPath: jsonFile)
         
         /**convert it to bytes*/
         let jsonData: Data?
@@ -100,27 +103,73 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             
         } catch _ {
             jsonData = nil
+            return
         }
         
+        guard let data = jsonData else{
+            return
+        }
         /** serialize the bytes into a dictionary object */
         let jsonResponse:AnyObject
         do {
-            try jsonResponse = JSONSerialization.jsonObject(with: jsonData!, options: []) as AnyObject
-            let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-            print("json response \(jsonResponse)")
-            let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-            print("json dictionaries \(locationDictionaries)")
-            for x in 0..<locationDictionaries.count{
-                if let location = createLocationWithDictionary(dict: locationDictionaries[x] as! Dictionary<AnyHashable, Any>){
-                    map.addAnnotation(location)
-                    self.datasource.append(location)
-                }
+            try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
+            guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                //fail gracefully
+                return
             }
             
-            let viewControllers = self.tabBarController?.viewControllers
-            let vc:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
-            vc.dataSource = self.datasource
+            guard let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>] else{
+                //fail gracefully
+                return
+            }
             
+            /* Populate the favorites vc */
+            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
+                //fail gracefully
+                return
+            }
+            var favsDataSource = [MSLocation]()
+            
+            for x in 0..<locationDictionaries.count{
+                if let location:MSLocation = self.createLocationWithDictionary(dict: locationDictionaries[x]){
+                    self.datasource.append(location)
+                    if let locID = location.locationID{
+                        if favs.contains(locID){
+                            favsDataSource.append(location)
+                        }
+                    }
+                }
+                
+                /* uncomment to see how copying an object would work */
+                //                let newloc = location.copy() as? MSLocation
+                //                if let newloc = newloc{
+                //                    newloc.type = "foo"
+                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+                //                }
+            }
+            
+            guard let viewControllers = self.tabBarController?.viewControllers else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                //fail gracefully
+                return
+            }
+            guard let nav:UINavigationController = viewControllers[2] as? UINavigationController else{
+                //fail gracefully
+                return
+            }
+            guard let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
+                //fail gracefully
+                return
+            }
+            
+            locationsVC.dataSource = self.datasource
+            favsVC.dataSource = favsDataSource
+            self.map.isHidden = false
+            print("json \(self.datasource)")
         } catch {
             print("json failed")
         }
@@ -142,10 +191,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         coordinate.latitude  = lat
         coordinate.longitude = long
         
-        let location = MSLocation(coordinate: coordinate)
-        location.distance = dist
-        location.coordinate = coordinate
-        
+        let location = MSLocation(coordinate: coordinate, distance:dist)
         /* we'll allow the rest of our properties to be possibly nil */
         location.locationID = dict["locationId"] as? Int
         location.title = dict["name"] as? String

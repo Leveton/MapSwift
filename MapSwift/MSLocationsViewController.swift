@@ -94,7 +94,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         
         //cell?.delegate = self
         cell?.textLabel?.text = location.title
-        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
+        cell?.detailTextLabel?.text = NSString(format: "distance: %f", location.distance) as String
         return cell!
     }
     
