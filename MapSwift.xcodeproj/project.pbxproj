@@ -134,8 +134,8 @@
 				1C32FCDB1EAA9F0A006A2D3C /* MSGlobals.swift */,
 				1CC916941EA5BBE700F3CE95 /* MapStackLocations.json */,
 				1CE1EAAB1E8C5FCF00C4E87D /* Main.storyboard */,
-				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB01E8C5FCF00C4E87D /* LaunchScreen.storyboard */,
+				1CE1EAAE1E8C5FCF00C4E87D /* Assets.xcassets */,
 				1CE1EAB31E8C5FCF00C4E87D /* Info.plist */,
 			);
 			path = MapSwift;
