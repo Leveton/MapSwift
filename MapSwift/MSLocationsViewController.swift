@@ -89,21 +89,21 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
 
     /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let location = self.dataSource[indexPath.row]
+        
         let str:String = "cellid"
         var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        
-        if (cell == nil){
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            //print("new cell")
+        if let cell = cell {
+            print("old cell")
+            if let textLabel = cell.textLabel {
+                textLabel.text = "row: \(indexPath.row)"
+            }
+            return cell
         }else{
-            //print("old cell")
+            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+            print("new cell")
+            /*something in the system went horribly wrong if there's still not a cell */
+            return cell ?? UITableViewCell()
         }
-        
-        //cell?.delegate = self
-        cell?.textLabel?.text = location.title
-        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)) as String
-        return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
