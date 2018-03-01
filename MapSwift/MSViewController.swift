@@ -31,4 +31,5 @@ public enum GlobalStrings: String {
     case GlobalThemeChanged  = "com.mapstack.themeWasChanged"
     case FavoriteUpdated     = "com.mapstack.favoritesUpdated"
     case FavoritesRearranged = "com.mapstack.favoritesOrderRearranged"
+    case FavoritesArray      = "com.mapstack.favoritesArray"
 }
