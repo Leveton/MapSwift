@@ -173,12 +173,17 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         /* this flashes the cell upon tap which is good for UX */
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
+        guard let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath) else{
+            return
+        }
+        guard let accessView = cell.accessoryView else{
+            return
+        }
         
         /* toggle the cell's right-hand view hidden */
         if indexPath.section == Sections.ThemeColor.rawValue{
             hideAllChecksForIndexPath(indexPath: indexPath)
-            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            accessView.isHidden = !accessView.isHidden
             
             switch indexPath.row {
             case 0:
@@ -198,10 +203,11 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         
         if  indexPath.section == Sections.DistanceFilter.rawValue{
             hideAllChecksForIndexPath(indexPath: indexPath)
-            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            accessView.isHidden = !accessView.isHidden
             
-            let vc = self.tabBarController?.viewControllers?[1] as! MSLocationsViewController
-            vc.range = self.getRangeFromIndexPath(index: indexPath)
+            if let vc = self.tabBarController?.viewControllers?[1] as? MSLocationsViewController{
+              vc.range = self.getRangeFromIndexPath(index: indexPath)
+            }
         }
     }
     
@@ -250,8 +256,8 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func favoritesUpdated(_ notification: NSNotification){
-        if notification.object != nil{
-            self.typesArray = notification.object as! Array
+        if let obj = notification.object as? Array<String>{
+            self.typesArray = obj
         }
     }
     

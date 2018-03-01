@@ -93,9 +93,12 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
         
         /* get a mutable reference to our data source and remove the deleted location */
-        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-        favs.removeWithObject(object: location.locationID!)
-        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        guard let locID = location.locationID, let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+            return
+        }
+        var mutableFavs = favs
+        mutableFavs.removeWithObject(object: locID)
+        UserDefaults.standard.set(mutableFavs, forKey: GlobalStrings.FavoritesArray.rawValue)
         self.dataSource.removeWithObject(object: location)
         
         var array = [IndexPath]()
@@ -144,7 +147,9 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     
     @IBAction func nameSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+        guard let control = sender as? UISwitch else{
+            return
+        }
         control.isOn = !control.isOn
         distanceFilter.isOn = false
         typeFilter.isOn = false
@@ -160,7 +165,9 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     @IBAction func distanceSwitched(_ sender: Any) {
         //casting to UISwitch so we have access to isOn
-        let control = sender as! UISwitch
+        guard let control = sender as? UISwitch else{
+            return
+        }
         control.isOn = !control.isOn
         nameFilter.isOn = false
         typeFilter.isOn = false
@@ -174,7 +181,9 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
     }
     @IBAction func distanceTypeSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+        guard let control = sender as? UISwitch else{
+            return
+        }
         //control.isOn = !control.isOn
         nameFilter.isOn = false
         distanceFilter.isOn = false
@@ -201,8 +210,9 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
             foo.sort{$0.total! < $1.total!}
             
-            let finally = foo[0].collection + foo[1].collection + foo[2].collection! + foo[3].collection + foo[4].collection
-            self.dataSource = finally
+            let firstCombined = foo[0].collection + foo[1].collection
+            let secondCombined = foo[2].collection + foo[3].collection
+            self.dataSource = firstCombined + secondCombined + foo[4].collection
             self.tableView.reloadData()
             
         }else{

@@ -89,8 +89,10 @@ class MSLocationDetailViewController: UIViewController {
     var location:MSLocation?{
         didSet{
             self.label.text = location?.title
-            self.distanceLabel.text = NSString(format: "distance: %f", (location?.distance)!) as String
             self.imageView.image = location?.locationImage
+            if let dist = location?.distance{
+                self.distanceLabel.text = NSString(format: "distance: %f", dist) as String
+            }
         }
     }
     
@@ -109,12 +111,12 @@ class MSLocationDetailViewController: UIViewController {
         }
         
         
-        guard let loc = self.location else{
+        guard let locID = self.location?.locationID else{
             return
         }
         
-        print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: loc.locationID))")
-        isLocationFavorited = favs.contains((loc.locationID)!)
+        print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: locID))")
+        isLocationFavorited = favs.contains(locID)
         
         if isLocationFavorited{
             self.favoriteButton.setImage(UIImage.init(named: "favoriteStar"), for: UIControlState.normal)
@@ -226,7 +228,7 @@ class MSLocationDetailViewController: UIViewController {
             favsImgView.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
         }
         
-        print("favs from user defaults: \(mutableFavs)")
+        //print("favs from user defaults: \(mutableFavs)")
         
         
         if isLocationFavorited{
@@ -237,7 +239,7 @@ class MSLocationDetailViewController: UIViewController {
             tabController.addLocationToFavoritesWithLocation(location:loc)
         }
         
-        UserDefaults.standard.set(favs, forKey: GlobalStrings.FavoritesArray.rawValue)
+        UserDefaults.standard.set(mutableFavs, forKey: GlobalStrings.FavoritesArray.rawValue)
         isLocationFavorited = !isLocationFavorited
         
         /* this is redundant code, so let's refactor it */
@@ -250,7 +252,7 @@ class MSLocationDetailViewController: UIViewController {
         
         self.favoriteButton.isEnabled = true
         
-        print("favs from user defaults after mutation: \(favs)")
+        //print("favs from user defaults after mutation: \(mutableFavs) and count \(mutableFavs.count)")
     }
     
     /* uncomment this if you want to see in-line block example */

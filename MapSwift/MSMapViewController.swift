@@ -173,7 +173,9 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                     DispatchQueue.main.async {
                         self.progressView.stopAnimating()
                         self.progressView.isHidden = true
-                        self.layoutMapWithData(data: data!)
+                        if let theData = data{
+                          self.layoutMapWithData(data:theData)
+                        }
                     }
                     
             })
@@ -205,7 +207,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             }
             
             /* Populate the favorites vc */
-            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
+            guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
                 //fail gracefully
                 return
             }

@@ -43,7 +43,6 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             
             if range == nil{
                 self.copiedDataSource = self.dataSource
-                //self.dataSource.sort{$0.title! < $1.title!}
                 self.dataSource.sort{$0.distance < $1.distance}
                 self.tableView.reloadData()
             }
@@ -80,37 +79,37 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return self.dataSource.count
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-//        cell.textLabel?.text = location.title
-//        return cell
-//    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let location = self.dataSource[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+        cell.textLabel?.text = location.title
+        return cell
+    }
 
     /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        if let cell = cell {
-            print("old cell")
-            if let textLabel = cell.textLabel {
-                textLabel.text = "row: \(indexPath.row)"
-            }
-            return cell
-        }else{
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            print("new cell")
-            /*something in the system went horribly wrong if there's still not a cell */
-            return cell ?? UITableViewCell()
-        }
-    }
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//
+//        let str:String = "cellid"
+//        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+//        if let cell = cell {
+//            print("old cell")
+//            if let textLabel = cell.textLabel {
+//                textLabel.text = "row: \(indexPath.row)"
+//            }
+//            return cell
+//        }else{
+//            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+//            print("new cell")
+//            /*something in the system went horribly wrong if there's still not a cell */
+//            return cell ?? UITableViewCell()
+//        }
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let location = self.dataSource[indexPath.row]
         let vc = MSLocationDetailViewController()
         vc.location = location
-        vc.view.backgroundColor = UIColor.red
+        vc.view.backgroundColor = MSSingleton.sharedInstance.colorDetailView
         vc.isViewPresented = true
         self.present(vc, animated: true, completion: nil)
     }
@@ -118,13 +117,15 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     //MARK: selectors
     
     func sortByDistance(){
-        
-        if range != nil{
+        if let theRange = range{
             /* sort by range as selected in settings */
             self.dataSource = self.copiedDataSource
             
-            let predicate = NSPredicate(format: "distance BETWEEN {\(range!.startPoint), \(range!.endPoint)}")
-            self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+            //let predicate = NSPredicate(format: "distance BETWEEN {\(theRange.startPoint), \(theRange.endPoint)}")
+            //self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+            self.dataSource = self.dataSource.filter{Float($0.distance) > theRange.startPoint}
+            self.dataSource = self.dataSource.filter{Float($0.distance) < theRange.endPoint}
+            
         }else{
             /* sort by distance from highest to lowest */
             self.dataSource.sort{$0.distance < $1.distance}

@@ -24,7 +24,7 @@ class MSTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        print("top border \(self.topBorder.layer.zPosition) bottom \(self.bottomBorder.layer.zPosition)")
+        //print("top border \(self.topBorder.layer.zPosition) bottom \(self.bottomBorder.layer.zPosition)")
         self.topBorder.layer.zPosition = 2.0
         self.bottomBorder.layer.zPosition = 2.0
     }
@@ -38,13 +38,16 @@ class MSTableViewCell: UITableViewCell {
     //MARK: selectors
     
     @IBAction func didTapDelete(_ sender: Any) {
-        delegate?.deleteButtonTappedFrom(cell: self, location: self.location!)
+        if let loc = self.location{
+          delegate?.deleteButtonTappedFrom(cell: self, location:loc)
+        }
     }
     
     @IBAction func didTapDetail(_ sender: Any) {
-        delegate?.detailButtonTappedFrom(cell: self, location: self.location!)
+        if let loc = self.location{
+            delegate?.detailButtonTappedFrom(cell: self, location:loc)
+        }
     }
-    
 }
 
 //MARK: MSTableViewCellDelegate
