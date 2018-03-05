@@ -13,7 +13,8 @@ class MSViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleThemeChange(note:)), name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
+        
         self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
     }
 
@@ -22,7 +23,7 @@ class MSViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func handleThemeChange(note: Notification) {
+    @objc func handleThemeChange(note: Notification) {
         view.backgroundColor = note.object as? UIColor
     }
 }

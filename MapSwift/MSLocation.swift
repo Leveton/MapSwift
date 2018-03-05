@@ -24,7 +24,7 @@ class MSLocation: NSObject, MKAnnotation, NSCopying {
         self.distance = distance
     }
     
-    func getDistanceFromPoint2(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
+    func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
         /* if you square a negative number, you get a quiet nan */
         return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
     }

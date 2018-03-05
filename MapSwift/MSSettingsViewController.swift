@@ -42,8 +42,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         "1" : NSLocalizedString("two mile", comment: ""),
         "2" : NSLocalizedString("five mile", comment: ""),
         "3" : NSLocalizedString("ten mile", comment: ""),
-        "4" : NSLocalizedString("twenty mile", comment: ""),
-        "5" : NSLocalizedString("fifty mile", comment: ""),
+        "4" : NSLocalizedString("any distance (default)", comment: ""),
         ]
     
     var locations = [MSLocation](){
@@ -105,6 +104,12 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         return tableView
     }
     
+    lazy var editButton:UIButton = self.newEditButton()
+    func newEditButton() -> UIButton{
+        let button = UIButton(type: .system)
+        return button
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
@@ -125,7 +130,6 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         self.tableView.frame = tableFrame
         
     }
-    
     
     
     //MARK: UITableViewDelegate
@@ -185,6 +189,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
             hideAllChecksForIndexPath(indexPath: indexPath)
             accessView.isHidden = !accessView.isHidden
             
+            //Some UIColor convenience properties
             switch indexPath.row {
             case 0:
                 MSSingleton.sharedInstance.themeColor = UIColor.blue
@@ -196,8 +201,9 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
                 MSSingleton.sharedInstance.themeColor = UIColor.blue
             }
             
-            self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
+            /*Here we'll put our superclass to good use by having it listen to this notification so that all of its subclass instances will update their background colors. */
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: MSSingleton.sharedInstance.themeColor)
+            
             self.tableView.reloadData()
         }
         
@@ -228,23 +234,22 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         
         if (section == Sections.TypeFilter.rawValue){
             
-            let button = UIButton(type: .system)
             var editFrame = headerView.frame
             editFrame.origin.x = self.view.bounds.width - 40.0
             editFrame.size.width = 40.0
-            button.frame = editFrame
-            button.titleLabel?.textAlignment = NSTextAlignment.center
-            button.setTitleColor(MSSingleton.sharedInstance.themeColor, for: .normal)
-            button.setTitle(NSLocalizedString("Edit", comment: ""), for: .normal)
-            button.titleLabel?.font = UIFont(name: "Chalkduster", size: 10)
+            self.editButton.frame = editFrame
+            self.editButton.titleLabel?.textAlignment = NSTextAlignment.center
+            toggleEdit(true)
+            self.editButton.setTitle(NSLocalizedString("Edit", comment: ""), for: .normal)
+            self.editButton.titleLabel?.font = UIFont(name: "Chalkduster", size: 10)
             
             /* the color for when the finger is actually on the button */
-            button.setTitleColor(UIColor.blue, for: UIControlState.highlighted)
+            self.editButton.setTitleColor(UIColor.blue, for: UIControlState.highlighted)
             
-            button.layer.zPosition = 2.0
-            button.addTarget(self, action: #selector(self.didTapEditTypes), for: UIControlEvents.touchUpInside)
-            button.backgroundColor = UIColor.darkGray
-            headerView.addSubview(button)
+            self.editButton.layer.zPosition = 2.0
+            self.editButton.addTarget(self, action: #selector(self.didTapEditTypes), for: UIControlEvents.touchUpInside)
+            self.editButton.backgroundColor = UIColor.darkGray
+            headerView.addSubview(self.editButton)
             
         }
         
@@ -292,6 +297,11 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     
     //MARK: selectors
     
+    func toggleEdit(_ editing:Bool){
+        self.editButton.setTitle(NSLocalizedString(editing ? "Edit" : "Done", comment: ""), for: .normal)
+        
+    }
+    
     func hideAllChecksForIndexPath(indexPath: IndexPath){
         for i in 0...self.tableView.numberOfRows(inSection: indexPath.section){
             let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))
@@ -300,6 +310,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func didTapEditTypes(){
+        toggleEdit(self.tableView.isEditing)
         self.tableView.setEditing(!self.tableView.isEditing, animated: true)
     }
     
@@ -322,7 +333,6 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
                 range.startPoint = 3000.0
                 range.endPoint = 10000.0
             case 4:
-                
                 /* larger than the globe */
                 range.startPoint = 0.0
                 range.endPoint = 1000000000000.0

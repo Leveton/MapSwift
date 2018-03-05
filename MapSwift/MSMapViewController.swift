@@ -20,7 +20,6 @@ private enum locationDownloadFailures:String{
 
 class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.manager.startUpdatingLocation()
@@ -28,6 +27,13 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         /* 1 mile radius */
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
+        
+        //We'll use the same map frame to keep our label seperate from our map
+        var labelFrame:CGRect  = mapFrame()
+        labelFrame.origin      = CGPoint(x: 0, y: 0)
+        labelFrame.size.width  = self.view.frame.width
+        labelFrame.size.height = labelFrame.size.height/2
+        self.titleLabel.frame  = labelFrame
         
         populateMap()
     }
@@ -103,6 +109,16 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     lazy var datasource:Array<MSLocation> = self.newDatasource()
     func newDatasource() -> Array<MSLocation>{
         return Array()
+    }
+    
+    lazy var titleLabel:UILabel = self.newTitleLabel()
+    func newTitleLabel() -> UILabel{
+        let label = UILabel()
+        label.text   = "MapSwift"
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        self.view.addSubview(label)
+        return label
     }
     
     func mapFrame() -> CGRect{

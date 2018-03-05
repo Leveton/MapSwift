@@ -15,7 +15,7 @@ private struct Constants {
 class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let cellID = "CellIdentifier"
-    var copiedDataSource:Array<MSLocation>?
+    var copiedDataSource:Array = [MSLocation]()
     
     var range:MSRange?{
         didSet{
@@ -34,7 +34,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return tableView
     }
     
-    var dataSource:Array<MSLocation>!{
+    var dataSource:Array = [MSLocation](){
         didSet{
             /* 
              Did set only gets called once so you won't have an infinite loop here.
@@ -116,15 +116,13 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     //MARK: selectors
     
-    func sortByDistance(){
+    private func sortByDistance(){
         if let theRange = range{
             /* sort by range as selected in settings */
             self.dataSource = self.copiedDataSource
             
-            //let predicate = NSPredicate(format: "distance BETWEEN {\(theRange.startPoint), \(theRange.endPoint)}")
-            //self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
-            self.dataSource = self.dataSource.filter{Float($0.distance) > theRange.startPoint}
-            self.dataSource = self.dataSource.filter{Float($0.distance) < theRange.endPoint}
+            /* notice that we can chain filters to create a range of value */
+            self.dataSource = self.dataSource.filter{Float($0.distance) > theRange.startPoint}.filter{Float($0.distance) < theRange.endPoint}
             
         }else{
             /* sort by distance from highest to lowest */
