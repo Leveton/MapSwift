@@ -13,9 +13,12 @@ private struct Constants {
     static let MapSide = CGFloat(300)
     static let TabBarHeight = CGFloat(49)
 }
+private enum locationDownloadFailures:String{
+    case noNetwork = "com.MapSwift.locationDownloadFailures.noNetwork"
+    case badJson = "com.MapSwift.locationDownloadFailures.badJson"
+}
 
 class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +27,13 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         /* 1 mile radius */
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
+        
+        //We'll use the same map frame to keep our label seperate from our map
+        var labelFrame:CGRect  = mapFrame()
+        labelFrame.origin      = CGPoint(x: 0, y: 0)
+        labelFrame.size.width  = self.view.frame.width
+        labelFrame.size.height = labelFrame.size.height/2
+        self.titleLabel.frame  = labelFrame
         
         populateMap()
     }
@@ -45,14 +55,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return view
     }
     
-    lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
-    func  newLocationsRequest() -> NSMutableURLRequest{
+    lazy var locationsRequest:URLRequest? = self.newLocationsRequest()
+    func newLocationsRequest() -> URLRequest?{
         /**
          As of iOS 9, apple requires that API endpoint use SSL. Were I to serve this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
          */
-        
         let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
-        return NSMutableURLRequest(url: url!)
+        if let url = url{
+            return URLRequest(url: url)
+        }else{
+            return nil
+        }
     }
     
     /* URLSession is a large and rich API for downloading data */
@@ -98,6 +111,16 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return Array()
     }
     
+    lazy var titleLabel:UILabel = self.newTitleLabel()
+    func newTitleLabel() -> UILabel{
+        let label = UILabel()
+        label.text   = "MapSwift"
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        self.view.addSubview(label)
+        return label
+    }
+    
     func mapFrame() -> CGRect{
         
         var mapFrame = CGRect.zero
@@ -123,19 +146,28 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
-        let jsonURL = URL(fileURLWithPath: jsonFile!)
-        
+        /** make sure it's not nil **/
+        guard let file = jsonFile else{
+            handleLocationFailure(failureType: .badJson)
+            return
+        }
+        let jsonURL = URL(fileURLWithPath: file)
         /**convert it to bytes*/
         let jsonData: Data?
         do {
             jsonData = try Data(contentsOf: jsonURL)
-            
+            /** serialize the bytes into a dictionary object */
+            if let jsonData = jsonData{
+                self.layoutMapWithData(data: jsonData)
+            }else{
+                handleLocationFailure(failureType: .badJson)
+            }
+            /** jsonData was nil, fail gracefully */
         } catch _ {
             jsonData = nil
+            handleLocationFailure(failureType: .badJson)
+            return
         }
-        
-        /** serialize the bytes into a dictionary object */
-        self.layoutMapWithData(data: jsonData!)
     }
     
     func populateMap(){
@@ -149,36 +181,27 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         self.progressView.isHidden = false
         self.progressView.startAnimating()
         
-        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-            self.locationsRequest as URLRequest, completionHandler:
-            {(data, response, error) -> Void in
-                
-                print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-                self.progressView.isHidden = false
-                self.progressView.startAnimating()
-                
-                let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-                    self.locationsRequest as URLRequest, completionHandler:
-                    {(data, response, error) -> Void in
-                        
-                        print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-                        guard error == nil, data == data else{
-                            return
+        if let request = self.locationsRequest{
+            let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+                request, completionHandler:
+                {(data, response, error) -> Void in
+                    
+                    DispatchQueue.main.async {
+                        self.progressView.stopAnimating()
+                        self.progressView.isHidden = true
+                        if let theData = data{
+                            self.layoutMapWithData(data:theData)
                         }
-                        DispatchQueue.main.async {
-                            self.progressView.stopAnimating()
-                            self.progressView.isHidden = true
-                            self.layoutMapWithData(data: data!)
-                        }
-                })
-                
-                locationTask.resume()
-                
-        })
+                    }
+                    
+            })
+            
+            locationTask.resume()
+        }else{
+            getLocalData()
+        }
         
-        locationTask.resume()
-        
-        //getLocalData()
+        //
         
     }
     
@@ -194,34 +217,36 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 return
             }
             
-            guard let locationDictionaries = (jsonDict["MapStackLocationsArray"]) as? [NSDictionary] else{
+            guard let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>] else{
                 //fail gracefully
                 return
             }
             
             /* Populate the favorites vc */
-            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
+            guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
                 //fail gracefully
                 return
             }
             var favsDataSource = [MSLocation]()
             
             for x in 0..<locationDictionaries.count{
-                let dict = locationDictionaries[x] as NSDictionary
-                let location:MSLocation = self.createLocationWithDictionary(dict: dict)
-                self.datasource.append(location)
-                if let locID = location.locationID{
-                    if favs.contains(locID){
-                      favsDataSource.append(location)
+                if let location = createLocationWithDictionary(dict: locationDictionaries[x]){
+                    map.addAnnotation(location)
+                    self.datasource.append(location)
+                    
+                    if let locID = location.locationID{
+                        if favs.contains(locID){
+                            favsDataSource.append(location)
+                        }
                     }
                 }
                 
                 /* uncomment to see how copying an object would work */
-//                let newloc = location.copy() as? MSLocation
-//                if let newloc = newloc{
-//                    newloc.type = "foo"
-//                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
-//                }
+                //                let newloc = location.copy() as? MSLocation
+                //                if let newloc = newloc{
+                //                    newloc.type = "foo"
+                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+                //                }
             }
             
             guard let viewControllers = self.tabBarController?.viewControllers else{
@@ -252,28 +277,50 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         }
     }
     
-    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
-        let fl = dict.object(forKey: "distance") as? CGFloat
-        if let fl = fl{
-            var coordinate = CLLocationCoordinate2D()
-            coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
-            coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
-            
-            let location = MSLocation(coordinate: coordinate, distance:fl)
-            location.subtitle = "dist: \(String(describing: fl))"
-            location.locationID = dict.object(forKey: "locationId") as? Int
-            location.title = dict.object(forKey: "name") as? String
-            location.type = dict.object(forKey: "type") as? String
-            location.coordinate = coordinate
-            
-            let image = UIImage(named: dict.object(forKey: "image") as! String)
-            location.locationImage = image
-            
-            map.addAnnotation(location)
-            
-            return location
-        }else{
-            return MSLocation(coordinate: CLLocationCoordinate2D(), distance: 0.0)
+    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
+        guard let dist = dict["distance"] as? CGFloat else{
+            return nil
         }
+        guard let lat = dict["latitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        guard let long = dict["longitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = lat
+        coordinate.longitude = long
+        
+        let location = MSLocation(coordinate: coordinate, distance:dist)
+        location.subtitle = "dist: \(String(describing: dist))"
+        
+        /* we'll allow the rest of our properties to be possibly nil */
+        location.locationID = dict["locationId"] as? Int
+        location.title = dict["name"] as? String
+        location.type = dict["type"] as? String
+        
+        /*make sure the string exists and is the right type before trying to build the image with the string */
+        if let imgStr = dict["image"] as? String{
+            if let image = UIImage(named:imgStr){
+                location.locationImage = image
+            }
+        }
+        
+        return location
+    }
+    
+    fileprivate func handleLocationFailure(failureType:locationDownloadFailures){
+        var msg = ""
+        switch failureType {
+        case .noNetwork:
+            msg = NSLocalizedString("No Network", comment:"")
+        case .badJson:
+            msg = NSLocalizedString("Bad JSON", comment:"")
+        }
+        let alert = UIAlertController(title:msg, message:NSLocalizedString("Try again in a moment", comment:""), preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title:NSLocalizedString("Ok", comment:""), style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated:true, completion:nil)
     }
 }
+

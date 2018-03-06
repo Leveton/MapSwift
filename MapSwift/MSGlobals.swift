@@ -17,9 +17,20 @@ public class MSSingleton{
 public extension Array where Element: Equatable {
     // Remove first collection element that is equal to the given `object`:
     mutating func removeWithObject(object: Element) {
-        print("looping thru array")
         if let index = index(of: object) {
             remove(at: index)
         }
+    }
+}
+
+//Determine if the device has a 'safe area' i.e. face recognition housing i.e. is an iPhone X
+public extension UIApplication {
+    static var deviceHasSafeArea:Bool {
+        if #available(iOS 11.0, *) {
+            if let topPadding = shared.keyWindow?.safeAreaInsets.top{
+                return topPadding > 0
+            }
+        }
+        return false
     }
 }

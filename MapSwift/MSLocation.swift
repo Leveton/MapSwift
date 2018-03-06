@@ -35,7 +35,9 @@ class MSLocation: NSObject, MKAnnotation, NSCopying {
         coordinate.longitude = 0
         let location = MSLocation(coordinate: coordinate, distance: self.distance)
         location.title = self.title
+        location.subtitle = self.subtitle
         location.type = self.type
+        location.distance = self.distance
         location.locationImage = self.locationImage
         location.locationID = self.locationID
         return location

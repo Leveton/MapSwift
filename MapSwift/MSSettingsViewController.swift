@@ -55,17 +55,17 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     //MARK: getters
     
     func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
-        var cell = self.tableView.dequeueReusableCell(withIdentifier: colorsCellID)
-        if cell == nil{
-            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: colorsCellID)
+        let maybeCell = self.tableView.dequeueReusableCell(withIdentifier: colorsCellID)
+        guard let cell = maybeCell else{
+            let newCell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: colorsCellID)
             let imageView = UIImageView(image: UIImage(named: "check"))
             imageView.isHidden = true
-            cell?.accessoryView = imageView
+            newCell.accessoryView = imageView
+            return newCell
         }
-        
-        /* we can unwrap the optional because the cell is nil */
-        cell!.textLabel?.text = self.colorsArray[indexPath.row]
-        return cell!
+
+        cell.textLabel?.text = self.colorsArray[indexPath.row]
+        return cell
     }
     
     func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
@@ -173,13 +173,19 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         /* this flashes the cell upon tap which is good for UX */
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
+        guard let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath) else{
+            return
+        }
+        guard let accessView = cell.accessoryView else{
+            return
+        }
         
         /* toggle the cell's right-hand view hidden */
         if indexPath.section == Sections.ThemeColor.rawValue{
             hideAllChecksForIndexPath(indexPath: indexPath)
-            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            accessView.isHidden = !accessView.isHidden
             
+            //Some UIColor convenience properties
             switch indexPath.row {
             case 0:
                 MSSingleton.sharedInstance.themeColor = UIColor.blue
@@ -191,17 +197,19 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
                 MSSingleton.sharedInstance.themeColor = UIColor.blue
             }
             
-            self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
+            /*Here we'll put our superclass to good use by having it listen to this notification so that all of its subclass instances will update their background colors. */
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: MSSingleton.sharedInstance.themeColor)
+            
             self.tableView.reloadData()
         }
         
         if  indexPath.section == Sections.DistanceFilter.rawValue{
             hideAllChecksForIndexPath(indexPath: indexPath)
-            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            accessView.isHidden = !accessView.isHidden
             
-            let vc = self.tabBarController?.viewControllers?[1] as! MSLocationsViewController
-            vc.range = self.getRangeFromIndexPath(index: indexPath)
+            if let vc = self.tabBarController?.viewControllers?[1] as? MSLocationsViewController{
+                vc.range = self.getRangeFromIndexPath(index: indexPath)
+            }
         }
     }
     
@@ -250,8 +258,8 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func favoritesUpdated(_ notification: NSNotification){
-        if notification.object != nil{
-            self.typesArray = notification.object as! Array
+        if let obj = notification.object as? Array<String>{
+            self.typesArray = obj
         }
     }
     
@@ -296,7 +304,6 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         self.tableView.setEditing(!self.tableView.isEditing, animated: true)
     }
     
-    //TODO: Refactor case 4 for a cleaner implementation. notice that this 'todo' shows up if you tap the file helper at the top
     func getRangeFromIndexPath(index: IndexPath) -> MSRange{
         var range = MSRange()
         
@@ -315,7 +322,6 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
                 range.startPoint = 3000.0
                 range.endPoint = 10000.0
             case 4:
-                
                 /* larger than the globe */
                 range.startPoint = 0.0
                 range.endPoint = 1000000000000.0

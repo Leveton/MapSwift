@@ -15,7 +15,7 @@ private struct Constants {
 class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
     
     private let cellID = "CellIdentifier"
-    var copiedDataSource:Array<MSLocation>?
+    var copiedDataSource:Array = [MSLocation]()
     
     var range:MSRange?{
         didSet{
@@ -34,7 +34,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return tableView
     }
     
-    var dataSource:Array<MSLocation>!{
+    var dataSource:Array = [MSLocation](){
         didSet{
             /* 
              Did set only gets called once so you won't have an infinite loop here.
@@ -43,7 +43,6 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             
             if range == nil{
                 self.copiedDataSource = self.dataSource
-                //self.dataSource.sort{$0.title! < $1.title!}
                 self.dataSource.sort{$0.distance < $1.distance}
                 self.tableView.reloadData()
             }
@@ -80,13 +79,13 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return self.dataSource.count
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-//        cell.textLabel?.text = location.title
-//        return cell
-//    }
-
+    //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //        let location = self.dataSource[indexPath.row]
+    //        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+    //        cell.textLabel?.text = location.title
+    //        return cell
+    //    }
+    
     /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
@@ -117,14 +116,15 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     //MARK: selectors
     
-    func sortByDistance(){
+    private func sortByDistance(){
         
-        if range != nil{
+        if let theRange = range{
             /* sort by range as selected in settings */
             self.dataSource = self.copiedDataSource
             
-            let predicate = NSPredicate(format: "distance BETWEEN {\(range!.startPoint), \(range!.endPoint)}")
-            self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+            /* notice that we can chain filters to create a range of value */
+            self.dataSource = self.dataSource.filter{Float($0.distance) > theRange.startPoint}.filter{Float($0.distance) < theRange.endPoint}
+            
         }else{
             /* sort by distance from highest to lowest */
             self.dataSource.sort{$0.distance < $1.distance}
