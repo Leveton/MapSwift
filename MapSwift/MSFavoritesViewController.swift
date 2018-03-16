@@ -190,11 +190,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
         if control.isOn{
             //make arrays for each type and sort greatest to least
-            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type! == "Random"}.sorted{$0.distance > $1.distance}
-            let rested:Array<MSLocation> = self.dataSource.filter{$0.type! == "Restaurant"}.sorted{$0.distance > $1.distance}
-            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type! == "School"}.sorted{$0.distance > $1.distance}
-            let started:Array<MSLocation> = self.dataSource.filter{$0.type! == "StartUp"}.sorted{$0.distance > $1.distance}
-            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type! == "Hospital"}.sorted{$0.distance > $1.distance}
+            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}.sorted{$0.distance > $1.distance}
+            let rested:Array<MSLocation> = self.dataSource.filter{$0.type == "Restaurant"}.sorted{$0.distance > $1.distance}
+            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type == "School"}.sorted{$0.distance > $1.distance}
+            let started:Array<MSLocation> = self.dataSource.filter{$0.type == "StartUp"}.sorted{$0.distance > $1.distance}
+            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type == "Hospital"}.sorted{$0.distance > $1.distance}
             
             //find the total distance for each array
             let randomTotal = randomed.reduce(0, {$0 + $1.distance})
