@@ -33,8 +33,8 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
              Uncomment sorting by title to get the MDC locations in alphabetical order. Or use a more advanced sorting filter.
              */
             
-            //self.dataSource.sort{$0.title! < $1.title!}
-            self.dataSource.sort{$0.distance! < $1.distance!}
+            
+            self.dataSource.sort{$0.distance < $1.distance}
             self.tableView.reloadData()
         }
     }
@@ -69,31 +69,31 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return self.dataSource.count
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-//        cell.textLabel?.text = location.title
-//        return cell
-//    }
-
-    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
-        let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        
-        if (cell == nil){
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            //print("new cell")
-        }else{
-            //print("old cell")
-        }
-        
-        //cell?.delegate = self
-        cell?.textLabel?.text = location.title
-        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)!) as String
-        return cell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+        cell.textLabel?.text = location.title
+        return cell
     }
+
+    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
+    //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //
+    //        let str:String = "cellid"
+    //        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+    //        if let cell = cell {
+    //            print("old cell")
+    //            if let textLabel = cell.textLabel {
+    //                textLabel.text = "row: \(indexPath.row)"
+    //            }
+    //            return cell
+    //        }else{
+    //            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+    //            print("new cell")
+    //            /*something in the system went horribly wrong if there's still not a cell */
+    //            return cell ?? UITableViewCell()
+    //        }
+    //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let location = self.dataSource[indexPath.row]
