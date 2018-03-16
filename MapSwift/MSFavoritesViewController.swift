@@ -9,7 +9,7 @@
 import UIKit
 
 struct combinedLocation{
-    var total:CGFloat!
+    var total:CGFloat
     var collection:Array<MSLocation>!
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){
@@ -69,7 +69,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         cell.delegate = self
         cell.location = location
         cell.mainLabel?.text = location.title
-        cell.subLabel?.text = "dist: \(String(describing: location.distance!))"
+        cell.subLabel?.text = "dist: \(String(describing: location.distance))"
         cell.typeLabel?.text = location.type
         cell.locationImageView?.image = location.locationImage
         
@@ -158,7 +158,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         typeFilter.isOn = false
         
         if control.isOn{
-            self.dataSource.sort{($0.distance ?? 0.0) < ($1.distance ?? 0.0)}
+            self.dataSource.sort{($0.distance) < ($1.distance)}
             self.tableView.reloadData()
         }else{
             resetDataSource()
@@ -172,17 +172,17 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         distanceFilter.isOn = false
         
         if control.isOn{
-            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type! == "Random"}
-            let rested:Array<MSLocation> = self.dataSource.filter{$0.type! == "Restaurant"}
-            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type! == "School"}
-            let started:Array<MSLocation> = self.dataSource.filter{$0.type! == "StartUp"}
-            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type! == "Hospital"}
+            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}
+            let rested:Array<MSLocation> = self.dataSource.filter{$0.type == "Restaurant"}
+            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type == "School"}
+            let started:Array<MSLocation> = self.dataSource.filter{$0.type == "StartUp"}
+            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type == "Hospital"}
             
-            let randomTotal = randomed.reduce(0, {$0 + $1.distance!})
-            let restedTotal = rested.reduce(0, {$0 + $1.distance!})
-            let schoolTotal = schooled.reduce(0, {$0 + $1.distance!})
-            let startedTotal = started.reduce(0, {$0 + $1.distance!})
-            let hospitalTotal = hospitaled.reduce(0, {$0 + $1.distance!})
+            let randomTotal = randomed.reduce(0, {$0 + $1.distance})
+            let restedTotal = rested.reduce(0, {$0 + $1.distance})
+            let schoolTotal = schooled.reduce(0, {$0 + $1.distance})
+            let startedTotal = started.reduce(0, {$0 + $1.distance})
+            let hospitalTotal = hospitaled.reduce(0, {$0 + $1.distance})
             
             let random = combinedLocation(randomTotal, randomed)
             let school = combinedLocation(schoolTotal, schooled)
@@ -191,7 +191,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             let hospital = combinedLocation(hospitalTotal, hospitaled)
             
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
-            foo.sort{$0.total! < $1.total!}
+            foo.sort{$0.total < $1.total}
             
             let finally = foo[0].collection + foo[1].collection + foo[2].collection! + foo[3].collection + foo[4].collection
             self.dataSource = finally

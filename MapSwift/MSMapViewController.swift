@@ -34,7 +34,27 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        //We'll use the same map frame to keep our label seperate from our map
+        var labelFrame:CGRect  = mapFrame()
+        labelFrame.origin      = CGPoint(x: 0, y: 0)
+        labelFrame.size.width  = self.view.frame.width
+        labelFrame.size.height = labelFrame.size.height/2
+        self.titleLabel.frame  = labelFrame
+    }
     //MARK: getters
+    
+    lazy var titleLabel:UILabel = self.newTitleLabel()
+    func newTitleLabel() -> UILabel{
+        let label = UILabel()
+        label.text   = "MapSwift"
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        self.view.addSubview(label)
+        return label
+    }
     
     lazy var progressView:UIActivityIndicatorView = self.newProgressView()
     func newProgressView() -> UIActivityIndicatorView{
@@ -163,13 +183,16 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             {(data, response, error) -> Void in
             
             //print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-                guard error == nil, data == data else{
+                guard error == nil else{
+                    return
+                }
+                guard let data = data else{
                     return
                 }
                 DispatchQueue.main.async {
                     self.progressView.stopAnimating()
                     self.progressView.isHidden = true
-                    self.layoutMapWithData(data: data!)
+                    self.layoutMapWithData(data: data)
                 }
         })
 
