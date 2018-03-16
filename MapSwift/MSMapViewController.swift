@@ -46,14 +46,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return view
     }
     
-    lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
-    func  newLocationsRequest() -> NSMutableURLRequest{
+    lazy var locationsRequest:NSMutableURLRequest? = self.newLocationsRequest()
+    func  newLocationsRequest() -> NSMutableURLRequest?{
         /**
          As of iOS 9, apple requires that API endpoint use SSL. Were I to serve this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
          */
         
-        let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
-        return NSMutableURLRequest(url: url!)
+        let url = URL.init(string: "https://mikeleveton.com/MapStackLocations.json")
+        if let url = url{
+          return NSMutableURLRequest(url: url)
+        }
+        return nil
     }
     
     /* URLSession is a large and rich API for downloading data */
@@ -124,19 +127,22 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
-        let jsonURL = URL(fileURLWithPath: jsonFile!)
         
-        /**convert it to bytes*/
-        let jsonData: Data?
-        do {
-            jsonData = try Data(contentsOf: jsonURL)
+        if let jsonFile = jsonFile{
+            let jsonURL = URL(fileURLWithPath: jsonFile)
             
-        } catch _ {
-            jsonData = nil
+            /**convert it to bytes*/
+            do {
+                let jsonData = try Data(contentsOf: jsonURL)
+                /** serialize the bytes into a dictionary object */
+                self.layoutMapWithData(data: jsonData)
+                
+            } catch _ {
+                //fail gracefully
+            }
+        }else{
+            //fail gracefully
         }
-        
-        /** serialize the bytes into a dictionary object */
-        self.layoutMapWithData(data: jsonData!)
     }
     
     func populateMap(){
@@ -146,15 +152,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
          I like to lowercase block variables so that you can guess it's type.
          App transport security hack is required here.
          */
-        
+        guard let locationsRequest = self.locationsRequest else{
+            return
+        }
         self.progressView.isHidden = false
         self.progressView.startAnimating()
         
         let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-            self.locationsRequest as URLRequest, completionHandler:
+            locationsRequest as URLRequest, completionHandler:
             {(data, response, error) -> Void in
             
-            print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
+            //print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
                 guard error == nil, data == data else{
                     return
                 }
@@ -174,63 +182,104 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     /* let's abstract reused code into one method */
     func layoutMapWithData(data:Data){
         
-            /** serialize the bytes into a dictionary object */
-            let jsonResponse:AnyObject
-            do {
-                try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
-                let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-                print("json response \(jsonResponse)")
-                let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-                print("json dictionaries \(locationDictionaries)")
-                
-                /* Populate the favorites vc */
-                let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-                print("favs from MSMAPVC: \(favs)")
-                var favsDataSource = [MSLocation]()
-                
-                for x in 0..<locationDictionaries.count{
-                    let dict = locationDictionaries[x] as NSDictionary
-                    let location:MSLocation = self.createLocationWithDictionary(dict: dict)
+        /** serialize the bytes into a dictionary object */
+        let jsonResponse:AnyObject
+        do {
+            try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
+            guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>] else{
+                //fail gracefully
+                return
+            }
+            
+            /* Populate the favorites vc */
+            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
+                //fail gracefully
+                return
+            }
+            var favsDataSource = [MSLocation]()
+            
+            for loc in locationDictionaries{
+                if let location = createLocationWithDictionary(dict:loc){
+                    map.addAnnotation(location)
                     self.datasource.append(location)
-                    if favs.contains(location.locationID!){
-                        favsDataSource.append(location)
+                    
+                    if let locID = location.locationID{
+                        if favs.contains(locID){
+                            favsDataSource.append(location)
+                        }
                     }
                 }
                 
-                let viewControllers = self.tabBarController?.viewControllers
-                let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
-                locationsVC.dataSource = self.datasource
-                let nav:UINavigationController = viewControllers![2] as! UINavigationController
-                let favsVC = nav.viewControllers[0] as! MSFavoritesViewController
-                favsVC.dataSource = favsDataSource
-                
-                self.map.isHidden = false
-                
-            } catch {
-                print("json failed")
+                /* uncomment to see how copying an object would work */
+                //                let newloc = location.copy() as? MSLocation
+                //                if let newloc = newloc{
+                //                    newloc.type = "foo"
+                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+                //                }
             }
+            
+            guard let viewControllers = self.tabBarController?.viewControllers else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                //fail gracefully
+                return
+            }
+            guard let nav:UINavigationController = viewControllers[2] as? UINavigationController else{
+                //fail gracefully
+                return
+            }
+            guard let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
+                //fail gracefully
+                return
+            }
+            
+            locationsVC.dataSource = self.datasource
+            favsVC.dataSource = favsDataSource
+            self.map.isHidden = false
+            
+        } catch {
+            //This closure is called if JSONSerialization.jsonObject() errors out. Nothing after JSONSerialization.jsonObject would be executed
+            print("json failed")
+        }
     }
     
-    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
-        var coordinate = CLLocationCoordinate2D()
-        coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
-        coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
-        
-        let location = MSLocation(coordinate: coordinate)
-        location.locationID = dict.object(forKey: "locationId") as? Int
-        location.title = dict.object(forKey: "name") as? String
-        location.type = dict.object(forKey: "type") as? String
-        let fl = dict.object(forKey: "distance") as? CGFloat
-        if let fl = fl{
-            location.distance = fl
-            location.subtitle = "dist: \(String(describing: fl))"
+    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
+        guard let dist = dict["distance"] as? CGFloat else{
+            return nil
         }
-        location.coordinate = coordinate
+        guard let lat = dict["latitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        guard let long = dict["longitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = lat
+        coordinate.longitude = long
         
-        let image = UIImage(named: dict.object(forKey: "image") as! String)
-        location.locationImage = image
+        let location = MSLocation(coordinate: coordinate, distance:dist)
+        location.subtitle = "dist: \(String(describing: dist))"
         
-        map.addAnnotation(location)
+        /* we'll allow the rest of our properties to be possibly nil */
+        location.locationID = dict["locationId"] as? Int
+        location.title = dict["name"] as? String
+        location.type = dict["type"] as? String
+        
+        /*make sure the string exists and is the right type before trying to build the image with the string */
+        if let imgStr = dict["image"] as? String{
+            if let image = UIImage(named:imgStr){
+                location.locationImage = image
+            }
+        }
         
         return location
     }

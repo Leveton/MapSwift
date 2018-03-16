@@ -8,7 +8,7 @@
 
 import UIKit
 
-/* this is our base class. the four main view controllers are decended from this one. Keep this one very light! */
+/* this is our base class. the four main view controllers are decended from this one. Keep this one very light */
 class MSViewController: UIViewController {
 
     override func viewDidLoad() {

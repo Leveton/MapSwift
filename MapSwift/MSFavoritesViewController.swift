@@ -68,10 +68,10 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         let cell = tableView.dequeueReusableCell(withIdentifier: iden) as? MSTableViewCell ?? MSTableViewCell(style: .subtitle, reuseIdentifier: iden)
         cell.delegate = self
         cell.location = location
-        cell.mainLabel.text = location.title
-        cell.subLabel.text = "dist: \(String(describing: location.distance!))"
-        cell.typeLabel.text = location.type
-        cell.locationImageView.image = location.locationImage
+        cell.mainLabel?.text = location.title
+        cell.subLabel?.text = "dist: \(String(describing: location.distance!))"
+        cell.typeLabel?.text = location.type
+        cell.locationImageView?.image = location.locationImage
         
         //call some method on the cell class that adjusts the z-axis of the top and bottom borders
         //e.g. cell.adjustBorders()
