@@ -60,7 +60,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         /**
          As of iOS 9, apple requires that API endpoint use SSL. Were I to serve this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
          */
-        let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
+        let url = URL.init(string: "https://mikeleveton.com/MapStackLocations.json")
         if let url = url{
             return URLRequest(url: url)
         }else{
