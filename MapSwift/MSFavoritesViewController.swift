@@ -10,7 +10,7 @@ import UIKit
 
 struct combinedLocation{
     var total:CGFloat
-    var collection:Array<MSLocation>!
+    var collection = [MSLocation]()
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){
         self.total = total
@@ -20,13 +20,13 @@ struct combinedLocation{
 
 class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate {
 
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel?
+    @IBOutlet weak var distanceLabel: UILabel?
+    @IBOutlet weak var typeLabel: UILabel?
     
-    @IBOutlet weak var typeFilter: UISwitch!
-    @IBOutlet weak var distanceFilter: UISwitch!
-    @IBOutlet weak var nameFilter: UISwitch!
+    @IBOutlet weak var typeFilter: UISwitch?
+    @IBOutlet weak var distanceFilter: UISwitch?
+    @IBOutlet weak var nameFilter: UISwitch?
     
     private let cellID = "MSTableViewCell"
     
@@ -89,9 +89,12 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
         
         /* get a mutable reference to our data source and remove the deleted location */
-        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-        favs.removeWithObject(object: location.locationID!)
-        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>, let loc = location.locationID else{
+            return
+        }
+        var favorites = favs
+        favorites.removeWithObject(object: loc)
+        UserDefaults.standard.set(favorites, forKey: "favoritesArray")
         self.dataSource.removeWithObject(object: location)
         
         var array = [IndexPath]()
@@ -127,19 +130,19 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     //we're checking to see if copiedData source is NOT nil
     func resetDataSource(){
         if let copiedDataSource = copiedDataSource{
-            print("copied!")
+            
             self.dataSource = copiedDataSource
             self.tableView.reloadData()
         }else{
-            print("failed!")
+            
         }
     }
     
-    @IBAction func nameSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+    @IBAction func nameSwitched(_ sender: UISwitch) {
+        let control = sender
         //control.isOn = !control.isOn
-        distanceFilter.isOn = false
-        typeFilter.isOn = false
+        distanceFilter?.isOn = false
+        typeFilter?.isOn = false
         
         if control.isOn{
             //make sure title property is not nil, if it is, compare empty strings
@@ -150,12 +153,12 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         }
         
     }
-    @IBAction func distanceSwitched(_ sender: Any) {
+    @IBAction func distanceSwitched(_ sender: UISwitch) {
         //casting to UISwitch so we have access to isOn
-        let control = sender as! UISwitch
+        let control = sender
         //control.isOn = !control.isOn
-        nameFilter.isOn = false
-        typeFilter.isOn = false
+        nameFilter?.isOn = false
+        typeFilter?.isOn = false
         
         if control.isOn{
             self.dataSource.sort{($0.distance) < ($1.distance)}
@@ -165,11 +168,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         }
         
     }
-    @IBAction func distanceTypeSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+    @IBAction func distanceTypeSwitched(_ sender: UISwitch) {
+        let control = sender
         //control.isOn = !control.isOn
-        nameFilter.isOn = false
-        distanceFilter.isOn = false
+        nameFilter?.isOn = false
+        distanceFilter?.isOn = false
         
         if control.isOn{
             let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}
@@ -193,8 +196,10 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
             foo.sort{$0.total < $1.total}
             
-            let finally = foo[0].collection + foo[1].collection + foo[2].collection! + foo[3].collection + foo[4].collection
-            self.dataSource = finally
+            //Swift makes us do this to concatenate this particular collection (filed a Radar bug). The result is an array of MSLocations sorted by aggragated distance for each type
+            let firstCombined = foo[0].collection + foo[1].collection
+            let secondCombined = foo[2].collection + foo[3].collection
+            self.dataSource = firstCombined + secondCombined + foo[4].collection
             self.tableView.reloadData()
             
         }else{

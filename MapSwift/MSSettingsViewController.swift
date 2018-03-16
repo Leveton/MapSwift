@@ -58,17 +58,19 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     //MARK: getters
     
     func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
-        var cell = self.tableView.dequeueReusableCell(withIdentifier: colorsCellID)
-        if cell == nil{
-            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: colorsCellID)
+        
+        guard let cell = self.tableView.dequeueReusableCell(withIdentifier: colorsCellID) else{
+            let newCell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: colorsCellID)
             let imageView = UIImageView(image: UIImage(named: "check"))
             imageView.isHidden = true
-            cell?.accessoryView = imageView
+            newCell.accessoryView = imageView
+            newCell.textLabel?.text = self.colorsArray[indexPath.row]
+            return newCell
         }
         
         /* we can unwrap the optional because the cell is nil */
-        cell!.textLabel?.text = self.colorsArray[indexPath.row]
-        return cell!
+        cell.textLabel?.text = self.colorsArray[indexPath.row]
+        return cell
     }
     
     func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
@@ -161,8 +163,10 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         
         /* toggle the cell's right-hand view hidden */
         if indexPath.section == Sections.ThemeColor.rawValue || indexPath.section == Sections.DistanceFilter.rawValue{
-            let cell:UITableViewCell = self.tableView.cellForRow(at: indexPath)!
-            cell.accessoryView?.isHidden = !(cell.accessoryView?.isHidden)!
+            guard let cell = self.tableView.cellForRow(at: indexPath), let accessory = cell.accessoryView else{
+                return
+            }
+            accessory.isHidden = !accessory.isHidden
         }
         
     }
@@ -188,8 +192,8 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     @objc func favoritesUpdated(_ notification: NSNotification){
-        if notification.object != nil{
-            self.typesArray = notification.object as! Array
+        if let note = notification.object as? Array<String>{
+            self.typesArray = note
         }
     }
     
