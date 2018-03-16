@@ -10,7 +10,7 @@ import UIKit
 
 struct combinedLocation{
     var total:CGFloat!
-    var collection:Array<MSLocation>!
+    var collection = [MSLocation]()
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){
         self.total = total
@@ -91,11 +91,13 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     //MARK: MSTableViewCellDelegate
     
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
-        
+        guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int>, let loc = location.locationID else{
+            return
+        }
+        var favorites = favs
         /* get a mutable reference to our data source and remove the deleted location */
-        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-        favs.removeWithObject(object: location.locationID!)
-        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        favorites.removeWithObject(object: loc)
+        UserDefaults.standard.set(favorites, forKey: "favoritesArray")
         self.dataSource.removeWithObject(object: location)
         
         var array = [IndexPath]()
@@ -186,11 +188,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
         if control.isOn{
             //make arrays for each type and sort greatest to least
-            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type! == "Random"}.sorted{$0.distance > $1.distance}
-            let rested:Array<MSLocation> = self.dataSource.filter{$0.type! == "Restaurant"}.sorted{$0.distance > $1.distance}
-            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type! == "School"}.sorted{$0.distance > $1.distance}
-            let started:Array<MSLocation> = self.dataSource.filter{$0.type! == "StartUp"}.sorted{$0.distance > $1.distance}
-            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type! == "Hospital"}.sorted{$0.distance > $1.distance}
+            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}.sorted{$0.distance > $1.distance}
+            let rested:Array<MSLocation> = self.dataSource.filter{$0.type == "Restaurant"}.sorted{$0.distance > $1.distance}
+            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type == "School"}.sorted{$0.distance > $1.distance}
+            let started:Array<MSLocation> = self.dataSource.filter{$0.type == "StartUp"}.sorted{$0.distance > $1.distance}
+            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type == "Hospital"}.sorted{$0.distance > $1.distance}
             
             //find the total distance for each array
             let randomTotal = randomed.reduce(0, {$0 + $1.distance})
@@ -208,7 +210,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             
             //sort by the aggragated value
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
-            foo.sort{$0.total! < $1.total!}
+            foo.sort{$0.total < $1.total}
             
             //Swift makes us do this to concatenate this particular collection (filed a Radar bug). The result is an array of MSLocations sorted by aggragated distance for each type
             let firstCombined = foo[0].collection + foo[1].collection
