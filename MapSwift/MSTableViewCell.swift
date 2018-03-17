@@ -18,6 +18,9 @@ class MSTableViewCell: UITableViewCell {
     @IBOutlet weak var detailsButton: UIButton?
     @IBOutlet weak var deleteButton: UIButton?
     @IBOutlet weak var locationImageView: UIImageView?
+    @IBOutlet weak var topBorder: UIView?
+    @IBOutlet weak var bottomBorder: UIView?
+
     var location:MSLocation?
     override func awakeFromNib() {
         super.awakeFromNib()
