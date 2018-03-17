@@ -10,7 +10,7 @@ import UIKit
 
 struct combinedLocation{
     var total:CGFloat!
-    var collection:Array<MSLocation>!
+    var collection = [MSLocation]()
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){
         self.total = total
@@ -21,12 +21,12 @@ struct combinedLocation{
 class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate {
 
     private let cellID = "CellIdentifier"
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var typeLabel: UILabel!
-    @IBOutlet weak var nameFilter: UISwitch!
-    @IBOutlet weak var distanceFilter: UISwitch!
-    @IBOutlet weak var typeFilter: UISwitch!
+    @IBOutlet weak var nameLabel: UILabel?
+    @IBOutlet weak var distanceLabel: UILabel?
+    @IBOutlet weak var typeLabel: UILabel?
+    @IBOutlet weak var nameFilter: UISwitch?
+    @IBOutlet weak var distanceFilter: UISwitch?
+    @IBOutlet weak var typeFilter: UISwitch?
     
     /* guarantee that dataSource is not nil */
     var dataSource = [MSLocation](){
@@ -69,10 +69,10 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
         cell.delegate = self
         cell.location = location
-        cell.mainLabel.text = location.title
-        cell.subLabel.text = "dist: \(String(describing: location.distance))"
-        cell.typeLabel.text = location.type
-        cell.locationImageView.image = location.locationImage
+        cell.mainLabel?.text = location.title
+        cell.subLabel?.text = "dist: \(String(describing: location.distance))"
+        cell.typeLabel?.text = location.type
+        cell.locationImageView?.image = location.locationImage
         return cell
     }
     
@@ -80,17 +80,17 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         return 100
     }
     
-    @IBAction func distanceTypeSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+    @IBAction func distanceTypeSwitched(_ sender: UISwitch) {
+        let control = sender
         
-        nameFilter.isOn = false
-        distanceFilter.isOn = false
+        nameFilter?.isOn = false
+        distanceFilter?.isOn = false
         
         if control.isOn{
-            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type! == "Random"}
-            let rested = self.dataSource.filter{$0.type! == "Restaurant"}
-            let schooled = self.dataSource.filter{$0.type! == "School"}
-            let started = self.dataSource.filter{$0.type! == "StartUp"}
+            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}
+            let rested = self.dataSource.filter{$0.type == "Restaurant"}
+            let schooled = self.dataSource.filter{$0.type == "School"}
+            let started = self.dataSource.filter{$0.type == "StartUp"}
             
             let randomTotal = randomed.reduce(0, {$0 + $1.distance})
             let restedTotal = rested.reduce(0, {$0 + $1.distance})
@@ -105,57 +105,68 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             var foo:Array<combinedLocation> = [random, school, rest, start]
             foo.sort{$0.total < $1.total}
             
-            let final = foo[0].collection! + foo[1].collection! + foo[2].collection!
-            
-            self.dataSource = final
+            //Swift makes us do this to concatenate this particular collection (filed a Radar bug). The result is an array of MSLocations sorted by aggragated distance for each type
+            let firstCombined = foo[0].collection + foo[1].collection
+            let secondCombined = foo[2].collection + foo[3].collection
+            self.dataSource = firstCombined + secondCombined + foo[4].collection
+            self.tableView.reloadData()
             
         }else{
-            self.dataSource = self.copiedDataSource!
+            if let copiedDataSource = self.copiedDataSource{
+              self.dataSource = copiedDataSource
+            }
         }
         self.tableView.reloadData()
     }
-    @IBAction func distanceSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+    @IBAction func distanceSwitched(_ sender: UISwitch) {
+        let control = sender
         
-        nameFilter.isOn = false
-        typeFilter.isOn = false
+        nameFilter?.isOn = false
+        typeFilter?.isOn = false
         
         if control.isOn{
-            self.dataSource.sort{($0.distance ?? 0.0) < ($1.distance ?? 0.0)}
+            self.dataSource.sort{$0.distance < $1.distance}
         }else{
-            self.dataSource = self.copiedDataSource!
+            if let copiedDataSource = self.copiedDataSource{
+                self.dataSource = copiedDataSource
+            }
         }
         self.tableView.reloadData()
         
     }
-    @IBAction func nameSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
-        nameFilter.isOn = !nameFilter.isOn
+    @IBAction func nameSwitched(_ sender: UISwitch) {
+        let control = sender
+        guard let name = nameFilter else{
+            return
+        }
+        name.isOn = !name.isOn
         
-        distanceFilter.isOn = false
-        typeFilter.isOn = false
+        distanceFilter?.isOn = false
+        typeFilter?.isOn = false
         
         if control.isOn{
             self.dataSource.sort{($0.title ?? "") < ($1.title ?? "")}
         }else{
-            self.dataSource = self.copiedDataSource!
+            if let copiedDataSource = self.copiedDataSource{
+                self.dataSource = copiedDataSource
+            }
         }
         self.tableView.reloadData()
         
     }
 
-    func switchOffOthersExcept(notMe:Int){
-        nameFilter.isOn = notMe == nameFilter.tag
-        distanceFilter.isOn = notMe == distanceFilter.tag
-        typeFilter.isOn = notMe == typeFilter.tag
-    }
     //MARK: MSTableViewCellDelegate
     
     
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
-        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-        favs.removeWithObject(object: location.locationID!)
-        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>, let loc = location.locationID else{
+            //fail gracefully
+            return
+        }
+        var favorites = favs
+        
+        favorites.removeWithObject(object: loc)
+        UserDefaults.standard.set(favorites, forKey: "favoritesArray")
         self.dataSource.removeWithObject(object: location)
         self.tableView.reloadData()
     }

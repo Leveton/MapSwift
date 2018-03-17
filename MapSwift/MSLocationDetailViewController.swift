@@ -93,9 +93,13 @@ class MSLocationDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>, let loc = location?.locationID else{
+            //fail gracefully
+            return
+        }
+        
         print("favs from user defaults in viewdidload: \(favs) location: \(String(describing: location?.locationID))")
-        isLocationFavorited = favs.contains((self.location?.locationID)!)
+        isLocationFavorited = favs.contains(loc)
         
         if isLocationFavorited{
             self.favoriteButton.setImage(UIImage.init(named: "favoriteStar"), for: UIControlState.normal)
@@ -105,14 +109,14 @@ class MSLocationDetailViewController: UIViewController {
         self.favoriteButton.sizeToFit()
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        let tabController = self.presentingViewController as! MSTabBarController
-//        tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
-//    }
-    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        
+        /* the iPhone X adds another 20 pts to the status bar. It's less brittle to accomodate this with auto layout which is one reason more developers are adopting it. */
+        let safeAreaPadding:CGFloat = UIApplication.deviceHasSafeArea ? 20.0 : 0.0
+        
+        //turnary operator. thing of ? as if and : as else
+        let topPadding:CGFloat = (isBeingPresented ? 0.0 : 64) + safeAreaPadding
         
         var imageFrame = self.imageView.frame
         imageFrame.origin.x = Constants.ViewMargin
@@ -183,26 +187,40 @@ class MSLocationDetailViewController: UIViewController {
     
     @objc func didTapFavorite(){
         
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+            //fail gracefully
+            return
+        }
+        var mutableFavs = favs
+        
+        /* grab our custom tabbar controller at the root of the project and cascade down */
+        guard let tabController = self.presentingViewController as? MSTabBarController else{
+            return
+        }
+        
+        guard let loc = self.location, let locID = self.location?.locationID else{
+            return
+        }
         /*let's prevent interaction until the method returns */
         self.favoriteButton.isEnabled = false
         
-        self.favoriteButton.imageView?.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
-        
-        var favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-        print("favs from user defaults: \(favs)")
-        
-        /* grab our custom tabbar controller at the root of the project and cascade down */
-        let tabController = self.presentingViewController as! MSTabBarController
-        
-        if isLocationFavorited{
-            favs.removeWithObject(object: self.location!.locationID!)
-            tabController.removeLocationFromFavoritesWithLocation(location: self.location!)
-        }else{
-            favs.append(self.location!.locationID!)
-            tabController.addLocationToFavoritesWithLocation(location: self.location!)
+        /*we don't return if this fails because it's not mission critical */
+        if let favsImgView = self.favoriteButton.imageView{
+            favsImgView.image = isLocationFavorited ? UIImage.init(named: "favoriteStarEmpty") : UIImage.init(named: "favoriteStar")
         }
         
-        UserDefaults.standard.set(favs, forKey: "favoritesArray")
+        //print("favs from user defaults: \(mutableFavs)")
+        
+        
+        if isLocationFavorited{
+            mutableFavs.removeWithObject(object:locID)
+            tabController.removeLocationFromFavoritesWithLocation(location:loc)
+        }else{
+            mutableFavs.append(locID)
+            tabController.addLocationToFavoritesWithLocation(location:loc)
+        }
+        
+        UserDefaults.standard.set(mutableFavs, forKey: GlobalStrings.FavoritesArray.rawValue)
         isLocationFavorited = !isLocationFavorited
         
         /* this is redundant code, so let's refactor it */
@@ -215,7 +233,7 @@ class MSLocationDetailViewController: UIViewController {
         
         self.favoriteButton.isEnabled = true
         
-        print("favs from user defaults after mutation: \(favs)")
+        //print("favs from user defaults after mutation: \(mutableFavs) and count \(mutableFavs.count)")
     }
     
     /* uncomment this if you want to see in-line block example */
