@@ -10,7 +10,7 @@ import UIKit
 
 struct combinedLocation{
     var total:CGFloat!
-    var collection:Array<MSLocation>!
+    var collection = [MSLocation]()
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){
         self.total = total
@@ -212,7 +212,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             
             //sort by the aggragated value
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
-            foo.sort{$0.total! < $1.total!}
+            foo.sort{$0.total < $1.total}
             
             //Swift makes us do this to concatenate this particular collection (filed a Radar bug). The result is an array of MSLocations sorted by aggragated distance for each type
             let firstCombined = foo[0].collection + foo[1].collection
