@@ -46,14 +46,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         return view
     }
     
-    lazy var locationsRequest:NSMutableURLRequest = self.newLocationsRequest()
-    func  newLocationsRequest() -> NSMutableURLRequest{
+    lazy var locationsRequest:URLRequest? = self.newLocationsRequest()
+    func newLocationsRequest() -> URLRequest?{
         /**
          As of iOS 9, apple requires that API endpoint use SSL. Were I to serve this API via HTTP, the download would fail unless you executed a specific hack (Google app transport security for details on this).
          */
-        
-        let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
-        return NSMutableURLRequest(url: url!)
+        let url = URL.init(string: "https://mikeleveton.com/MapStackLocations.json")
+        if let url = url{
+            return URLRequest(url: url)
+        }else{
+            return nil
+        }
     }
     
     /* URLSession is a large and rich API for downloading data */
@@ -151,33 +154,27 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         self.progressView.isHidden = false
         self.progressView.startAnimating()
         
-        let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
-            self.locationsRequest as URLRequest, completionHandler:
-            {(data, response, error) -> Void in
-            
-            print("sess locs \(self.sessionlocations) sess req \(self.locationsRequest)")
-            if error == nil{
-                if data != nil{
+        if let request = self.locationsRequest{
+            let locationTask:URLSessionDataTask = self.sessionlocations.dataTask(with:
+                request, completionHandler:
+                {(data, response, error) -> Void in
                     
-                    //self.layoutMapWithData(data: data!)
                     DispatchQueue.main.async {
                         self.progressView.stopAnimating()
                         self.progressView.isHidden = true
-                        self.layoutMapWithData(data: data!)
+                        if let theData = data{
+                            self.layoutMapWithData(data:theData)
+                        }
                     }
                     
-                }else{
-                    print("data was nil")
-                }
-            }else{
-                print("server error: \(error!.localizedDescription)")
-            }
+            })
             
-        })
-
-        locationTask.resume()
+            locationTask.resume()
+        }else{
+            getLocalData()
+        }
         
-        //getLocalData()
+        //
         
     }
     
