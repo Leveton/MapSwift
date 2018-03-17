@@ -27,13 +27,27 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return tableView
     }
     
-    var dataSource:Array<MSLocation>!{
+    var dataSource:Array<MSLocation>?{
         didSet{
             self.tableView.reloadData()
-            let tab = self.tabBarController?.viewControllers
-            let nav = tab?[2] as! UINavigationController
-            let vc = nav.viewControllers[0] as! MSFavoritesViewController
-            vc.dataSource = dataSource
+            
+            guard let tab = self.tabBarController?.viewControllers else{
+                //fail gracefully
+                return
+            }
+            
+            guard let nav:UINavigationController = tab[2] as? UINavigationController else{
+                //fail gracefully
+                return
+            }
+            guard let vc:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
+                //fail gracefully
+                return
+            }
+            
+            if let datasource = dataSource{
+              vc.dataSource = datasource
+            }
         }
     }
     
@@ -64,18 +78,18 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     //MARK: UITableViewDelegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataSource.count
+        return self.dataSource?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let location = self.dataSource[indexPath.row]
+        let location = self.dataSource?[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-        cell.textLabel?.text = location.title
+        cell.textLabel?.text = location?.title
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let location = self.dataSource[indexPath.row]
+        let location = self.dataSource?[indexPath.row]
         let vc = MSLocationDetailViewController()
         vc.location = location
         vc.view.backgroundColor = UIColor.red

@@ -10,8 +10,8 @@ import UIKit
 
 class MSFavoritesTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var anImageView: UIImageView!
+    @IBOutlet weak var label: UILabel?
+    @IBOutlet weak var anImageView: UIImageView?
     
     override func awakeFromNib() {
         super.awakeFromNib()

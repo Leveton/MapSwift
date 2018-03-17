@@ -2,8 +2,6 @@
 
 [Lesson 7 slides - web](https://docs.google.com/presentation/d/1NyPvsqEZGbV44JvRtd_Yvi-cDY2jPkeZfigd8Qv3kQU/pub?start=false&loop=false&delayms=3000)
 
-[Lesson 7 slides - Speaker Deck](https://speakerdeck.com/leveton/mapswift-lesson-7)
-
 
 ## Links 
 

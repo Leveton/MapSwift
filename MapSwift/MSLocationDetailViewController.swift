@@ -62,7 +62,9 @@
         var location:MSLocation?{
             didSet{
                 self.label.text = location?.title
-                self.distanceLabel.text = NSString(format: "distance: %f", (location?.distance)!) as String
+                if let dist = location?.distance{
+                  self.distanceLabel.text = NSString(format: "distance: %f", dist) as String
+                }
                 self.imageView.image = location?.locationImage
                 print("image width \(String(describing: imageView.image?.size.width)) image height \(String(describing: imageView.image?.size.height))")
             }
@@ -94,11 +96,17 @@
         override func viewWillLayoutSubviews() {
             super.viewWillLayoutSubviews()
             
+            /* the iPhone X adds another 20 pts to the status bar. It's less brittle to accomodate this with auto layout which is one reason more developers are adopting it. */
+            let safeAreaPadding:CGFloat = UIApplication.deviceHasSafeArea ? 20.0 : 0.0
+            
+            //turnary operator. thing of ? as if and : as else
+            let topPadding:CGFloat = (isBeingPresented ? 0.0 : 64) + safeAreaPadding
+            
             var imageFrame = self.imageView.frame
             imageFrame.origin.x = Constants.ViewMargin
             
             /* the status bar is 20 points */
-            imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0
+            imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0 + topPadding
             
             imageFrame.size.width = self.view.frame.width - (Constants.ViewMargin*2)
             imageFrame.size.height = Constants.ImageHeight
@@ -123,7 +131,7 @@
             dismissFrame.origin.x = Constants.ViewMargin
             
             /* the status bar is 20 points */
-            dismissFrame.origin.y = CGFloat(20)
+            dismissFrame.origin.y = CGFloat(20) + topPadding
             self.dismissButton.frame = dismissFrame
             
         }
