@@ -122,7 +122,7 @@ class MSLocationDetailViewController: UIViewController {
         imageFrame.origin.x = Constants.ViewMargin
         
         /* the status bar is 20 points */
-        imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0
+        imageFrame.origin.y   = (Constants.ViewMargin * 2) + 20.0 + topPadding
         
         imageFrame.size.width = self.view.frame.width - (Constants.ViewMargin*2)
         imageFrame.size.height = Constants.ImageHeight
@@ -147,13 +147,13 @@ class MSLocationDetailViewController: UIViewController {
         dismissFrame.origin.x = Constants.ViewMargin
         
         /* the status bar is 20 points */
-        dismissFrame.origin.y = CGFloat(20)
+        dismissFrame.origin.y = CGFloat(20) + topPadding
         self.dismissButton.frame = dismissFrame
         
         
         var favoriteFrame = self.favoriteButton.frame
         favoriteFrame.origin.x = self.view.frame.width - (favoriteFrame.size.width + Constants.ViewMargin)
-        favoriteFrame.origin.y = 20.0
+        favoriteFrame.origin.y = 20.0 + topPadding
         self.favoriteButton.frame = favoriteFrame
     }
     
