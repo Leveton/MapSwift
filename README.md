@@ -2,8 +2,6 @@
 
 [Lesson 3 slides - web](https://docs.google.com/presentation/d/1Hn21IDxvENoT8vfJp3QMYgRynt12Ln6NMhRdYWCOoag/pub?start=false&loop=false&delayms=3000)
 
-[Lesson 3 slides - Speaker Deck](https://speakerdeck.com/leveton/mapswift-lesson-3)
-
 
 ## Links - up to date for Swift 3
 

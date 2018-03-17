@@ -21,17 +21,17 @@ class FirstViewController: UIViewController {
     /* end constants */
     
     /* mutable and accessable variables */
-    var arrayA:Array<String>!
+    var arrayA = [String]()
     weak var carA:Car?
-    var carB:Car!
+    var carB:Car?
     
-    var label:UILabel!{
+    var label:UILabel?{
         didSet{
             
-            label.text = locStringHelloWorld
-            label.textAlignment = .center
-            label.layer.borderColor = self.label.textColor.cgColor
-            label.layer.borderWidth = 1.0
+            label?.text = locStringHelloWorld
+            label?.textAlignment = .center
+            label?.layer.borderColor = self.label?.textColor.cgColor
+            label?.layer.borderWidth = 1.0
         }
     }
     
@@ -39,12 +39,12 @@ class FirstViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        var labelFrame = label.frame
-        labelFrame.size.width  = labelSide
-        labelFrame.size.height = labelSide
-        labelFrame.origin.x = (self.view.frame.width - labelSide)/2
-        labelFrame.origin.y = (self.view.frame.height - labelSide)/2
-        label.frame = labelFrame
+        var labelFrame = label?.frame
+        labelFrame?.size.width  = labelSide
+        labelFrame?.size.height = labelSide
+        labelFrame?.origin.x = (self.view.frame.width - labelSide)/2
+        labelFrame?.origin.y = (self.view.frame.height - labelSide)/2
+        label?.frame = labelFrame ?? CGRect()
         
     }
     
@@ -52,7 +52,9 @@ class FirstViewController: UIViewController {
         super.viewDidLoad()
         arrayA = Array()
         label = UILabel()
-        self.view.addSubview(label)
+        if let label = label{
+          self.view.addSubview(label)
+        }
         
         self.view.backgroundColor = UIColor.red
         
@@ -119,7 +121,9 @@ class FirstViewController: UIViewController {
         if boat.isMember(of: NSObject.self){ print("is member of NSObject") } //does not print out
         
         boat.engine = Engine(cylinder: 4)
-        print("boat engine \(boat.engine!) cylinder count \(boat.engine!.cylinder)")
+        if let engine = boat.engine{
+          print("boat engine \(engine) cylinder count \(engine.cylinder)")
+        }
         
         //let titanic = Boat()
         //titanic.engine = Engine()

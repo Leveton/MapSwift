@@ -18,7 +18,7 @@ class Car{
     /* get only computed property */
     var color:String{
         get{
-            return NSLocalizedString("red", comment: "that key should not be hardcoded!")
+            return NSLocalizedString("red", comment: "that key should not be hardcoded")
         }
     }
     
