@@ -24,6 +24,18 @@ public extension Array where Element: Equatable {
     }
 }
 
+//Determine if the device has a 'safe area' i.e. face recognition housing i.e. is an iPhone X
+public extension UIApplication {
+    static var deviceHasSafeArea:Bool {
+        if #available(iOS 11.0, *) {
+            if let topPadding = shared.keyWindow?.safeAreaInsets.top{
+                return topPadding > 0
+            }
+        }
+        return false
+    }
+}
+
 public enum GlobalStrings: String {
     case GlobalThemeChanged = "com.mapstack.themeWasChanged"
     case FavoritesArray = "favoritesArray"

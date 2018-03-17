@@ -137,8 +137,11 @@ class MSLocationDetailViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
+        /* the iPhone X adds another 20 pts to the status bar. It's less brittle to accomodate this with auto layout which is one reason more developers are adopting it. */
+        let safeAreaPadding:CGFloat = UIApplication.deviceHasSafeArea ? 20.0 : 0.0
+        
         //turnary operator. thing of ? as if and : as else
-        let topPadding:CGFloat = isPresented ? 0.0 : 64
+        let topPadding:CGFloat = (isPresented ? 0.0 : 64) + safeAreaPadding
         
         var imageFrame = self.imageView.frame
         imageFrame.origin.x = Constants.ViewMargin

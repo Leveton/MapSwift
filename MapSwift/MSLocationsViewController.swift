@@ -75,13 +75,13 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     //MARK: UITableViewDelegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataSource.count
+        return self.dataSource?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let location = self.dataSource[indexPath.row]
+        let location = self.dataSource?[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-        cell.textLabel?.text = location.title
+        cell.textLabel?.text = location?.title
         return cell
     }
 
@@ -123,9 +123,11 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             let predicate = NSPredicate(format: "distance BETWEEN {\(range.startPoint), \(range.endPoint)}")
             
             //because i'm using objecte-c predicates, I have to cast my datasource to NSArray, sort the thing, and the cast it back to Array
-            self.dataSource = (datasource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+            self.dataSource = (datasource as NSArray).filtered(using: predicate) as? Array<MSLocation>
         }else{
-            self.dataSource = datasource.sort{$0.distance < $1.distance}
+            if let cmonSwift = self.dataSource{
+                self.dataSource = cmonSwift.sorted{$0.distance < $1.distance}
+            }
         }
     }
 }

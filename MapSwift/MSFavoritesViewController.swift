@@ -64,14 +64,18 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
 
     //I must implement this method because if conform to MSTableViewCellDelegate
     func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
-        //get a ref to our data source
-        var favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+            //fail gracefully
+            return
+        }
+        
+        var favorites = favs
         let locId = location.locationID
         
         //makes sure that location.locationID is not nil
         if let locId = locId{
-            favs.removeWithObject(locId)
-            UserDefaults.standard.set(favs, forKey: GlobalStrings.FavoritesArray.rawValue)
+            favorites.removeWithObject(locId)
+            UserDefaults.standard.set(favorites, forKey: GlobalStrings.FavoritesArray.rawValue)
             self.dataSource.removeWithObject(location)
             var array = [IndexPath]()
             array.append(IndexPath(row: cell.tag, section: 0))
@@ -142,8 +146,8 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         }
     }
     
-    @IBAction func nameSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+    @IBAction func nameSwitched(_ sender: UISwitch) {
+        let control = sender
         control.isOn = !control.isOn
         distanceFilter?.isOn = false
         typeFilter?.isOn = false
@@ -158,9 +162,9 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
     }
     
-    @IBAction func distanceSwitched(_ sender: Any) {
+    @IBAction func distanceSwitched(_ sender: UISwitch) {
         //casting to UISwitch so we have access to isOn
-        let control = sender as! UISwitch
+        let control = sender
         control.isOn = !control.isOn
         nameFilter?.isOn = false
         typeFilter?.isOn = false
@@ -173,8 +177,8 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         }
         
     }
-    @IBAction func distanceTypeSwitched(_ sender: Any) {
-        let control = sender as! UISwitch
+    @IBAction func distanceTypeSwitched(_ sender: UISwitch) {
+        let control = sender
         //control.isOn = !control.isOn
         nameFilter?.isOn = false
         distanceFilter?.isOn = false
@@ -199,7 +203,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             let hospital = combinedLocation(hospitalTotal, hospitaled)
             
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
-            foo.sort{$0.total! < $1.total!}
+            foo.sort{$0.total < $1.total}
         
             //Swift makes us do this to concatenate this particular collection (filed a Radar bug). The result is an array of MSLocations sorted by aggragated distance for each type
             let firstCombined = foo[0].collection + foo[1].collection
