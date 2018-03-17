@@ -124,63 +124,44 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
-        let jsonURL = URL(fileURLWithPath: jsonFile!)
-        
-        /**convert it to bytes*/
-        let jsonData: Data?
-        do {
-            jsonData = try Data(contentsOf: jsonURL)
+        if let file = jsonFile{
+            let jsonURL = URL(fileURLWithPath: file)
             
-        } catch _ {
-            jsonData = nil
+            /**convert it to bytes*/
+            do {
+                let jsonData = try Data(contentsOf: jsonURL)
+                /** serialize the bytes into a dictionary object */
+                self.layoutMapWithData(data: jsonData)
+                
+            } catch {
+                //fail gracefully
+            }
+            
         }
-        
-        /** serialize the bytes into a dictionary object */
-        self.layoutMapWithData(data: jsonData!)
     }
     
     func layoutMapWithData(data:Data){
+        
         /** serialize the bytes into a dictionary object */
         let jsonResponse:AnyObject
         do {
             try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
-            let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-            print("json response \(jsonResponse)")
-            let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-            print("json dictionaries \(locationDictionaries)")
-            
-            /* Populate the favorites vc */
-            let favs = UserDefaults.standard.object(forKey: "favoritesArray") as! Array<Int>
-            print("favs from MSMAPVC: \(favs)")
-            var favsDataSource = [MSLocation]()
-            
-            for x in 0..<locationDictionaries.count{
-                let dict = locationDictionaries[x] as NSDictionary
-                let location:MSLocation = self.createLocationWithDictionary(dict: dict)
-                self.datasource.append(location)
-                if favs.contains(location.locationID!){
-                    favsDataSource.append(location)
-                }
-                
-                /* uncomment to see how copying an object would work */
-                //                    let newloc = location.copy() as! MSLocation
-                //                    newloc.type = "foo"
-                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+            guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                //fail gracefully
+                return
             }
             
-            let viewControllers = self.tabBarController?.viewControllers
-            let locationsVC:MSLocationsViewController = viewControllers![1] as! MSLocationsViewController
-            locationsVC.dataSource = self.datasource
+            guard let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>] else{
+                //fail gracefully
+                return
+            }
             
-            let nav:UINavigationController = viewControllers![2] as! UINavigationController
-            
-            let favsVC:MSFavoritesViewController = nav.viewControllers[0] as! MSFavoritesViewController
-            favsVC.dataSource = favsDataSource
-            self.map.isHidden = false
-            
-        } catch {
-            print("json failed")
-        }
+            /* Populate the favorites vc */
+            guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>, let loc = location?.locationID else{
+                //fail gracefully
+                return
+            }
+        
     }
     
     func populateMap(){

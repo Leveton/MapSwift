@@ -113,15 +113,15 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         
         cell.delegate = self //self is favs view controller
         cell.location = location
-        cell.mainLabel.text = location.title
-        cell.subLabel.text = "dist: \(String(describing: location.distance))"
-        cell.typeLabel.text = location.type
-        cell.locationImageView.image = location.locationImage
+        cell.mainLabel?.text = location.title
+        cell.subLabel?.text = "dist: \(String(describing: location.distance))"
+        cell.typeLabel?.text = location.type
+        cell.locationImageView?.image = location.locationImage
         
         //call some method on the cell class that adjusts the z-axis of the top and bottom borders
         //e.g. cell.adjustBorders()
         cell.selectionStyle = .none
-        cell.topBorder.isHidden = indexPath.row != 0
+        cell.topBorder?.isHidden = indexPath.row != 0
         return cell
     }
     
