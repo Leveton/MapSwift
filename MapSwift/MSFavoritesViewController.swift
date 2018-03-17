@@ -10,7 +10,7 @@ import UIKit
 
 struct combinedLocation{
     var total:CGFloat!
-    var collection:Array<MSLocation>!
+    var collection = [MSLocation]()
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){
         self.total = total
@@ -20,13 +20,13 @@ struct combinedLocation{
 
 class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate {
 
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var nameLabel: UILabel?
+    @IBOutlet weak var distanceLabel: UILabel?
+    @IBOutlet weak var typeLabel: UILabel?
     
-    @IBOutlet weak var typeFilter: UISwitch!
-    @IBOutlet weak var distanceFilter: UISwitch!
-    @IBOutlet weak var nameFilter: UISwitch!
+    @IBOutlet weak var typeFilter: UISwitch?
+    @IBOutlet weak var distanceFilter: UISwitch?
+    @IBOutlet weak var nameFilter: UISwitch?
     
     var dataSource = [MSLocation](){
         didSet{
@@ -46,9 +46,9 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     
     @objc func handleThemeChange(_ note: Notification) {
-        nameLabel.backgroundColor = note.object as? UIColor
-        distanceLabel.backgroundColor = note.object as? UIColor
-        typeLabel.backgroundColor = note.object as? UIColor
+        nameLabel?.backgroundColor = note.object as? UIColor
+        distanceLabel?.backgroundColor = note.object as? UIColor
+        typeLabel?.backgroundColor = note.object as? UIColor
         
     }
     //gets called everytime the view is at the top level of the stack
@@ -145,8 +145,8 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     @IBAction func nameSwitched(_ sender: Any) {
         let control = sender as! UISwitch
         control.isOn = !control.isOn
-        distanceFilter.isOn = false
-        typeFilter.isOn = false
+        distanceFilter?.isOn = false
+        typeFilter?.isOn = false
         
         if control.isOn{
             //make sure title property is not nil, if it is, compare empty strings
@@ -162,8 +162,8 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         //casting to UISwitch so we have access to isOn
         let control = sender as! UISwitch
         control.isOn = !control.isOn
-        nameFilter.isOn = false
-        typeFilter.isOn = false
+        nameFilter?.isOn = false
+        typeFilter?.isOn = false
         
         if control.isOn{
             self.dataSource.sort{$0.distance < $1.distance}
@@ -176,15 +176,15 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     @IBAction func distanceTypeSwitched(_ sender: Any) {
         let control = sender as! UISwitch
         //control.isOn = !control.isOn
-        nameFilter.isOn = false
-        distanceFilter.isOn = false
+        nameFilter?.isOn = false
+        distanceFilter?.isOn = false
         
         if control.isOn{
-            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type! == "Random"}
-            let rested:Array<MSLocation> = self.dataSource.filter{$0.type! == "Restaurant"}
-            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type! == "School"}
-            let started:Array<MSLocation> = self.dataSource.filter{$0.type! == "StartUp"}
-            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type! == "Hospital"}
+            let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}
+            let rested:Array<MSLocation> = self.dataSource.filter{$0.type == "Restaurant"}
+            let schooled:Array<MSLocation> = self.dataSource.filter{$0.type == "School"}
+            let started:Array<MSLocation> = self.dataSource.filter{$0.type == "StartUp"}
+            let hospitaled:Array<MSLocation> = self.dataSource.filter{$0.type == "Hospital"}
             
             let randomTotal = randomed.reduce(0, {$0 + $1.distance})
             let restedTotal = rested.reduce(0, {$0 + $1.distance})
@@ -200,9 +200,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             
             var foo:Array<combinedLocation> = [random, school, rest, start, hospital]
             foo.sort{$0.total! < $1.total!}
-            
-            let finally = foo[0].collection + foo[1].collection + foo[2].collection! + foo[3].collection + foo[4].collection
-            self.dataSource = finally
+        
+            //Swift makes us do this to concatenate this particular collection (filed a Radar bug). The result is an array of MSLocations sorted by aggragated distance for each type
+            let firstCombined = foo[0].collection + foo[1].collection
+            let secondCombined = foo[2].collection + foo[3].collection
+            self.dataSource = firstCombined + secondCombined + foo[4].collection
             self.tableView.reloadData()
             
         }else{

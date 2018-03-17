@@ -34,40 +34,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     }
     
     //MARK: getters
-    
-    //anytime you're doing networking you want to show/hide a spinner
-    lazy var progressView:UIActivityIndicatorView = self.newProgressView()
-    func newProgressView() -> UIActivityIndicatorView{
-        let view = UIActivityIndicatorView()
-        view.frame = self.mapFrame()
-        view.layer.zPosition = 2.0
-        view.isHidden = true
-        self.view.addSubview(view)
-        return view
-    }
-    
-    //allow this property to be nil because that url might not exist
-    lazy var locationsRequest:URLRequest? = self.newLocationsRequest()
-    func newLocationsRequest() -> URLRequest?{
-        let url = URL.init(string: "http://mikeleveton.com/MapStackLocations.json")
-        
-        if let url = url{
-            return URLRequest(url:url)
-        }else{
-            return nil
-        }
-    }
-    
-    lazy var sessionLocations:URLSession = self.newSessionLocations()
-    func newSessionLocations() -> URLSession{
-        
-        //cache the request with default
-        let config = URLSessionConfiguration.default
-        return URLSession(configuration: config)
-    }
-    
-    
-    
     lazy var manager:CLLocationManager = self.newManager()
     func newManager() -> CLLocationManager{
         let manager = CLLocationManager()
@@ -121,27 +87,28 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     //MARK: selectors
     
-    func getLocalData(){
-        /** grab the local json file */
-        let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
-        if let file = jsonFile{
-            let jsonURL = URL(fileURLWithPath: file)
-            
-            /**convert it to bytes*/
-            do {
-                let jsonData = try Data(contentsOf: jsonURL)
-                /** serialize the bytes into a dictionary object */
-                self.layoutMapWithData(data: jsonData)
-                
-            } catch {
-                //fail gracefully
-            }
-            
-        }
-    }
-    
-    func layoutMapWithData(data:Data){
+    func populateMap(){
         
+        /** grab the local json file */
+        guard let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json") else{
+            return
+        }
+        
+        let jsonURL = URL(fileURLWithPath: jsonFile)
+        
+        /**convert it to bytes*/
+        let jsonData: Data?
+        do {
+            jsonData = try Data(contentsOf: jsonURL)
+            
+        } catch _ {
+            jsonData = nil
+            return
+        }
+        
+        guard let data = jsonData else{
+            return
+        }
         /** serialize the bytes into a dictionary object */
         let jsonResponse:AnyObject
         do {
@@ -157,86 +124,89 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             }
             
             /* Populate the favorites vc */
-            guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>, let loc = location?.locationID else{
+            guard let favs = UserDefaults.standard.object(forKey: "favoritesArray") as? Array<Int> else{
                 //fail gracefully
                 return
             }
-        
-    }
-    
-    func populateMap(){
-    
-        self.map.isHidden = true
-        self.progressView.isHidden = false
-        self.progressView.startAnimating()
-        
-        //first we'll try to download, then we'll fetch locally if failed
-        if let request = self.locationsRequest{
-            //DONE in a background thread. so it's executed AFTER resume() is executed, resume() is how triggers it.
-            let locationTask:URLSessionDataTask = self.sessionLocations.dataTask(with: request, completionHandler: {(data, response, error) ->
-                //exectuting some code that can be passed around, in an encapsulated call-stack, but not returning anything.
-                Void in
+            var favsDataSource = [MSLocation]()
             
-                //data has downloaded so grab the main thread to update the UI
-                //we use async because it's asynchronous, because if it were syncronous, it would stop the program until it was finished.
-                DispatchQueue.main.async {
-                    self.progressView.stopAnimating()
-                    self.progressView.isHidden = true
-                    self.layoutMapWithData(data:data!)
-                    self.map.isHidden = false
+            for x in 0..<locationDictionaries.count{
+                if let location:MSLocation = self.createLocationWithDictionary(dict: locationDictionaries[x]){
+                    map.addAnnotation(location)
+                    self.datasource.append(location)
+                    if let locID = location.locationID{
+                        if favs.contains(locID){
+                            favsDataSource.append(location)
+                        }
+                    }
                 }
-//                self.progressView.stopAnimating()
-//                self.progressView.isHidden = true
-//                self.layoutMapWithData(data:data!)
-            })
+                
+                /* uncomment to see how copying an object would work */
+                //                let newloc = location.copy() as? MSLocation
+                //                if let newloc = newloc{
+                //                    newloc.type = "foo"
+                //                    print("newloc \(String(describing: newloc.type)) oldloc \(String(describing: location.type))")
+                //                }
+            }
             
-            //this horribly named method kicks off the download
-            locationTask.resume()
-        }else{
-            getLocalData()
+            guard let viewControllers = self.tabBarController?.viewControllers else{
+                //fail gracefully
+                return
+            }
+            
+            guard let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                //fail gracefully
+                return
+            }
+            guard let nav:UINavigationController = viewControllers[2] as? UINavigationController else{
+                //fail gracefully
+                return
+            }
+            guard let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
+                //fail gracefully
+                return
+            }
+            
+            locationsVC.dataSource = self.datasource
+            favsVC.dataSource = favsDataSource
+            self.map.isHidden = false
+            
+        } catch {
+            print("json failed")
         }
-    }
-    
-    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
         
-        let fl = dict.object(forKey: "distance") as? CGFloat
-        if let fl = fl{
-            var coordinate = CLLocationCoordinate2D()
-            coordinate.latitude  = dict.object(forKey: "latitude") as! CLLocationDegrees
-            coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
-            
-            let location = MSLocation(coordinate: coordinate, distance:fl)
-            location.subtitle = "dist: \(String(describing: fl))"
-            location.locationID = dict.object(forKey: "locationId") as? Int
-            location.title = dict.object(forKey: "name") as? String
-            location.type = dict.object(forKey: "type") as? String
-            location.coordinate = coordinate
-            
-            let image = UIImage(named: dict.object(forKey: "image") as! String)
-            location.locationImage = image
-            
-            map.addAnnotation(location)
-            
-            return location
-        }else{
-            return MSLocation(coordinate: CLLocationCoordinate2D(), distance: 0.0)
-        }
     }
     
-    func configureUserDefaults(locations:Array<MSLocation>){
-        var holderArray = [MSLocation]()
-        let favs:Array<Int> = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as! Array<Int>
-        for i in 0..<locations.count{
-            let location = locations[i]
-            if favs.contains(location.locationID!){
-                holderArray.append(location)
+    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
+        guard let dist = dict["distance"] as? CGFloat else{
+            return nil
+        }
+        guard let lat = dict["latitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        guard let long = dict["longitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        var coordinate = CLLocationCoordinate2D()
+        coordinate.latitude  = lat
+        coordinate.longitude = long
+        
+        let location = MSLocation(coordinate: coordinate, distance:dist)
+        location.subtitle = "dist: \(String(describing: dist))"
+        
+        /* we'll allow the rest of our properties to be possibly nil */
+        location.locationID = dict["locationId"] as? Int
+        location.title = dict["name"] as? String
+        location.type = dict["type"] as? String
+        
+        /*make sure the string exists and is the right type before trying to build the image with the string */
+        if let imgStr = dict["image"] as? String{
+            if let image = UIImage(named:imgStr){
+                location.locationImage = image
             }
         }
         
-        let nav = self.tabBarController?.viewControllers?[2] as! UINavigationController
-        let vc = nav.viewControllers[0] as! MSFavoritesViewController
-        vc.dataSource = holderArray
-        vc.copiedDataSource = holderArray
-        
+        return location
     }
 }

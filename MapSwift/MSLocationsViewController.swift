@@ -34,7 +34,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return tableView
     }
     
-    var dataSource:Array<MSLocation>!{
+    var dataSource:Array<MSLocation>?{
         didSet{
             /* 
              Did set only gets called once so you won't have an infinite loop here.
@@ -78,32 +78,34 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return self.dataSource.count
     }
     
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row]
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
-//        cell.textLabel?.text = location.title
-//        return cell
-//    }
-
-    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let location = self.dataSource[indexPath.row]
-        let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        
-        if (cell == nil){
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            //print("new cell")
-        }else{
-            //print("old cell")
-        }
-        cell?.textLabel?.text = location.title
-        cell?.detailTextLabel?.text = NSString(format: "distance: %f", (location.distance)) as String
-        return cell!
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as UITableViewCell
+        cell.textLabel?.text = location.title
+        return cell
     }
+
+    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
+    //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    //
+    //        let str:String = "cellid"
+    //        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+    //        if let cell = cell {
+    //            print("old cell")
+    //            if let textLabel = cell.textLabel {
+    //                textLabel.text = "row: \(indexPath.row)"
+    //            }
+    //            return cell
+    //        }else{
+    //            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+    //            print("new cell")
+    //            /*something in the system went horribly wrong if there's still not a cell */
+    //            return cell ?? UITableViewCell()
+    //        }
+    //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let location = self.dataSource[indexPath.row]
+        let location = self.dataSource?[indexPath.row]
         let vc = MSLocationDetailViewController()
         vc.location = location
         vc.view.backgroundColor = UIColor.red
@@ -114,16 +116,16 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     //MARK: selectors
     
     func sortByDistance(){
-        if let range = range{
+        if let range = range, let datasource = self.dataSource{
             self.dataSource = self.copiedDataSource
             //a predicate creates a condition that must be met
             //"distance between" is some objective-c DSL for allowing to create predicates. similar to our sorting, map, filter, reduce
             let predicate = NSPredicate(format: "distance BETWEEN {\(range.startPoint), \(range.endPoint)}")
             
             //because i'm using objecte-c predicates, I have to cast my datasource to NSArray, sort the thing, and the cast it back to Array
-            self.dataSource = (self.dataSource as NSArray).filtered(using: predicate) as! Array<MSLocation>
+            self.dataSource = (datasource as NSArray).filtered(using: predicate) as! Array<MSLocation>
         }else{
-            self.dataSource.sort{$0.distance < $1.distance}
+            self.dataSource = datasource.sort{$0.distance < $1.distance}
         }
     }
 }
