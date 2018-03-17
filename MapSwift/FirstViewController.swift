@@ -15,7 +15,7 @@ struct SomeSize{
 
 class FirstViewController: UIViewController {
 
-    var arrayA:Array<String>!
+    var arrayA:Array<String>?
     weak var carA:Car?
     
     override func viewDidLoad() {
