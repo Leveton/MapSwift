@@ -24,12 +24,11 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
         
-        let location = MSLocation(coordinate:self.centerPoint)
         var newPoint = CLLocationCoordinate2D()
         newPoint.latitude  = 15.777599
         newPoint.longitude = 70.190793
-        let distance = location.getDistanceFromPoint(pointA: self.centerPoint, pointB: newPoint)
-        print("distance \(distance)")
+        //let distance = MSLocation.getDistanceFromPoint(pointA: self.centerPoint, pointB: newPoint)
+        let location = MSLocation(coordinate:self.centerPoint, distance:0.0)
         
         populateMap()
         
@@ -90,73 +89,82 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     //MARK: selectors
     
     func populateMap(){
-        //Bundle is all the stuff in our project
         
-        let jsonFile = Bundle.main.path(forResource:"MapStackLocations", ofType: "json")
-        
-        //let's make sure jsonFile is not nil
-        if let jsonFile = jsonFile{
-            //get a url with the file.
-            let jsonURL = URL(fileURLWithPath: jsonFile)
-            //jsonData could be nil, hence the question mark
-            let jsonData: Data?
-            do {
-                //a byte stream
-                jsonData = try Data(contentsOf: jsonURL)
-                print("json data \(String(describing: jsonData))")
-                
-            } catch{
-                jsonData = nil
-            }
-            if let jsonData = jsonData{
-                print("json data \(jsonData)")
-                let jsonResponse:AnyObject
-                do {
-                    try jsonResponse = JSONSerialization.jsonObject(with: jsonData, options: []) as AnyObject
-                    let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-                    //first bang is saying that jsonDict["some key"] exists i swear on my family, second bang is promising that locationdictiionaries exists
-                    let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-                    
-                    var datasource = [MSLocation]()
-                    for x in 0..<locationDictionaries.count{
-                        let dict = locationDictionaries[x]
-                        let location = self.createLocationWithDictionary(dict: dict)
-                        map.addAnnotation(location)
-                        datasource.append(location)
-                    }
-                    guard let viewControllers = self.tabBarController?.viewControllers else{
-                        //fail gracefullly
-                        return
-                    }
-                    guard let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else {
-                        //fail gracefullly
-                        return
-                    }
-                    vc.dataSource = datasource
-                    
-                    
-                } catch{
-                    print("json failed")
-                }
-            }
+        /** grab the local json file */
+        let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
+        guard let file = jsonFile else{
+            return
         }
+        let jsonURL = URL(fileURLWithPath: file)
+        
+        /**convert it to bytes*/
+        do {
+            let jsonData = try Data(contentsOf: jsonURL)
+            do {
+                /** serialize the bytes into a dictionary object */
+                let jsonResponse = try JSONSerialization.jsonObject(with: jsonData, options: []) as AnyObject
+                
+                guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                    //fail gracefully
+                    return
+                }
+                if let locationDictionaries = (jsonDict["MapStackLocationsArray"] as? [Dictionary<AnyHashable,Any>]){
+                    for dict in locationDictionaries{
+                        if let obj = createLocationWithDictionary(dict: dict){
+                            //self.datasource.append(obj)
+                        }
+                    }
+                }
+                
+                guard let viewControllers = self.tabBarController?.viewControllers else{
+                    //fail gracefully
+                    return
+                }
+                guard let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                    //fail gracefully
+                    return
+                }
+                //vc.dataSource = self.datasource
+                
+            } catch {
+                //fail gracefully
+            }
+            
+        } catch {
+            //fail gracefully
+        }
+        
     }
     
-    func createLocationWithDictionary(dict: NSDictionary) -> MSLocation{
+    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
+        guard let dist = dict["distance"] as? CGFloat else{
+            return nil
+        }
+        guard let lat = dict["latitude"] as? CLLocationDegrees else{
+            return nil
+        }
+        guard let long = dict["longitude"] as? CLLocationDegrees else{
+            return nil
+        }
         var coordinate = CLLocationCoordinate2D()
-        coordinate.latitude = dict.object(forKey: "latitude") as! CLLocationDegrees
-        coordinate.longitude = dict.object(forKey: "longitude") as! CLLocationDegrees
+        coordinate.latitude  = lat
+        coordinate.longitude = long
         
-        let location = MSLocation(coordinate: coordinate)
-        location.locationID = dict.object(forKey: "locationId") as? Int
-        location.type = dict.object(forKey: "type") as? String
-        location.distance = dict.object(forKey: "distance") as? CGFloat
-        location.locationImage = UIImage.init(named: dict.object(forKey: "image") as! String)
+        let location = MSLocation(coordinate: coordinate, distance:dist)
+        location.subtitle = "dist: \(String(describing: dist))"
         
-        /*required for the MKAnnotation conformance */
-        location.coordinate = coordinate
-        location.title = dict.object(forKey: "name") as? String
-        location.subtitle = "this is a subtile"
+        /* we'll allow the rest of our properties to be possibly nil */
+        location.locationID = dict["locationId"] as? Int
+        location.title = dict["name"] as? String
+        location.type = dict["type"] as? String
+        
+        /*make sure the string exists and is the right type before trying to build the image with the string */
+        if let imgStr = dict["image"] as? String{
+            if let image = UIImage(named:imgStr){
+                location.locationImage = image
+            }
+        }
         
         return location
     }

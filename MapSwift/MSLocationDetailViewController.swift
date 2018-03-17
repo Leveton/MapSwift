@@ -87,7 +87,7 @@ class MSLocationDetailViewController: MSViewController {
     var location:MSLocation?{
         didSet{
             self.label.text = location?.title
-            self.distanceLabel.text = "distance \(String(describing: location?.distance!))"
+            self.distanceLabel.text = "distance \(String(describing: location?.distance))"
             self.imageView.image = location?.locationImage
         }
     }

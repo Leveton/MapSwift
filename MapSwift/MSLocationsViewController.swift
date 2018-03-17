@@ -26,9 +26,9 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         return tableView
     }
     
-    var dataSource:Array<MSLocation>!{
+    var dataSource:Array<MSLocation>?{
         didSet{
-            self.dataSource.sort{$0.distance! > $1.distance!}
+            self.dataSource?.sort{$0.distance > $1.distance}
             self.tableView.reloadData()
         }
     }
@@ -61,44 +61,45 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //returns roughly 15
-        return self.dataSource.count
+        return self.dataSource?.count ?? 0
         //return 1000
     }
 
-    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
+//    /* uncomment this and return 1000 in numberOfRowsInSection to show a hundreds reused rows */
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//
+//        let str:String = "cellid"
+//        var cell = tableView.dequeueReusableCell(withIdentifier: str)
+//        if let cell = cell {
+//            print("old cell")
+//            if let textLabel = cell.textLabel {
+//                textLabel.text = "row: \(indexPath.row)"
+//            }
+//            return cell
+//        }else{
+//            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
+//            print("new cell")
+//            /*something in the system went horribly wrong if there's still not a cell */
+//            return cell ?? UITableViewCell()
+//        }
+//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let str:String = "cellid"
-        var cell = tableView.dequeueReusableCell(withIdentifier: str)
-        if let cell = cell {
-            print("old cell")
-            if let textLabel = cell.textLabel {
-                textLabel.text = "row: \(indexPath.row)"
-            }
+        let location = self.dataSource?[indexPath.row];
+        if let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? MSLocationTableViewCell{
+            cell.mainLabel.text = location?.title
+            cell.subLabel.text = "dist \(String(describing: location?.distance))"
             return cell
-        }else{
-            cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: str)
-            print("new cell")
-            /*something in the system went horribly wrong if there's still not a cell */
-            return cell ?? UITableViewCell()
         }
+        return UITableViewCell()
     }
-    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let location = self.dataSource[indexPath.row];
-//        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! MSLocationTableViewCell
-//        cell.mainLabel.text = location.title
-//        cell.subLabel.text = "dist \(String(describing: location.distance!))"
-//        return cell
-//    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 130
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let location = self.dataSource[indexPath.row]
+        let location = self.dataSource?[indexPath.row]
         let vc = MSLocationDetailViewController()
         vc.location = location
         vc.view.backgroundColor = UIColor.yellow
