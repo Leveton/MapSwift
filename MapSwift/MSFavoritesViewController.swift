@@ -16,8 +16,6 @@ class MSFavoritesViewController: MSViewController {
         //save the user's name for access in other modules
         UserDefaults.standard.set("Mike", forKey: "userName")
         
-        //access this in other modules
-        print("user name: \(UserDefaults.standard.object(forKey: "userName") as! String)")
     }
 
     override func didReceiveMemoryWarning() {

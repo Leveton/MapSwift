@@ -20,6 +20,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         super.viewDidLoad()
         self.manager.startUpdatingLocation()
         
+        var dict:Dictionary<Int,String>?
         /* 1 mile radius */
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
@@ -35,6 +36,9 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
     }
     
+    func fuck(dd: Dictionary<Int, String>){
+        
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -90,47 +94,54 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     //MARK: selectors
     
     func populateMap(){
-        //Bundle is all the stuff in our project
         
-        let jsonFile = Bundle.main.path(forResource:"MapStackLocations", ofType: "json")
-        
-        //let's make sure jsonFile is not nil
-        if let jsonFile = jsonFile{
-            //get a url with the file.
-            let jsonURL = URL(fileURLWithPath: jsonFile)
-            //jsonData could be nil, hence the question mark
-            let jsonData: Data?
-            do {
-                //a byte stream
-                jsonData = try Data(contentsOf: jsonURL)
-                print("json data \(String(describing: jsonData))")
-                
-            } catch{
-                jsonData = nil
-            }
-            if let jsonData = jsonData{
-                print("json data \(jsonData)")
-                let jsonResponse:AnyObject
-                do {
-                    try jsonResponse = JSONSerialization.jsonObject(with: jsonData, options: []) as AnyObject
-                    let jsonDict = jsonResponse as! Dictionary<AnyHashable, AnyObject>
-                    //first bang is saying that jsonDict["some key"] exists i swear on my family, second bang is promising that locationdictiionaries exists
-                    let locationDictionaries = (jsonDict["MapStackLocationsArray"])! as! [NSDictionary]
-                    
-                    for x in 0..<locationDictionaries.count{
-                        let dict = locationDictionaries[x]
-                        let location = self.createLocationWithDictionary(dict: dict)
-                        map.addAnnotation(location)
-                    }
-                    print("dicts \(locationDictionaries)")
-                } catch{
-                    print("json failed")
-                }
-            }
+        /** grab the local json file */
+        let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
+        guard let file = jsonFile else{
+            return
         }
+        let jsonURL = URL(fileURLWithPath: file)
+        
+        /**convert it to bytes*/
+        do {
+            let jsonData = try Data(contentsOf: jsonURL)
+            do {
+                /** serialize the bytes into a dictionary object */
+                let jsonResponse = try JSONSerialization.jsonObject(with: jsonData, options: []) as AnyObject
+                
+                guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
+                    //fail gracefully
+                    return
+                }
+                if let locationDictionaries = (jsonDict["MapStackLocationsArray"] as? [Dictionary<AnyHashable,Any>]){
+                    for dict in locationDictionaries{
+                        if let obj = createLocationWithDictionary(dict: dict){
+                            //self.datasource.append(obj)
+                        }
+                    }
+                }
+                
+                guard let viewControllers = self.tabBarController?.viewControllers else{
+                    //fail gracefully
+                    return
+                }
+                guard let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                    //fail gracefully
+                    return
+                }
+                //vc.dataSource = self.datasource
+                
+            } catch {
+                //fail gracefully
+            }
+            
+        } catch {
+            //fail gracefully
+        }
+        
     }
     
-    func createLocationWithDictionary(dict:NSDictionary) -> MSLocation{
+    func createLocationWithDictionary(dict:Dictionary<AnyHashable,Any>) -> MSLocation?{
         return MSLocation(coordinate: self.centerPoint)
     }
 }

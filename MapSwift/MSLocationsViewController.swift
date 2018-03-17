@@ -65,7 +65,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             print("new cell")
             cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: iden)
             cell?.textLabel?.text = "index path row \(indexPath.row) for section \(indexPath.section)"
-            return cell!
+            return cell ?? UITableViewCell()
         }
     }
     
