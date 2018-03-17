@@ -15,9 +15,10 @@ struct SomeSize{
 
 class FirstViewController: UIViewController {
     
-    var arrayA:Array<String>!
+    /* mutable and accessable variables */
+    var arrayA = [String]()
     weak var carA:Car?
-    var carB:Car!
+    var carB:Car?
     
     override func viewDidLoad() {
         super.viewDidLoad()
