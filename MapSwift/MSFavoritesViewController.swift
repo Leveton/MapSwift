@@ -9,7 +9,7 @@
 import UIKit
 
 struct combinedLocation{
-    var total:CGFloat!
+    var total:CGFloat
     var collection = [MSLocation]()
     
     init(_ total:CGFloat, _ collection:Array<MSLocation>){

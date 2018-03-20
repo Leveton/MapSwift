@@ -151,20 +151,17 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
             handleLocationFailure(failureType: .badJson)
             return
         }
+        
         let jsonURL = URL(fileURLWithPath: file)
+        
         /**convert it to bytes*/
-        let jsonData: Data?
         do {
-            jsonData = try Data(contentsOf: jsonURL)
+            let jsonData = try Data(contentsOf: jsonURL)
             /** serialize the bytes into a dictionary object */
-            if let jsonData = jsonData{
-                self.layoutMapWithData(data: jsonData)
-            }else{
-                handleLocationFailure(failureType: .badJson)
-            }
-        /** jsonData was nil, fail gracefully */
+            self.layoutMapWithData(data: jsonData)
+        
+            /** jsonData was nil, fail gracefully */
         } catch _ {
-            jsonData = nil
             handleLocationFailure(failureType: .badJson)
             return
         }
