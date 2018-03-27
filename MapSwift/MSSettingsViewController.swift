@@ -14,7 +14,7 @@ private enum Sections:Int{
     case DistanceFilter
 }
 
-class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableViewDataSource {
+class MSSettingsViewController: MSViewController {
     
     required init(coder:NSCoder){
         super.init(coder: coder)!
@@ -74,19 +74,7 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         cell.textLabel?.text = self.locationRangeDictionary[index]
         return cell
     }
-    
-    func typeCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
-        let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSTypeTableViewCell
-        
-        /*prevent highlight upon tap */
-        cell.selectionStyle = UITableViewCellSelectionStyle.none
-        
-        /* allow cell to be reoredered */
-        cell.showsReorderControl = true
-        
-        cell.textLabel?.text = self.typesArray[indexPath.row]
-        return cell
-    }
+
     
     lazy var tableView:UITableView = self.newTableView()
     func newTableView() -> UITableView{
@@ -132,7 +120,115 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
     }
     
     
-    //MARK: UITableViewDelegate
+    @objc func favoritesUpdated(_ notification: NSNotification){
+        if let obj = notification.object as? Array<String>{
+            self.typesArray = obj
+        }
+    }
+
+    
+    func toggleEdit(_ editing:Bool){
+        self.editButton.setTitle(NSLocalizedString(editing ? "Edit" : "Done", comment: ""), for: .normal)
+        
+    }
+    
+    func hideAllChecksForIndexPath(indexPath: IndexPath){
+        for i in 0...self.tableView.numberOfRows(inSection: indexPath.section){
+            let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))
+            cell?.accessoryView?.isHidden = true
+        }
+    }
+    
+    @objc func didTapEditTypes(){
+        toggleEdit(self.tableView.isEditing)
+        self.tableView.setEditing(!self.tableView.isEditing, animated: true)
+    }
+    
+    //TODO: Refactor case 4 for a cleaner implementation. notice that this 'todo' shows up if you tap the file helper at the top
+    func getRangeFromIndexPath(index: IndexPath) -> MSRange{
+        var range = MSRange()
+        
+        if index.section == Sections.DistanceFilter.rawValue{
+            switch index.row {
+            case 0:
+                range.startPoint = 0.0
+                range.endPoint = 300.0
+            case 1:
+                range.startPoint = 300.0
+                range.endPoint = 750.0
+            case 2:
+                range.startPoint = 750.0
+                range.endPoint = 3000.0
+            case 3:
+                range.startPoint = 3000.0
+                range.endPoint = 10000.0
+            case 4:
+                /* larger than the globe */
+                range.startPoint = 0.0
+                range.endPoint = 1000000000000.0
+            default:
+                range.startPoint = 0.0
+                range.endPoint = 1000000.0
+            }
+        }
+        
+        return range
+    }
+    
+    func typeCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+        let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSTypeTableViewCell
+        
+        /*prevent highlight upon tap */
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
+        
+        /* allow cell to be reoredered */
+        cell.showsReorderControl = true
+        
+        cell.textLabel?.text = self.typesArray[indexPath.row]
+        return cell
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+extension MSSettingsViewController:UITableViewDelegate, UITableViewDataSource{
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == Sections.TypeFilter.rawValue{
+            return true
+        }
+        return false
+    }
+    
+    //gets called after we've let go of the cell
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        /*update our data source to refect the change */
+        let sourceString:String = self.typesArray[sourceIndexPath.row]
+        typesArray.remove(at: sourceIndexPath.row)
+        typesArray.insert(sourceString, at: destinationIndexPath.row)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: self.typesArray)
+    }
+    
+    /* prevents animations on non-type cells */
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.section == Sections.TypeFilter.rawValue{
+            return true
+        }
+        return false
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.none
+    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.sectionTitleDictionary.keys.count
@@ -212,9 +308,13 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
             accessView.isHidden = !accessView.isHidden
             
             if let vc = self.tabBarController?.viewControllers?[1] as? MSLocationsViewController{
-              vc.range = self.getRangeFromIndexPath(index: indexPath)
+                vc.range = self.getRangeFromIndexPath(index: indexPath)
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -254,94 +354,5 @@ class MSSettingsViewController: MSViewController, UITableViewDelegate, UITableVi
         }
         
         return headerView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
-    
-    @objc func favoritesUpdated(_ notification: NSNotification){
-        if let obj = notification.object as? Array<String>{
-            self.typesArray = obj
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == Sections.TypeFilter.rawValue{
-            return true
-        }
-        return false
-    }
-    
-    //gets called after we've let go of the cell
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        
-        /*update our data source to refect the change */
-        let sourceString:String = self.typesArray[sourceIndexPath.row]
-        typesArray.remove(at: sourceIndexPath.row)
-        typesArray.insert(sourceString, at: destinationIndexPath.row)
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: self.typesArray)
-    }
-    
-    /* prevents animations on non-type cells */
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == Sections.TypeFilter.rawValue{
-            return true
-        }
-        return false
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-        return UITableViewCellEditingStyle.none
-    }
-    
-    //MARK: selectors
-    
-    func toggleEdit(_ editing:Bool){
-        self.editButton.setTitle(NSLocalizedString(editing ? "Edit" : "Done", comment: ""), for: .normal)
-        
-    }
-    
-    func hideAllChecksForIndexPath(indexPath: IndexPath){
-        for i in 0...self.tableView.numberOfRows(inSection: indexPath.section){
-            let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))
-            cell?.accessoryView?.isHidden = true
-        }
-    }
-    
-    @objc func didTapEditTypes(){
-        toggleEdit(self.tableView.isEditing)
-        self.tableView.setEditing(!self.tableView.isEditing, animated: true)
-    }
-    
-    //TODO: Refactor case 4 for a cleaner implementation. notice that this 'todo' shows up if you tap the file helper at the top
-    func getRangeFromIndexPath(index: IndexPath) -> MSRange{
-        var range = MSRange()
-        
-        if index.section == Sections.DistanceFilter.rawValue{
-            switch index.row {
-            case 0:
-                range.startPoint = 0.0
-                range.endPoint = 300.0
-            case 1:
-                range.startPoint = 300.0
-                range.endPoint = 750.0
-            case 2:
-                range.startPoint = 750.0
-                range.endPoint = 3000.0
-            case 3:
-                range.startPoint = 3000.0
-                range.endPoint = 10000.0
-            case 4:
-                /* larger than the globe */
-                range.startPoint = 0.0
-                range.endPoint = 1000000000000.0
-            default:
-                range.startPoint = 0.0
-                range.endPoint = 1000000.0
-            }
-        }
-        
-        return range
     }
 }
