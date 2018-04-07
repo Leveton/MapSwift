@@ -132,9 +132,6 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     
     //MARK: selectors
-
-    //MARK: selectors
-    
     //we're checking to see if copiedData source is NOT nil
     func resetDataSource(){
         if let copiedDataSource = copiedDataSource{
@@ -184,12 +181,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
         guard let control = sender as? UISwitch else{
             return
         }
-        //control.isOn = !control.isOn
         nameFilter?.isOn = false
         distanceFilter?.isOn = false
         
         if control.isOn{
-            //make arrays for each type and sort greatest to least
+            //make arrays for each type and sort greatest to least. An example of functional chaining
             let randomed:Array<MSLocation> = self.dataSource.filter{$0.type == "Random"}.sorted{$0.distance > $1.distance}
             let rested:Array<MSLocation> = self.dataSource.filter{$0.type == "Restaurant"}.sorted{$0.distance > $1.distance}
             let schooled:Array<MSLocation> = self.dataSource.filter{$0.type == "School"}.sorted{$0.distance > $1.distance}

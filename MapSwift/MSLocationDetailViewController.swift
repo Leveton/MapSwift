@@ -104,14 +104,12 @@ class MSLocationDetailViewController: UIViewController {
         //self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(addCancel))
         
         /* Initialize a global favorites array if it hasn't been already */
-        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+        guard
+            let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>,
+            let locID = self.location?.locationID
+            else{
             let favs = [Int]()
             UserDefaults.standard.set(favs, forKey:GlobalStrings.FavoritesArray.rawValue)
-            return
-        }
-        
-        
-        guard let locID = self.location?.locationID else{
             return
         }
         
@@ -210,19 +208,15 @@ class MSLocationDetailViewController: UIViewController {
     
     @objc func didTapFavorite(){
         
-        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
-            return
-        }
+        guard
+            let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>,
+            /* grab our custom tabbar controller at the root of the project and cascade down */
+            let tabController = self.presentingViewController as? MSTabBarController,
+            let loc = self.location, let locID = self.location?.locationID
+                else{return}
+        
         var mutableFavs = favs
         
-        /* grab our custom tabbar controller at the root of the project and cascade down */
-        guard let tabController = self.presentingViewController as? MSTabBarController else{
-            return
-        }
-        
-        guard let loc = self.location, let locID = self.location?.locationID else{
-            return
-        }
         /*let's prevent interaction until the method returns */
         self.favoriteButton.isEnabled = false
         

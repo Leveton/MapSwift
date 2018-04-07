@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 
+//Must be a class so we can conform to MKAnnotation and show details on our map
 class MSLocation: NSObject, MKAnnotation, NSCopying {
 
     var title:String?
@@ -32,15 +33,12 @@ extension MSLocation{
      we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil
      */
     static func serializeLocationWith(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
-        guard let dist = dict["distance"] as? CGFloat else{
-            return nil
-        }
-        guard let lat = dict["latitude"] as? CLLocationDegrees else{
-            return nil
-        }
-        guard let long = dict["longitude"] as? CLLocationDegrees else{
-            return nil
-        }
+        guard
+            let dist = dict["distance"] as? CGFloat,
+            let lat = dict["latitude"] as? CLLocationDegrees,
+            let long = dict["longitude"] as? CLLocationDegrees
+                else {return nil}
+            
         var coordinate = CLLocationCoordinate2D()
         coordinate.latitude  = lat
         coordinate.longitude = long

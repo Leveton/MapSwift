@@ -216,7 +216,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y5w-gQ-QjW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1444" y="-994"/>
+            <point key="canvasLocation" x="1369" y="657"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="g88-SM-wsB">
@@ -233,7 +233,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VFT-kb-s1L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="-994"/>
+            <point key="canvasLocation" x="694" y="658"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hNz-n2-bh7">
@@ -252,7 +252,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="-320"/>
+            <point key="canvasLocation" x="694" y="-663"/>
         </scene>
         <!--Locations View Controller-->
         <scene sceneID="wg7-f3-ORb">
@@ -271,7 +271,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="360"/>
+            <point key="canvasLocation" x="694" y="0.0"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="kc3-39-PeD">
@@ -290,7 +290,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gNq-ui-JVV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="750" y="1052"/>
+            <point key="canvasLocation" x="694" y="1369"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">

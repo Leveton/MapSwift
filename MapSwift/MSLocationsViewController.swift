@@ -18,6 +18,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     var copiedDataSource:Array = [MSLocation]()
     
     var range:MSRange?{
+        
         //didSet allows you to be reactive
         didSet{
             self.sortByDistance()
@@ -122,7 +123,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
             /* sort by range as selected in settings */
             self.dataSource = self.copiedDataSource
             
-            /* notice that we can chain filters to create a range of value */
+            /* notice that we can functionally chain filters to create a range of value */
             self.dataSource = self.dataSource.filter{Float($0.distance) > theRange.startPoint}.filter{Float($0.distance) < theRange.endPoint}
             
         }else{
