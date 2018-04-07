@@ -10,15 +10,19 @@ import UIKit
 import MapKit
 
 private struct Constants {
-    static let MapSide = CGFloat(300)
-    static let TabBarHeight = CGFloat(49)
+    static let statusBarHeight = CGFloat(64)
+    static let TabBarHeight    = CGFloat(49)
+    static let titlePadding    = CGFloat(5)
+    //For iPhone X. Easier and cleaner to achieve if using IB
+    static let safeAreaPadding = UIApplication.deviceHasSafeArea ? CGFloat(20.0) : CGFloat(0.0)
 }
+
 private enum locationDownloadFailures:String{
     case noNetwork = "com.MapSwift.locationDownloadFailures.noNetwork"
     case badJson = "com.MapSwift.locationDownloadFailures.badJson"
 }
 
-class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class MSMapViewController: MSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,23 +32,14 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
         
-        //We'll use the same map frame to keep our label seperate from our map
-        var labelFrame:CGRect  = mapFrame()
-        labelFrame.origin      = CGPoint(x: 0, y: 0)
-        labelFrame.size.width  = self.view.frame.width
-        labelFrame.size.height = labelFrame.size.height/2
-        self.titleLabel.frame  = labelFrame
-        
         populateMap()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-    //MARK: getters
-    
+    //MARK: lazy getters
     lazy var progressView:UIActivityIndicatorView = self.newProgressView()
     func newProgressView() -> UIActivityIndicatorView{
         let view = UIActivityIndicatorView()
@@ -83,7 +78,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func newManager() -> CLLocationManager{
         let manager = CLLocationManager()
         manager.requestWhenInUseAuthorization()
-        manager.delegate = self
         return manager
     }
     
@@ -91,7 +85,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func newMap() -> MKMapView{
         let map = MKMapView()
         map.frame = self.mapFrame()
-        map.delegate = self
         map.showsUserLocation = true
         map.isHidden = true
         self.view.addSubview(map)
@@ -115,34 +108,27 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     func newTitleLabel() -> UILabel{
         let label = UILabel()
         label.text   = "MapSwift"
-        label.textColor = UIColor.white
+        label.sizeToFit()
+        label.frame.size.width  = self.view.frame.width
+        label.frame.origin.y = Constants.statusBarHeight + Constants.safeAreaPadding
         label.textAlignment = .center
+        label.textColor = UIColor.white
         self.view.addSubview(label)
         return label
     }
     
     func mapFrame() -> CGRect{
-        
         var mapFrame = CGRect.zero
-        mapFrame.size = CGSize(width: Constants.MapSide, height: Constants.MapSide)
+        mapFrame.size = CGSize(width: view.frame.size.width, height: (view.frame.height - self.titleLabel.frame.maxY + Constants.titlePadding))
         
         /* Calculate the map's position of the view using Core Graphic helper methods */
-        let xOffset = (self.view.frame.width - Constants.MapSide)/2
-        let yOffset = (self.view.frame.height - Constants.MapSide)/2
-        let mapOrigin = CGPoint(x: xOffset, y: yOffset)
+        let mapOrigin = CGPoint(x: 0, y: self.titleLabel.frame.maxY + Constants.titlePadding)
         mapFrame.origin = mapOrigin
         
         return  mapFrame;
     }
     
-    //MARK: MKMapViewDelegate
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-    }
-    
     //MARK: selectors
-    
     func getLocalData(){
         /** grab the local json file */
         let jsonFile = Bundle.main.path(forResource: "MapStackLocations", ofType: "json")
@@ -154,12 +140,15 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
         let jsonURL = URL(fileURLWithPath: file)
         
-        /**convert it to bytes*/
+        /**
+         convert it to bytes.
+         Could use the new JSONDecoder method here but we want to demonstrate guard chaining.
+         */
         do {
             let jsonData = try Data(contentsOf: jsonURL)
             /** serialize the bytes into a dictionary object */
             self.layoutMapWithData(data: jsonData)
-        
+            
             /** jsonData was nil, fail gracefully */
         } catch _ {
             handleLocationFailure(failureType: .badJson)
@@ -187,7 +176,7 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                         self.progressView.stopAnimating()
                         self.progressView.isHidden = true
                         if let theData = data{
-                          self.layoutMapWithData(data:theData)
+                            self.layoutMapWithData(data:theData)
                         }
                     }
                     
@@ -209,34 +198,29 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         let jsonResponse:AnyObject
         do {
             try jsonResponse = JSONSerialization.jsonObject(with: data, options: []) as AnyObject
-            guard let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject> else{
-                //fail gracefully
-                return
-            }
             
-            guard let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>] else{
-                //fail gracefully
-                return
-            }
+            guard
+                let jsonDict = jsonResponse as? Dictionary<AnyHashable, AnyObject>,
+                let locationDictionaries:Array = (jsonDict["MapStackLocationsArray"]) as? [Dictionary<AnyHashable,Any>],
+                /* Populate the favorites vc */
+                let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>
+                else {return}
             
-            /* Populate the favorites vc */
-            guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
-                //fail gracefully
-                return
-            }
             var favsDataSource = [MSLocation]()
             
             for x in 0..<locationDictionaries.count{
-                if let location = createLocationWithDictionary(dict: locationDictionaries[x]){
-                    map.addAnnotation(location)
-                    self.datasource.append(location)
-                    
-                    if let locID = location.locationID{
-                        if favs.contains(locID){
-                            favsDataSource.append(location)
-                        }
+                guard let location = MSLocation.serializeLocationWith(dict: locationDictionaries[x]) else {return}
+                
+                map.addAnnotation(location)
+                self.datasource.append(location)
+                
+                //Use if let here because we still want execution to continue
+                if let locID = location.locationID {
+                    if favs.contains(locID){
+                        favsDataSource.append(location)
                     }
                 }
+                
                 
                 /* uncomment to see how copying an object would work */
                 //                let newloc = location.copy() as? MSLocation
@@ -246,23 +230,12 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 //                }
             }
             
-            guard let viewControllers = self.tabBarController?.viewControllers else{
-                //fail gracefully
-                return
-            }
-            
-            guard let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
-                //fail gracefully
-                return
-            }
-            guard let nav:UINavigationController = viewControllers[2] as? UINavigationController else{
-                //fail gracefully
-                return
-            }
-            guard let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController else{
-                //fail gracefully
-                return
-            }
+            guard
+                let viewControllers = self.tabBarController?.viewControllers,
+                let locationsVC:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController,
+                let nav:UINavigationController = viewControllers[2] as? UINavigationController,
+                let favsVC:MSFavoritesViewController = nav.viewControllers[0] as? MSFavoritesViewController
+                else{return}
             
             locationsVC.dataSource = self.datasource
             favsVC.dataSource = favsDataSource
@@ -274,39 +247,6 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         }
     }
     
-    /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
-    func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
-        guard let dist = dict["distance"] as? CGFloat else{
-            return nil
-        }
-        guard let lat = dict["latitude"] as? CLLocationDegrees else{
-            return nil
-        }
-        guard let long = dict["longitude"] as? CLLocationDegrees else{
-            return nil
-        }
-        var coordinate = CLLocationCoordinate2D()
-        coordinate.latitude  = lat
-        coordinate.longitude = long
-        
-        let location = MSLocation(coordinate: coordinate, distance:dist)
-        location.subtitle = "dist: \(String(describing: dist))"
-        
-        /* we'll allow the rest of our properties to be possibly nil */
-        location.locationID = dict["locationId"] as? Int
-        location.title = dict["name"] as? String
-        location.type = dict["type"] as? String
-        
-        /*make sure the string exists and is the right type before trying to build the image with the string */
-        if let imgStr = dict["image"] as? String{
-            if let image = UIImage(named:imgStr){
-                location.locationImage = image
-            }
-        }
-        
-        return location
-    }
-
     fileprivate func handleLocationFailure(failureType:locationDownloadFailures){
         var msg = ""
         switch failureType {

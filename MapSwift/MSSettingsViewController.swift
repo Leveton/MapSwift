@@ -100,7 +100,7 @@ class MSSettingsViewController: MSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
+        self.view.backgroundColor = UIColor.themeColor
     }
     
     override func didReceiveMemoryWarning() {
@@ -288,17 +288,17 @@ extension MSSettingsViewController:UITableViewDelegate, UITableViewDataSource{
             //Some UIColor convenience properties
             switch indexPath.row {
             case 0:
-                MSSingleton.sharedInstance.themeColor = UIColor.blue
+                UIColor.themeColor = UIColor.blue
             case 1:
-                MSSingleton.sharedInstance.themeColor = UIColor.green
+                UIColor.themeColor = UIColor.green
             case 2:
-                MSSingleton.sharedInstance.themeColor = UIColor.red
+                UIColor.themeColor = UIColor.red
             default:
-                MSSingleton.sharedInstance.themeColor = UIColor.blue
+                UIColor.themeColor = UIColor.blue
             }
             
             /*Here we'll put our superclass to good use by having it listen to this notification so that all of its subclass instances will update their background colors. */
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: MSSingleton.sharedInstance.themeColor)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: UIColor.themeColor)
             
             self.tableView.reloadData()
         }
@@ -320,7 +320,7 @@ extension MSSettingsViewController:UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 50)
-        headerView.backgroundColor = MSSingleton.sharedInstance.themeColor
+        headerView.backgroundColor = UIColor.themeColor
         
         let label = UILabel(frame: headerView.frame)
         label.textColor = UIColor.black

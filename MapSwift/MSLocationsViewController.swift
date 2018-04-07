@@ -18,6 +18,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
     var copiedDataSource:Array = [MSLocation]()
     
     var range:MSRange?{
+        //didSet allows you to be reactive
         didSet{
             self.sortByDistance()
             self.tableView.reloadData()
@@ -109,7 +110,7 @@ class MSLocationsViewController: MSViewController, UITableViewDelegate, UITableV
         let location = self.dataSource[indexPath.row]
         let vc = MSLocationDetailViewController()
         vc.location = location
-        vc.view.backgroundColor = MSSingleton.sharedInstance.colorDetailView
+        vc.view.backgroundColor = UIColor.detailColor
         vc.isViewPresented = true
         self.present(vc, animated: true, completion: nil)
     }

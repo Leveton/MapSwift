@@ -124,7 +124,7 @@ class MSLocationDetailViewController: UIViewController {
             self.favoriteButton.setImage(UIImage.init(named: "favoriteStarEmpty"), for: UIControlState.normal)
         }
         self.favoriteButton.sizeToFit()
-        self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
+        self.view.backgroundColor = UIColor.themeColor
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -15,7 +15,7 @@ class MSViewController: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleThemeChange(note:)), name: NSNotification.Name(rawValue: GlobalStrings.GlobalThemeChanged.rawValue), object: nil)
         
-        self.view.backgroundColor = MSSingleton.sharedInstance.themeColor
+        self.view.backgroundColor = UIColor.themeColor
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,11 +26,4 @@ class MSViewController: UIViewController {
     @objc func handleThemeChange(note: Notification) {
         view.backgroundColor = note.object as? UIColor
     }
-}
-
-public enum GlobalStrings: String {
-    case GlobalThemeChanged  = "com.mapstack.themeWasChanged"
-    case FavoriteUpdated     = "com.mapstack.favoritesUpdated"
-    case FavoritesRearranged = "com.mapstack.favoritesOrderRearranged"
-    case FavoritesArray      = "com.mapstack.favoritesArray"
 }
