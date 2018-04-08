@@ -52,8 +52,7 @@ class MSSettingsViewController: MSViewController {
     }
     
     //MARK: getters
-    
-     func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+    private func colorsCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSColorTableViewCell
         let imageView = UIImageView(image: UIImage(named: "check"))
         imageView.isHidden = true
@@ -63,7 +62,7 @@ class MSSettingsViewController: MSViewController {
     }
     
     // you don't always have to use dequeue cells
-    func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+    private func distanceCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSDistanceTableViewCell
         let imageView = UIImageView(image: UIImage(named: "check"))
         imageView.isHidden = true
@@ -83,7 +82,6 @@ class MSSettingsViewController: MSViewController {
         let tableView = UITableView(frame: CGRect.zero, style: UITableViewStyle.grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: settingsCellID)
         tableView.registerReusableCell(MSTypeTableViewCell.self)
         tableView.registerReusableCell(MSDistanceTableViewCell.self) // This will register using the class without using a UINib
         tableView.registerReusableCell(MSColorTableViewCell.self)
@@ -116,36 +114,35 @@ class MSSettingsViewController: MSViewController {
         tableFrame.size.width = self.view.frame.width
         tableFrame.size.height = self.view.frame.height - 30.0
         self.tableView.frame = tableFrame
-        
     }
     
     
-    @objc func favoritesUpdated(_ notification: NSNotification){
+    @objc private func favoritesUpdated(_ notification: NSNotification){
         if let obj = notification.object as? Array<String>{
             self.typesArray = obj
         }
     }
 
     
-    func toggleEdit(_ editing:Bool){
+    private func toggleEdit(_ editing:Bool){
         self.editButton.setTitle(NSLocalizedString(editing ? "Edit" : "Done", comment: ""), for: .normal)
         
     }
     
-    func hideAllChecksForIndexPath(indexPath: IndexPath){
+    private func hideAllChecksForIndexPath(indexPath: IndexPath){
         for i in 0...self.tableView.numberOfRows(inSection: indexPath.section){
             let cell = self.tableView.cellForRow(at: IndexPath(row: i, section: indexPath.section))
             cell?.accessoryView?.isHidden = true
         }
     }
     
-    @objc func didTapEditTypes(){
+    @objc private func didTapEditTypes(){
         toggleEdit(self.tableView.isEditing)
         self.tableView.setEditing(!self.tableView.isEditing, animated: true)
     }
     
     //TODO: Refactor case 4 for a cleaner implementation. notice that this 'todo' shows up if you tap the file helper at the top
-    func getRangeFromIndexPath(index: IndexPath) -> MSRange{
+    public func getRangeFromIndexPath(index: IndexPath) -> MSRange{
         var range = MSRange()
         
         if index.section == Sections.DistanceFilter.rawValue{
@@ -158,24 +155,24 @@ class MSSettingsViewController: MSViewController {
                 range.endPoint = 750.0
             case 2:
                 range.startPoint = 750.0
-                range.endPoint = 3000.0
+                range.endPoint = 3_000.0
             case 3:
-                range.startPoint = 3000.0
-                range.endPoint = 10000.0
+                range.startPoint = 3_000.0
+                range.endPoint = 10_000.0
             case 4:
                 /* larger than the globe */
                 range.startPoint = 0.0
-                range.endPoint = 1000000000000.0
+                range.endPoint = 1_000_000_000_000.0
             default:
                 range.startPoint = 0.0
-                range.endPoint = 1000000.0
+                range.endPoint = 1_000_000.0
             }
         }
         
         return range
     }
     
-    func typeCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
+    private func typeCellForIndexPath(indexPath:IndexPath) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(indexPath: indexPath) as MSTypeTableViewCell
         
         /*prevent highlight upon tap */
@@ -188,16 +185,6 @@ class MSSettingsViewController: MSViewController {
         return cell
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 extension MSSettingsViewController:UITableViewDelegate, UITableViewDataSource{
     

@@ -36,7 +36,7 @@ class MSTableViewCell: UITableViewCell {
     }
     
     //MARK: selectors
-    
+
     @IBAction func didTapDelete(_ sender: Any) {
         if let loc = self.location{
           delegate?.deleteButtonTappedFrom(cell: self, location:loc)
@@ -49,8 +49,6 @@ class MSTableViewCell: UITableViewCell {
         }
     }
 }
-
-//MARK: MSTableViewCellDelegate
 
 /* use 'class' to guarantee that only classes will conform to this protocol */
 protocol MSTableViewCellDelegate: class {

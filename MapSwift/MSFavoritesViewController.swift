@@ -87,49 +87,6 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
-
-    //MARK: MSTableViewCellDelegate
-    
-    func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
-        
-        /* get a mutable reference to our data source and remove the deleted location */
-        guard let locID = location.locationID, let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
-            return
-        }
-        var mutableFavs = favs
-        mutableFavs.removeWithObject(object: locID)
-        UserDefaults.standard.set(mutableFavs, forKey: GlobalStrings.FavoritesArray.rawValue)
-        self.dataSource.removeWithObject(object: location)
-        
-        var array = [IndexPath]()
-        
-        /* the parameter here is a class method to get the row that was tapped, our table has only 1 section so pass 0 */
-        array.append(IndexPath(row: cell.tag, section: 0))
-        
-        /* triggers a .3 second animation for all UI related calls in between 'beginUpdates' and 'endUpdates' */
-        self.tableView.beginUpdates()
-        self.tableView.deleteRows(at: array, with: UITableViewRowAnimation.automatic)
-        self.tableView.endUpdates()
-        
-        /**
-         
-         GCD method to grab the main thread and execute the block of code after .3 seconds (when endUpdates returns).
-         Calling 'reloadData' outside this block would override 'beginUpdates'.
-         
-         */
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.tableView.reloadData()
-        }
-    }
-    
-    func detailButtonTappedFrom(cell: MSTableViewCell, location: MSLocation) {
-        
-        /* Same code as 'didSelectRowAtIndexPath' from the last lesson */
-        let vc = MSLocationDetailViewController()
-        vc.isViewPresented = false
-        vc.location = location
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
     
     //MARK: selectors
     //we're checking to see if copiedData source is NOT nil
@@ -247,5 +204,48 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
             self.dataSource = type0 + type1 + type2 + type3 + type4
             self.tableView.reloadData()
         }
+    }
+}
+
+extension MSFavoritesViewController{
+    func deleteButtonTappedFrom(cell: MSTableViewCell, location:MSLocation){
+        
+        /* get a mutable reference to our data source and remove the deleted location */
+        guard let locID = location.locationID, let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{
+            return
+        }
+        var mutableFavs = favs
+        mutableFavs.removeWithObject(object: locID)
+        UserDefaults.standard.set(mutableFavs, forKey: GlobalStrings.FavoritesArray.rawValue)
+        self.dataSource.removeWithObject(object: location)
+        
+        var array = [IndexPath]()
+        
+        /* the parameter here is a class method to get the row that was tapped, our table has only 1 section so pass 0 */
+        array.append(IndexPath(row: cell.tag, section: 0))
+        
+        /* triggers a .3 second animation for all UI related calls in between 'beginUpdates' and 'endUpdates' */
+        self.tableView.beginUpdates()
+        self.tableView.deleteRows(at: array, with: UITableViewRowAnimation.automatic)
+        self.tableView.endUpdates()
+        
+        /**
+         
+         GCD method to grab the main thread and execute the block of code after .3 seconds (when endUpdates returns).
+         Calling 'reloadData' outside this block would override 'beginUpdates'.
+         
+         */
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func detailButtonTappedFrom(cell: MSTableViewCell, location: MSLocation) {
+        
+        /* Same code as 'didSelectRowAtIndexPath' from the last lesson */
+        let vc = MSLocationDetailViewController()
+        vc.isViewPresented = false
+        vc.location = location
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

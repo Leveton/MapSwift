@@ -34,8 +34,11 @@ extension MSLocation{
      */
     static func serializeLocationWith(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
         guard
+            
             let dist = dict["distance"] as? CGFloat,
+            
             let lat = dict["latitude"] as? CLLocationDegrees,
+            
             let long = dict["longitude"] as? CLLocationDegrees
                 else {return nil}
             
@@ -61,7 +64,7 @@ extension MSLocation{
         return location
     }
     
-    func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
+    public func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
         /* if you square a negative number, you get a quiet nan */
         return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
     }
