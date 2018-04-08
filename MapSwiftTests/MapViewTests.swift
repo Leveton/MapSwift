@@ -38,4 +38,25 @@ class MapViewTests: XCTestCase {
     func testSerializationAndDistance(){
         XCTAssertEqual(Double(coordinateDistance), location?.getDistanceFromPoint(pointA: coordinate!, pointB: (location?.coordinate)!))
     }
+    
+    //Are we getting any data from our API?
+    func testAPIGenerically(){
+        let promise = expectation(description: "network fetch succeeded")
+        
+        let session = URLSession(configuration: .default)
+        let url = URL.init(string: "https://mikeleveton.com/MapStackLocations.json")
+        let dataTask:URLSessionDataTask = session.dataTask(with: url!, completionHandler: {(data, response, error) -> Void in
+            if error != nil{
+                XCTFail("error: \(String(describing: error))")
+            }
+            if data != nil{
+                promise.fulfill()
+            }else{
+                XCTFail("no data")
+            }
+        })
+        
+        dataTask.resume()
+        waitForExpectations(timeout: 5.0, handler: nil)
+    }
 }

@@ -17,7 +17,7 @@ private struct Constants{
 
 class MSLocationDetailViewController: UIViewController {
     
-    private var isLocationFavorited:Bool = false
+    public var isLocationFavorited:Bool = false
     
     /* default will be a view pushed onto the navigation stack */
     var isViewPresented:Bool = false
@@ -71,7 +71,7 @@ class MSLocationDetailViewController: UIViewController {
     lazy var favoriteButton:UIButton = self.newFavoriteButton()
     func newFavoriteButton() ->UIButton{
         let button = UIButton(type: .system)
-        button.addTarget(self, action: #selector(MSLocationDetailViewController.didTapFavorite), for: .touchUpInside)
+        button.addTarget(self, action: #selector(self.didTapFavorite), for: .touchUpInside)
         button.isHidden = !isViewPresented
         self.view.addSubview(button)
         return button
@@ -196,27 +196,26 @@ class MSLocationDetailViewController: UIViewController {
     }
     
     let handleDismiss = {() -> Void in
-        print("completion block fired")
+        print("closure fired")
     }
     
     @objc func didTapDismiss(){
         self.dismiss(animated: true, completion: handleDismiss)
         
-        /* notice that this was logged out BEFORE "completion block fired" was logged out */
+        /* notice that this was logged out BEFORE "completion closure fired" was logged out */
         print("reached end of didTapDismiss scope")
     }
     
-    @objc func didTapFavorite(){
-        
+    //Returning an array here makes this business logic easier to test.
+    public func handleFavoriteTapped(with favs:Array<Int>) -> Array<Int>?{
         guard
-            let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int>,
             /* grab our custom tabbar controller at the root of the project and cascade down */
-            let tabController = self.presentingViewController as? MSTabBarController,
+            //let tabController = self.presentingViewController as? MSTabBarController,
             let loc = self.location, let locID = self.location?.locationID
-                else{return}
+            else{return nil}
         
         var mutableFavs = favs
-        
+        let tabController = self.presentingViewController as? MSTabBarController
         /*let's prevent interaction until the method returns */
         self.favoriteButton.isEnabled = false
         
@@ -227,16 +226,15 @@ class MSLocationDetailViewController: UIViewController {
         
         //print("favs from user defaults: \(mutableFavs)")
         
-        
         if isLocationFavorited{
             mutableFavs.removeWithObject(object:locID)
-            tabController.removeLocationFromFavoritesWithLocation(location:loc)
+            tabController?.removeLocationFromFavoritesWithLocation(location:loc)
         }else{
             mutableFavs.append(locID)
-            tabController.addLocationToFavoritesWithLocation(location:loc)
+            tabController?.addLocationToFavoritesWithLocation(location:loc)
         }
         
-        UserDefaults.standard.set(mutableFavs, forKey: GlobalStrings.FavoritesArray.rawValue)
+        UserDefaults.standard.set(favs, forKey: GlobalStrings.FavoritesArray.rawValue)
         isLocationFavorited = !isLocationFavorited
         
         /* this is redundant code, so let's refactor it */
@@ -248,17 +246,22 @@ class MSLocationDetailViewController: UIViewController {
         self.favoriteButton.sizeToFit()
         
         self.favoriteButton.isEnabled = true
-        
+        return mutableFavs
         //print("favs from user defaults after mutation: \(mutableFavs) and count \(mutableFavs.count)")
     }
     
-    /* uncomment this if you want to see in-line block example */
+    @objc private func didTapFavorite(){
+        guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{return}
+        handleFavoriteTapped(with: favs)
+    }
+    
+    /* uncomment this if you want to see in-line closure example */
     //    func didTapDismiss(){
     //        self.dismiss(animated: true, completion: {() -> Void in
-    //            print("completion block fired")
+    //            print("completion closure fired")
     //        })
     //
-    //        /* notice that this was logged out BEFORE "completion block fired" was logged out */
+    //        /* notice that this was logged out BEFORE "completion closure fired" was logged out */
     //        print("reached end of didTapDismiss scope")
     //    }
     

@@ -32,11 +32,11 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     required init(coder:NSCoder){
         super.init(coder: coder)!
         
-        /* don't put this in viewDidLoad because the it's only called if the user visits the view  */
+        /* don't put this in viewDidLoad because the that's only called if the user visits the view  */
         NotificationCenter.default.addObserver(self, selector: #selector(self.favoritesReordered(_:)), name: NSNotification.Name(rawValue: GlobalStrings.FavoritesRearranged.rawValue), object: nil)
     }
     
-    /* guarantee that dataSource is not nil */
+    /* guarantee that copiedDataSource is not nil */
     var dataSource = [MSLocation](){
         didSet{
             if copiedDataSource == nil{
@@ -179,7 +179,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
     }
     
     /* @objc is required because DistributedNotification is written in Objective-C and so in order for DistributedNotification to call favoritesReordered() via #selector, it must be bridged to Objective-C. */
-    @objc func favoritesReordered(_ notification: NSNotification){
+    @objc public func favoritesReordered(_ notification: NSNotification){
         
         /* An example of array concatination. Create 5 arrays, one for each type, order by the new order passed to the notification, and then set the data source to this ordered array */
         if let arr:Array = notification.object as? Array<String>{
@@ -201,6 +201,7 @@ class MSFavoritesViewController: UITableViewController, MSTableViewCellDelegate 
                     type4.append(loc)
                 }
             }
+            //concatinate all arrays
             self.dataSource = type0 + type1 + type2 + type3 + type4
             self.tableView.reloadData()
         }
@@ -231,8 +232,8 @@ extension MSFavoritesViewController{
         
         /**
          
-         GCD method to grab the main thread and execute the block of code after .3 seconds (when endUpdates returns).
-         Calling 'reloadData' outside this block would override 'beginUpdates'.
+         GCD method to grab the main thread and execute the closure after .3 seconds (when endUpdates returns).
+         Calling 'reloadData' outside this closure would override 'beginUpdates'.
          
          */
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {

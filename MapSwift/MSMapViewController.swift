@@ -159,8 +159,8 @@ class MSMapViewController: MSViewController {
     func populateMap(){
         
         /**
-         URLSessionDataTask returns data directly to the app in a block. This time, the block is exectuted when the response comes from the server.
-         I like to lowercase block variables so that you can guess it's type.
+         URLSessionDataTask returns data directly to the app in a closure. This time, the closure is exectuted when the response comes from the server.
+         I like to lowercase closure variables so that you can guess it's type.
          App transport security hack is required here.
          */
         
