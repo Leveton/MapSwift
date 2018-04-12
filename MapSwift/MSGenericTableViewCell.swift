@@ -13,6 +13,7 @@ protocol Reusable {
     static var reuseIdentifier: String { get }
 }
 
+//This extension allows anything conforming to Reusable to have a reuseIdentifier ready to go but still read-only.
 extension Reusable {
     static var reuseIdentifier: String {
         // I like to use the class's name as an identifier
@@ -22,7 +23,6 @@ extension Reusable {
         //Self is the thing conforming to the protocol, in this case a subclass of UITableViewCell
         return String(describing: Self.self)
     }
-    
 }
 
 class MSColorTableViewCell: UITableViewCell, Reusable {

@@ -252,7 +252,9 @@ class MSLocationDetailViewController: UIViewController {
     
     @objc private func didTapFavorite(){
         guard let favs = UserDefaults.standard.object(forKey: GlobalStrings.FavoritesArray.rawValue) as? Array<Int> else{return}
-        handleFavoriteTapped(with: favs)
+        
+        //Use the placeholder when we just want to execute some logic without getting anything.
+        let _ = handleFavoriteTapped(with: favs)
     }
     
     /* uncomment this if you want to see in-line closure example */

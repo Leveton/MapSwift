@@ -31,6 +31,7 @@ class LocationsViewTests: XCTestCase {
         super.tearDown()
     }
 
+    
     func testFavsBusinessLogic(){
         let favs = [9,8,6]
         let newFavs = detailVC?.handleFavoriteTapped(with:favs)
@@ -46,8 +47,9 @@ class LocationsViewTests: XCTestCase {
             return
             
         }
+        XCTAssertEqual(decrimentedFavs[2], 6)
+        
         XCTAssert(decrimentedFavs.count == 3)
         XCTAssert(decrimentedFavs[0] == 9)
-        XCTAssert(decrimentedFavs[2] == 6)
     }
 }

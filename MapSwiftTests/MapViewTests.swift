@@ -11,11 +11,13 @@ import MapKit
 @testable import MapSwift
 
 class MapViewTests: XCTestCase {
+    
     let coordinateDistance:CGFloat = 157.61929069755391
     var location:MSLocation?
     var coordinate:CLLocationCoordinate2D?
     
     override func setUp() {
+        
         super.setUp()
         
         coordinate = CLLocationCoordinate2D()
@@ -35,7 +37,7 @@ class MapViewTests: XCTestCase {
     }
     
     //test both correct serialization and the getDistance function. It's ok to unwrap here because if coordinate or loc.coordinate are nil, then something's wrong with our tests.
-    func testSerializationAndDistance(){
+    func testLocationSerializationAndDistance(){
         XCTAssertEqual(Double(coordinateDistance), location?.getDistanceFromPoint(pointA: coordinate!, pointB: (location?.coordinate)!))
     }
     

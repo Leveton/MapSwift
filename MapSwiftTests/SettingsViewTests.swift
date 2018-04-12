@@ -14,15 +14,13 @@ class SettingsTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        let coder = NSCoder()
-        settingsVC = MSSettingsViewController(coder:coder)
     }
     
     override func tearDown() {
-        settingsVC = nil
         super.tearDown()
     }
     
+    //TODO: make these tests pass!
     func testRange(){
         let index = IndexPath(row: 3, section: 0)
         let range = settingsVC?.getRangeFromIndexPath(index: index)
