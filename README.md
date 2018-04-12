@@ -1,5 +1,6 @@
 
-[<img style="width: 200px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Harvard_Wreath_Logo_1.png/246px-Harvard_Wreath_Logo_1.png" alt="Harvard University" />](http://www.harvard.edu/)
+
+<!-- [<img style="width: 200px;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Harvard_Wreath_Logo_1.png/246px-Harvard_Wreath_Logo_1.png" alt="Harvard University" />](http://www.harvard.edu/) -->
 [<img style="width: 200px;" src="http://i.imgur.com/7Rjxn1J.png" alt="The Idea Center" />](http://theideacenter.co/)
 [<img style="width: 200px;" src="http://i.imgur.com/wzb1fU6.png" alt="Miami Dade College" />](http://www.mdc.edu/)
 
@@ -13,7 +14,19 @@ Each lesson has its own git branch. Teachers and students will switch branches t
 
 <img src="https://raw.githubusercontent.com/Leveton/MapSwift/lesson0/images/BranchFlow.png" alt="TSNavigationStripView examples" />
 
-## Table of Branches and Their Contents
+## Themes
+
+ - The course is opinionated. There is less convention in the iOS community than in other communities (e.g. Rails or Java). Apple's closed nature, intermittent enthusiasm for the platform, and other factors account for this.
+
+- The app is architected inconsistently on purpose. The goal is to demo the common patterns that iOS developers encounter from day one.
+
+- The essential concepts most often confusing to students are given the most weight.
+
+- Table views are used extensively, being the standard way to navigate on mobile.
+
+- Because UIKit is a library of objects, OOP style programming is taught from day one but, don't worry, functional concepts are introduced as the course progresses.
+
+## Table of branches and their Contents
 
 **Lesson 0 - Hello World**
  - creating a project
@@ -40,7 +53,7 @@ Each lesson has its own git branch. Teachers and students will switch branches t
  - playgrounds
  - ARC again
  - getters and setters
- - optional chaining conditionals (if let, guard let, if case let, for case let, etc.)
+ - optional chaining conditionals
  - access levels
 
  **Lesson 3 - Prereqs and Foundation**
@@ -48,7 +61,7 @@ Each lesson has its own git branch. Teachers and students will switch branches t
  - initializers
  - core geometry
  - pixels and points
- - setting up an map
+ - setting up the map
  - lazy initiation
 
 **Lesson 4 - Getting data around**
@@ -73,14 +86,14 @@ Each lesson has its own git branch. Teachers and students will switch branches t
  - table view dequeueing
  - reuse identifier
  - modal presentation
- - inout parameter
+ - inout parameters and mutating functions
 
 **Lesson 7 - Swift and iOS features grab bag**
  - closures
  - gesture recognizers
  - animations
  - extensions
- - operator overloading
+ - equatable
 
 **Lesson 8 - Swift and iOS features grab bag continued**
  - animations cont.
@@ -100,7 +113,7 @@ Each lesson has its own git branch. Teachers and students will switch branches t
  - custom delegates and protocols
  - weak delegates and preventing retain cycles
  - functional programming (map, filter, reduce cont.)
- - interface bulider and stack views
+ - interface builder and basic constraints
 
 **Lesson 10 - Networking and GCD**
  - URL Session
@@ -143,23 +156,15 @@ You can send me a pull request to fix any issues or add any features.
 
 <hr />
 
-## Themes
-
-The course is opinionated. There is less convention in the iOS community than in other communities (e.g. Rails or Java). Apple's closed nature, intermittent enthusiasm for the platform, and other factors account for this.
-
-The essential concepts most often confusing to students are given the most weight.
-
-Table views are the heart of the app, being the standard way to navigate on mobile.
-
 ## Course Rationale
 
-I noticed a lack of material depth when reviewing iOS and Objective-C introductory books while developing the course curriculum. Essential concepts like reference counting, delegation, and the object lifecycle were glossed over or excluded altogether. This course tries for a balance of depth and breadth. MapSwift's features are shared across the majority of iOS apps and we implement these features in various ways to stress the non-standardized nature of iOS development.
+I noticed a lack of material depth when reviewing iOS and Objective-C introductory books while developing the course curriculum. Essential concepts like reference counting, delegation, and the object lifecycle were glossed over or excluded altogether. This course tries to balance depth and breadth. MapSwift's features are shared across the majority of iOS apps and we implement these features in various ways to stress the less-than-standardized nature of iOS development.
 
-This isn’t a course for beginning coders. The CS50 graduates coming into this class have done difficult problem sets in C and often find that course more difficult than any of the graduate tracks.
+This isn’t a course for beginning coders. The CS50 graduates coming into this class have done difficult problem sets in C and often find that course more difficult than the specialized tracks like this one.
 
 ## Prerequisites
 
-All students are graduates of Harvard's CS50xMiami course. They should know C-style control flow, basic data types, stack vs heap, dequeuing, FIFO and LIFO and procedural programming.
+All students are graduates of Miami Dade College's CS50x course sponsored by Harvard. They should know C-style control flow, basic data types, stack vs heap, dequeuing, FIFO and LIFO and procedural programming.
 
 ## License
 
