@@ -4,6 +4,8 @@
 
 ## User settings
 xcuserdata/
+MapSwift.xcodeproj/project.xcworkspace/xcuserdata/michaelleveton.xcuserdatad/UserInterfaceState.xcuserstate
+MapSwift.xcodeproj/project.xcworkspace/xcshareddata/
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
