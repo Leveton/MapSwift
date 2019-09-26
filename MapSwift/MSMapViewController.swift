@@ -134,15 +134,10 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
     
     /* we want to return nil (and thus not include it in our data source) if either the distance or the coordinates fail to serialize. The other properties are not mission critical and so can be nil */
     func createLocationWithDictionary(dict:Dictionary<AnyHashable, Any>) -> MSLocation?{
-        guard let dist = dict["distance"] as? CGFloat else{
+        guard let dist = dict["distance"] as? CGFloat, let lat = dict["latitude"] as? CLLocationDegrees, let long = dict["longitude"] as? CLLocationDegrees else{
             return nil
         }
-        guard let lat = dict["latitude"] as? CLLocationDegrees else{
-            return nil
-        }
-        guard let long = dict["longitude"] as? CLLocationDegrees else{
-            return nil
-        }
+       
         var coordinate = CLLocationCoordinate2D()
         coordinate.latitude  = lat
         coordinate.longitude = long
@@ -156,10 +151,8 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         location.type = dict["type"] as? String
         
         /*make sure the string exists and is the right type before trying to build the image with the string */
-        if let imgStr = dict["image"] as? String{
-            if let image = UIImage(named:imgStr){
-                location.locationImage = image
-            }
+        if let imgStr = dict["image"] as? String, let image = UIImage(named:imgStr){
+            location.locationImage = image
         }
         
         return location
