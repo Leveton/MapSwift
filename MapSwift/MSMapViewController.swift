@@ -110,17 +110,13 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                 }
                 if let locationDictionaries = (jsonDict["MapStackLocationsArray"] as? [Dictionary<AnyHashable,Any>]){
                     for dict in locationDictionaries{
-                        if let obj = createLocationWithDictionary(dict: dict){
-                            //self.datasource.append(obj)
-                        }
+                        guard let obj = createLocationWithDictionary(dict: dict) else { continue }
+                        //self.datasource.append(obj)
+                        
                     }
                 }
                 
-                guard let viewControllers = self.tabBarController?.viewControllers else{
-                    //fail gracefully
-                    return
-                }
-                guard let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
+                guard let viewControllers = self.tabBarController?.viewControllers, let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
                     //fail gracefully
                     return
                 }
