@@ -1,28 +1,27 @@
 //
-//  MSLocation.swift
+//  File.swift
 //  MapSwift
 //
-//  Created by Mike Leveton on 4/17/17.
-//  Copyright © 2017 mikeleveton. All rights reserved.
+//  Created by Michael Leveton on 3/17/20.
+//  Copyright © 2020 mikeleveton. All rights reserved.
 //
 
-import UIKit
-import MapKit
 
-class MSLocation: NSObject, MKAnnotation {
-
-    var title:String?
-    var coordinate:CLLocationCoordinate2D
-    var distance:CGFloat?
-    var locationImage:UIImage?
+class MSLocation {
     
-    init(coordinate:CLLocationCoordinate2D){
-        self.coordinate = coordinate
+    // can be nil
+    private var title: String!
+    
+    // cannot be nil
+    var xCoordintate: Double
+    var yCoordinate: Double
+    
+    init(x: Double, y: Double){
+        self.xCoordintate = x
+        self.yCoordinate = y
     }
     
-    func getDistanceFromPoint(pointA:CLLocationCoordinate2D, pointB:CLLocationCoordinate2D) -> Double{
-        /* if you square a negative number, you get a quiet nan */
-        return sqrt(abs(((pointA.latitude - pointB.latitude) * (pointA.latitude - pointB.latitude)) + ((pointA.longitude - pointB.longitude) * (pointA.longitude - pointB.longitude))))
+    func getTitle() -> String {
+        return title
     }
-
 }

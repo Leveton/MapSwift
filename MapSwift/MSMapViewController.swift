@@ -20,17 +20,16 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         super.viewDidLoad()
         self.manager.startUpdatingLocation()
         
-        var dict:Dictionary<Int,String>?
         /* 1 mile radius */
         let adjustedRegion = self.map.regionThatFits(MKCoordinateRegionMakeWithDistance(self.centerPoint, 1609.34, 1609.34))
         self.map.setRegion(adjustedRegion, animated: true)
         
-        let location = MSLocation(coordinate:self.centerPoint)
         var newPoint = CLLocationCoordinate2D()
         newPoint.latitude  = 15.777599
         newPoint.longitude = 70.190793
-        let distance = location.getDistanceFromPoint(pointA: self.centerPoint, pointB: newPoint)
-        print("distance \(distance)")
+        
+        var location = MSLocation(x: newPoint.latitude, y:newPoint.longitude)
+        title = location.getTitle()
         
         populateMap()
         
@@ -114,18 +113,13 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
                     return
                 }
                 if let locationDictionaries = (jsonDict["MapStackLocationsArray"] as? [Dictionary<AnyHashable,Any>]){
-                    for dict in locationDictionaries{
-                        guard let obj = createLocationWithDictionary(dict: dict) else { continue }
-                        //self.datasource.append(obj)
+                    for _ in locationDictionaries{
+                        
                         
                     }
                 }
                 
-                guard let viewControllers = self.tabBarController?.viewControllers, let vc:MSLocationsViewController = viewControllers[1] as? MSLocationsViewController else{
-                    //fail gracefully
-                    return
-                }
-                //vc.dataSource = self.datasource
+                
                 
             } catch {
                 //fail gracefully
@@ -137,7 +131,5 @@ class MSMapViewController: MSViewController, CLLocationManagerDelegate, MKMapVie
         
     }
     
-    func createLocationWithDictionary(dict:Dictionary<AnyHashable,Any>) -> MSLocation?{
-        return MSLocation(coordinate: self.centerPoint)
-    }
+    
 }
